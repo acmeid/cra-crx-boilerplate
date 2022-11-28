@@ -1,13 +1,13 @@
-'use strict';
+'use strict'
 
-const path = require('path');
-const fs = require('fs');
-const getPublicUrlOrPath = require('react-dev-utils/getPublicUrlOrPath');
+const path = require('path')
+const fs = require('fs')
+const getPublicUrlOrPath = require('react-dev-utils/getPublicUrlOrPath')
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const appDirectory = fs.realpathSync(process.cwd())
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath)
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -19,63 +19,50 @@ const publicUrlOrPath = getPublicUrlOrPath(
   process.env.NODE_ENV === 'development',
   require(resolveApp('package.json')).homepage,
   process.env.PUBLIC_URL
-);
+)
 
-const buildPath = process.env.BUILD_PATH || 'build';
+const buildPath = process.env.BUILD_PATH || 'build'
 
-const moduleFileExtensions = [
-  'web.mjs',
-  'mjs',
-  'web.js',
-  'js',
-  'web.ts',
-  'ts',
-  'web.tsx',
-  'tsx',
-  'json',
-  'web.jsx',
-  'jsx',
-];
+const moduleFileExtensions = ['web.mjs', 'mjs', 'web.js', 'js', 'web.ts', 'ts', 'web.tsx', 'tsx', 'json', 'web.jsx', 'jsx']
 
 // Resolve file paths in the same order as webpack
 const resolveModule = (resolveFn, filePath) => {
-  const extension = moduleFileExtensions.find(extension =>
-    fs.existsSync(resolveFn(`${filePath}.${extension}`))
-  );
+  const extension = moduleFileExtensions.find((extension) => fs.existsSync(resolveFn(`${filePath}.${extension}`)))
 
   if (extension) {
-    return resolveFn(`${filePath}.${extension}`);
+    return resolveFn(`${filePath}.${extension}`)
   }
 
-  return resolveFn(`${filePath}.js`);
-};
+  return resolveFn(`${filePath}.js`)
+}
 
 /** 改动：多入口配置 */
-const pages = Object.entries(require('./pageConf'));
+const pages = Object.entries(require('./pageConf'))
 const entry = pages.reduce((pre, cur) => {
-  const [name, { entry }] = cur;
-  if(entry) {
-    pre[`${name}`] = resolveModule(resolveApp, entry);
+  const [name, { entry }] = cur
+  if (entry) {
+    pre[`${name}`] = resolveModule(resolveApp, entry)
   }
-  return pre;
-}, {});
+  return pre
+}, {})
 const htmlPlugins = pages.reduce((pre, cur) => {
-  const [name, { template, filename }] = cur;
-  template && pre.push({
-    name,
-    filename: filename,
-    template: resolveApp(template),
-  });
-  return pre;
-}, []);
+  const [name, { template, filename }] = cur
+  template &&
+    pre.push({
+      name,
+      filename: filename,
+      template: resolveApp(template),
+    })
+  return pre
+}, [])
 const requiredFiles = pages.reduce((pre, cur) => {
-  const { entry, template } = cur[1];
-  const entryReal = entry && resolveModule(resolveApp,entry);
-  const templateReal =  template && resolveApp(template);
-  entryReal && !pre.includes(entryReal) && pre.push(entryReal);
-  templateReal && !pre.includes(templateReal) && pre.push(templateReal);
-  return pre;
-}, []);
+  const { entry, template } = cur[1]
+  const entryReal = entry && resolveModule(resolveApp, entry)
+  const templateReal = template && resolveApp(template)
+  entryReal && !pre.includes(entryReal) && pre.push(entryReal)
+  templateReal && !pre.includes(templateReal) && pre.push(templateReal)
+  return pre
+}, [])
 
 // config after eject: we're in ./config/
 module.exports = {
@@ -101,8 +88,6 @@ module.exports = {
   entry,
   requiredFiles,
   htmlPlugins,
-};
+}
 
-
-
-module.exports.moduleFileExtensions = moduleFileExtensions;
+module.exports.moduleFileExtensions = moduleFileExtensions

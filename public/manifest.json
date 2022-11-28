@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
   "version": "1.0.0",
-  "name": "Chrome Extension with React",
-  "description": "A chrome extension boilerplate built with Manifest V3, Webpack 5, React 18",
+  "name": "SRS",
+  "description": "SRS Wallet",
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "logo192.png"
+    "default_icon": "logo@2x.png"
   },
   "background": {
     "service_worker": "background.js"
@@ -26,7 +26,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["logo192.png", "logo512.png", "logo.svg"],
+      "resources": ["logo@2x.png", "logo@2x.png", "logo@2x.png"],
       "matches": []
     }
   ]

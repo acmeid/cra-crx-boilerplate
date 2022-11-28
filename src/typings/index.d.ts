@@ -1,4 +1,4 @@
 type MessageEventType<T = any> = {
-    type: string;
-    datta?: T;
-};
+  type: string
+  datta?: T
+}
