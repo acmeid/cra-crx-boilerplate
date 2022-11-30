@@ -5,7 +5,8 @@
   "description": "SRS Wallet",
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "logo@2x.png"
+    "default_icon": "logo@2x.png",
+    "default_title": "SRS Wallet"
   },
   "background": {
     "service_worker": "background.js"
@@ -19,7 +20,7 @@
       "js": ["content.js"]
     }
   ],
-  "devtools_page": "devtools.html",
+  "permissions": ["storage"],
   "options_page": "options.html",
   "icons": {
     "128": "logo512.png"

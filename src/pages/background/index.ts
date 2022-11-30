@@ -16,4 +16,10 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 console.log('This is the background page.')
+
+// chrome.action.onClicked.addListener(() => {
+//   const newURL = 'newtab.html'
+//   chrome.tabs.create({ url: newURL })
+// })
+
 export {}

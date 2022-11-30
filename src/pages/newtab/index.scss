@@ -6,45 +6,60 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.App {
-  text-align: center;
+#root {
+  height: 100%;
+  color: #444649;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.textOver {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.chakra-table tbody tr:nth-of-type(odd) td {
+  border-bottom-width: 0px;
+}
+
+.chakra-table thead th {
+  text-transform: none;
+  font-weight: normal;
+  font-size: 14px;
+  color: #444948;
+}
+
+.chakra-input__group .chakra-input {
+  border-color: var(--chakra-colors-gray-300);
+  box-shadow: 0 0 0 0px var(--chakra-colors-gray-100);
+}
+
+.chakra-input__group .chakra-input:focus-visible {
+  // border-color: var(--chakra-colors-green-500);
+  // box-shadow: 0 0 0 1px var(--chakra-colors-green-500);
+
+  border-color: var(--chakra-colors-gray-500);
+  box-shadow: 0 0 1px 1px var(--chakra-colors-gray-300);
+}
+
+.chakra-form-control .chakra-input,
+.chakra-form-control .chakra-textarea {
+  &:focus-visible {
+    border-color: var(--chakra-colors-gray-400);
+    box-shadow: 0 0 1px 1px var(--chakra-colors-gray-200);
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.chakra-checkbox {
+  .chakra-checkbox__control {
+    border: 1px solid var(--chakra-colors-gray-400);
   }
 }

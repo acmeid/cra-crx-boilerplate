@@ -1,19 +1,32 @@
-import React from 'react'
-import logo from '../../logo@2x.png'
+import React, { useState } from 'react'
+import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
+
+import NotFound from './notFound'
+import Welcome from './welcome'
+import Create1 from './create1'
+import Create2 from './create2'
+import Create3 from './create3'
+import { Box, Flex } from '@chakra-ui/react'
 
 function Newtab() {
+  // const [tab, setTab] = useState<string>('welcome')
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/Newtab.tsx</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://github.com/Godiswill/cra-crx-boilerplate" target="_blank" rel="noopener noreferrer">
-          Learn More
-        </a>
-      </header>
-    </div>
+    // bg="#fafafa"
+    <Router>
+      <Flex justifyContent="center" alignItems="center" bg="#fafafa" h="100%">
+        <Box w="375px" h="600px" bg="#fff" borderRadius="12px">
+          <Routes>
+            <Route path="*" element={<NotFound />} />
+            <Route path={'/'} element={<Navigate to="/welcome" />} />
+            <Route path={'/welcome'} element={<Welcome />} />
+            <Route path={'/create1'} element={<Create1 />} />
+            <Route path={'/create2'} element={<Create2 />} />
+            <Route path={'/create3'} element={<Create3 />} />
+          </Routes>
+        </Box>
+      </Flex>
+    </Router>
   )
 }
 

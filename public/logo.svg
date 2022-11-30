@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 5</title>
+    <g id="1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="登陆注册-1备份" transform="translate(-134.000000, -99.000000)">
+            <g id="编组-4" transform="translate(134.000000, 99.000000)">
+                <rect id="矩形" x="0" y="0" width="100" height="100"></rect>
+                <g id="编组" transform="translate(20.000000, 7.000000)">
+                    <path d="M27,57 L27,0 C12.0883118,0 0,12.7598846 0,28.5 C0,44.2401154 12.0883118,57 27,57 Z" id="椭圆形" fill="#08CE9E"></path>
+                    <path d="M52.75,43 L52.75,2 C41.4281626,2 32.25,11.1781626 32.25,22.5 C32.25,33.8218374 41.4281626,43 52.75,43 Z" id="椭圆形备份-2" fill="#00E0A9"></path>
+                    <path d="M52.75,87 L52.75,46 C41.4281626,46 32.25,55.1781626 32.25,66.5 C32.25,77.8218374 41.4281626,87 52.75,87 Z" id="椭圆形备份-3" fill="#00E0A9" transform="translate(42.500000, 66.500000) rotate(-180.000000) translate(-42.500000, -66.500000) "></path>
+                    <path d="M26.25,86.5 L26.25,59.5 C18.7941559,59.5 12.75,65.5441559 12.75,73 C12.75,80.4558441 18.7941559,86.5 26.25,86.5 Z" id="椭圆形备份-4" fill="#00E0A9"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

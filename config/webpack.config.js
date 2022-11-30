@@ -1,5 +1,5 @@
 'use strict'
-
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
@@ -270,6 +270,9 @@ module.exports = function (webpackEnv) {
       ],
     },
     resolve: {
+      fallback: {
+        crypto: require.resolve('crypto-browserify'), // 如果不需要，那么就直接改为 false 就可以了
+      },
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
@@ -466,6 +469,7 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
+      new NodePolyfillPlugin(),
       /** 改动：监听 public 文件改动，复制最新到 build */
       new CopyPlugin({
         patterns: [

@@ -1,0 +1,39 @@
+.menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+
+  background-color: #fff;
+  border-top: 1px solid #ededed;
+
+  .menuItem {
+    height: 60px;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // color: #444649;
+    color: var(--chakra-colors-blackAlpha-500);
+    // color: red;
+    cursor: pointer;
+
+    &:hover {
+      // color: #444649;
+      // background-color: #ddd;
+      > img {
+        color: var(--chakra-colors-blackAlpha-700);
+      }
+    }
+
+    > img {
+      width: 30px;
+      // height: 30px;
+    }
+  }
+}

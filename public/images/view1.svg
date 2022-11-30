@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 6</title>
+    <g id="1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="登陆注册-1备份" transform="translate(-303.000000, -456.000000)">
+            <g id="编组-3" transform="translate(18.000000, 440.000000)">
+                <g id="编组-6" transform="translate(285.000000, 16.000000)">
+                    <rect id="矩形" x="0" y="0" width="21" height="21"></rect>
+                    <g id="编组" opacity="0.562091206" transform="translate(3.000000, 4.000000)" stroke="#B1B6BB" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25">
+                        <path d="M2.343144,4.8 C0.895432,6 0,7.2 0,7.2 C0,7.2 3.58172,12 8,12 C8.54796,12 9.08304,11.92616 9.6,11.79684 M6.41272,2.6 C6.92576,2.47264 7.45656,2.4 8,2.4 C12.41828,2.4 16,7.2 16,7.2 C16,7.2 15.10456,8.4 13.65684,9.6" id="形状"></path>
+                        <path d="M6.52568,5.84844 C6.19924,6.20436 6,6.67888 6,7.19992 C6,8.30448 6.89544,9.19992 8,9.19992 C8.54508,9.19992 9.03924,8.98184 9.4,8.6282" id="路径"></path>
+                        <line x1="15.2" y1="14.4" x2="0.8" y2="0" id="路径"></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
