@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组备份 2</title>
+    <g id="1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-308.000000, -119.000000)">
+            <g id="编组-3备份" transform="translate(142.000000, 104.000000)">
+                <g id="编组备份-2" transform="translate(166.000000, 15.000000)">
+                    <rect id="矩形" x="0" y="0" width="30" height="30"></rect>
+                    <g id="编组-2" transform="translate(4.736842, 4.736842)" fill="#444649">
+                        <rect id="矩形" x="15.7894737" y="0" width="5.52631579" height="20.5263158" rx="2.76315789"></rect>
+                        <rect id="矩形备份" x="7.89473684" y="3.94736842" width="5.52631579" height="16.5789474" rx="2.76315789"></rect>
+                        <rect id="矩形备份-2" x="0" y="8.68421053" width="5.52631579" height="11.8421053" rx="2.76315789"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

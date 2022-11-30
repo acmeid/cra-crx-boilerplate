@@ -122,7 +122,7 @@ export default function Welcome({ style, setTab }: any) {
             <Button variant="outline" minW="187px" onClick={onToggle}>
               Show phrase again
             </Button>
-            <Button variant="solid" minW="120px" ml="20px">
+            <Button variant="solid" minW="120px" ml="20px" onClick={() => navigate({ pathname: '/main/home' })}>
               Done
             </Button>
           </Box>

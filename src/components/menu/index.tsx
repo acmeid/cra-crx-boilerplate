@@ -9,29 +9,49 @@ export default function Menu(props: cprops) {
   return (
     <Flex className={styles.menu}>
       <NavLink to={{ pathname: '/main/home' }}>
-        <Box className={styles.menuItem}>
-          <Image src="./images/view2.svg"></Image>
-        </Box>
+        {({ isActive }: any) => {
+          return (
+            <Box className={styles.menuItem}>
+              <Image src={isActive ? './images/a2.svg' : './images/a1.svg'}></Image>
+            </Box>
+          )
+        }}
       </NavLink>
       <NavLink to={{ pathname: '/main/collectible' }}>
-        <Box className={styles.menuItem}>
-          <Image src="./images/view2.svg"></Image>
-        </Box>
+        {({ isActive }: any) => {
+          return (
+            <Box className={styles.menuItem}>
+              <Image src={isActive ? './images/e2.svg' : './images/e1.svg'}></Image>
+            </Box>
+          )
+        }}
       </NavLink>
       <NavLink to={{ pathname: '/main/stake' }}>
-        <Box className={styles.menuItem}>
-          <Image src="./images/view2.svg"></Image>
-        </Box>
+        {({ isActive }: any) => {
+          return (
+            <Box className={styles.menuItem}>
+              <Image src={isActive ? './images/b2.svg' : './images/b1.svg'}></Image>
+            </Box>
+          )
+        }}
       </NavLink>
       <NavLink to={{ pathname: '/main/activity' }}>
-        <Box className={styles.menuItem}>
-          <Image src="./images/view2.svg"></Image>
-        </Box>
+        {({ isActive }: any) => {
+          return (
+            <Box className={styles.menuItem}>
+              <Image src={isActive ? './images/c2.svg' : './images/c1.svg'}></Image>
+            </Box>
+          )
+        }}
       </NavLink>
       <NavLink to={{ pathname: '/main/setting' }}>
-        <Box className={styles.menuItem}>
-          <Image src="./images/view2.svg"></Image>
-        </Box>
+        {({ isActive }: any) => {
+          return (
+            <Box className={styles.menuItem}>
+              <Image src={isActive ? './images/d2.svg' : './images/d1.svg'}></Image>
+            </Box>
+          )
+        }}
       </NavLink>
     </Flex>
   )
