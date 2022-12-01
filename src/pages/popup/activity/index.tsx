@@ -76,7 +76,7 @@ export default function Welcome({ style, setTab }: any) {
       <Box className={styles.list}>
         {list.map((item: any, index: any) => {
           return (
-            <Flex className={styles.listItem} key="index">
+            <Flex className={styles.listItem} key={index}>
               <Box className={styles.tag}>
                 {/* <Image src="/images/up.svg"></Image> */}
                 <Image src="/images/down.svg"></Image>

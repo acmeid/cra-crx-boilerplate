@@ -53,7 +53,46 @@ export default function Stake({ style, setTab }: any) {
   return (
     <Box className={styles.container} style={style}>
       <Box className={styles.tit}>Stake</Box>
-      {/* <Menu></Menu> */}
+      <Flex mt="15px">
+        <Box className={styles.logo}>
+          <Image src="logo.svg"></Image>
+        </Box>
+        <Box flexGrow="1">
+          <Box className={styles.id}>Account ID</Box>
+          <Box className={styles.addr}>1AA2CB…B2C8EB</Box>
+        </Box>
+      </Flex>
+
+      <Flex justifyContent="space-between" mt="18px">
+        <Box fontSize="15px">Staking</Box>
+        <Box>
+          0 <span className="highlight">AC</span>
+        </Box>
+      </Flex>
+      <Flex justifyContent="space-between" mt="15px">
+        <Box fontSize="15px">Available</Box>
+        <Box>
+          0 <span className="highlight">AG</span>
+        </Box>
+      </Flex>
+
+      <Box fontWeight="600" fontSize="16px" mt="25px">
+        Purchased Bond Type：
+      </Box>
+      <Box>
+        {new Array(6).fill(10).map((item, index) => {
+          return (
+            <Flex key={index} bg="blackAlpha.100" mt="20px" padding="6px 0">
+              <Box w="47%" pl="30px">
+                1M
+              </Box>
+              <Box w="53%" pl="5px">
+                0 <span className="highlight">AC</span>
+              </Box>
+            </Flex>
+          )
+        })}
+      </Box>
     </Box>
   )
 }

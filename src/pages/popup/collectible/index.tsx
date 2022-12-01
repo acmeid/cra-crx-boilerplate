@@ -53,7 +53,21 @@ export default function Welcome({ style, setTab }: any) {
   return (
     <Box className={styles.container} style={style}>
       <Box className={styles.tit}>Collectibles</Box>
-      {/* <Menu></Menu> */}
+      <Flex mt="15px">
+        <Box className={styles.logo}>
+          <Image src="logo.svg"></Image>
+        </Box>
+        <Box flexGrow="1">
+          <Box className={styles.id}>Account ID</Box>
+          <Box className={styles.addr}>1AA2CB…B2C8EB</Box>
+        </Box>
+      </Flex>
+
+      <Flex wrap="wrap" ml="-18px" mr="-18px">
+        {new Array(7).fill(1).map((item, index) => {
+          return <Box key={index} w="154px" h="154px" mt="20px" ml="18px" bg="green.100"></Box>
+        })}
+      </Flex>
     </Box>
   )
 }

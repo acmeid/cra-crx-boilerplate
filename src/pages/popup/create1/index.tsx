@@ -80,7 +80,7 @@ export default function Welcome({ style }: any) {
               name="password2"
               control={control}
               rules={{ required: true, minLength: 6 }}
-              render={({ field }) => <Input {...field} h="49px" placeholder="Confirm Password" />}
+              render={({ field }) => <Input {...field} type="password" h="49px" placeholder="Confirm Password" />}
             />
           </InputGroup>
           {/* {JSON.stringify(touchedFields)} */}
