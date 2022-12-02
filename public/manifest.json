@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "version": "1.0.0",
-  "name": "SRS",
+  "name": "SRS Wallet",
   "description": "SRS Wallet",
   "action": {
     "default_popup": "popup.html",

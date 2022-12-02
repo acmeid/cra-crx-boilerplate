@@ -16,7 +16,7 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import ErrorMessage from '../../../components/ErrorMessage'
+import ErrorMessage from '@/components/errorMessage'
 
 type IFormInput = {
   password: string
@@ -61,7 +61,7 @@ export default function Welcome({ style }: any) {
               render={({ field }) => <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" />}
             />
 
-            <InputRightElement>
+            <InputRightElement h="49px">
               <ViewIcon cursor="pointer" color="blackAlpha.600" style={{ display: show1 ? '' : 'none' }} onClick={() => setShow1(!show1)}></ViewIcon>
               <ViewOffIcon
                 cursor="pointer"

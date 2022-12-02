@@ -1,67 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Box,
-  Flex,
-  Button,
-  Image,
-  Slide,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  SlideFade,
-  Grid,
-  GridItem,
-  Center,
-  StyledStepper,
-} from '@chakra-ui/react'
+import { Box, Flex, Button, Image } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
-import Menu from '../../../components/menu'
+// import Menu from '../../../components/menu'
+import AccountHeader from '@/components/accountHeader'
+import { getUser } from '@/utils'
 
-import { Cosmos } from '../../../utils/cosmos'
-const chainId = 'srspoa'
-const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
-
-export default function Welcome({ style, setTab }: any) {
-  const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
-  const [showTip, setShowTip] = useState<boolean>(true)
+export default function Home({ style, setTab }: any) {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [step, setStep] = useState<number>(2)
+  const [user, setUser] = useState<any>({})
 
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
+  useEffect(() => {
+    getUser().then((res) => {
+      setUser(res)
+    })
+  }, [])
 
-  const createMnemonic = () => {
-    setShowTip(false)
-  }
-
-  useEffect(() => {}, [])
-
-  const next = () => {
-    // navigate({ pathname: '/create2' })
-  }
+  // const next = () => {
+  //   // navigate({ pathname: '/create2' })
+  // }
 
   return (
     <Box className={styles.container} style={style}>
-      <Box className={styles.tit}>Home</Box>
-      <Flex mt="15px">
-        <Box className={styles.logo}>
-          <Image src="logo.svg"></Image>
-        </Box>
-        <Box flexGrow="1">
-          <Box className={styles.id}>Account ID</Box>
-          <Box className={styles.addr}>1AA2CB…B2C8EB</Box>
-        </Box>
-      </Flex>
+      <AccountHeader title="Home"></AccountHeader>
 
       <Box mt="18px">
         Total Balance <span>0</span>

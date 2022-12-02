@@ -1,0 +1,53 @@
+.container {
+  position: relative;
+  padding: 18px;
+  height: 100%;
+  // overflow-y: auto;
+  padding-bottom: 68px;
+}
+
+.tit {
+  font-size: 20px;
+  font-weight: 600;
+  // margin-top: 10px;
+}
+
+.highlight {
+  color: #08ce9e;
+}
+
+.list {
+  height: calc(100% - 68px);
+  overflow-y: auto;
+
+  // scrollbar-width: none; /* firefox */
+  // -ms-overflow-style: none; /* IE 10+ */
+
+  // &::-webkit-scrollbar {
+  //   display: none; /* Chrome Safari */
+  // }
+
+  .listItem {
+    border-radius: 8px;
+    border: 1px solid #ededed;
+    padding: 12px 12px 12px 0;
+    margin-top: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+      background-color: var(--chakra-colors-blackAlpha-100);
+    }
+  }
+
+  .tag {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .type {
+    font-size: 16px;
+    font-weight: 600;
+  }
+}

@@ -158,6 +158,9 @@ export class Cosmos {
   }
 }
 
+const chainId = 'srspoa'
+export const SRS = new Cosmos('http://192.168.0.206:1317', chainId)
+
 function toHex(str, hex) {
   try {
     hex = unescape(encodeURIComponent(str))

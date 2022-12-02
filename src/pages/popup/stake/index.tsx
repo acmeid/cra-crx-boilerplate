@@ -25,6 +25,7 @@ import styles from './styles.module.scss'
 
 import { Cosmos } from '../../../utils/cosmos'
 import Menu from '@/components/menu'
+import AccountHeader from '@/components/accountHeader'
 const chainId = 'srspoa'
 const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
@@ -52,16 +53,7 @@ export default function Stake({ style, setTab }: any) {
 
   return (
     <Box className={styles.container} style={style}>
-      <Box className={styles.tit}>Stake</Box>
-      <Flex mt="15px">
-        <Box className={styles.logo}>
-          <Image src="logo.svg"></Image>
-        </Box>
-        <Box flexGrow="1">
-          <Box className={styles.id}>Account ID</Box>
-          <Box className={styles.addr}>1AA2CB…B2C8EB</Box>
-        </Box>
-      </Flex>
+      <AccountHeader title="Stake"></AccountHeader>
 
       <Flex justifyContent="space-between" mt="18px">
         <Box fontSize="15px">Staking</Box>

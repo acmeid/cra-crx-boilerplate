@@ -25,6 +25,7 @@ import styles from './styles.module.scss'
 
 import { Cosmos } from '../../../utils/cosmos'
 import Menu from '@/components/menu'
+import AccountHeader from '@/components/accountHeader'
 const chainId = 'srspoa'
 const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
@@ -53,7 +54,7 @@ export default function Welcome({ style, setTab }: any) {
 
   return (
     <Box className={styles.container} style={style}>
-      <Box className={styles.tit}>Settings</Box>
+      {/* <Box className={styles.tit}>Settings</Box>
       <Flex mt="15px">
         <Box className={styles.logo}>
           <Image src="logo.svg"></Image>
@@ -69,20 +70,67 @@ export default function Welcome({ style, setTab }: any) {
             </Box>
           </Flex>
         </Box>
-      </Flex>
+      </Flex> */}
+
+      <AccountHeader title="Settings"></AccountHeader>
 
       <Box className={styles.list}>
+        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/network' })}>
+          <Box flexGrow="1">Network Devnet</Box>
+          <Box>
+            <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
+          </Box>
+        </Flex>
+        <Flex className={styles.listItem}>
+          <Box flexGrow="1">Security and Privacy</Box>
+          <Box>
+            <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
+          </Box>
+        </Flex>
+        <Flex className={styles.listItem}>
+          <Box flexGrow="1">Help & Support</Box>
+          <Box>
+            <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
+          </Box>
+        </Flex>
+        <Flex className={styles.listItem}>
+          <Box flexGrow="1">Lock wallet</Box>
+          <Box>
+            <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
+          </Box>
+        </Flex>
+        <Flex className={styles.listItem}>
+          <Box flexGrow="1">Manage account</Box>
+          <Box>
+            <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
+          </Box>
+        </Flex>
+        <Flex className={styles.listItem}>
+          <Box flexGrow="1">View on explorer</Box>
+          <Box>
+            <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
+          </Box>
+        </Flex>
+        <Flex className={styles.listItem}>
+          <Box flexGrow="1">Remove account</Box>
+          <Box>
+            <ChevronRightIcon color="blackAlpha.600" boxSize="17px"></ChevronRightIcon>
+          </Box>
+        </Flex>
+      </Box>
+
+      {/* <Box className={styles.list}>
         {list.map((item: any, index: any) => {
           return (
             <Flex className={styles.listItem} key={index}>
               <Box flexGrow="1">Network Devnet</Box>
               <Box>
-                <ChevronRightIcon color="blackAlpha.500"></ChevronRightIcon>
+                <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
               </Box>
             </Flex>
           )
         })}
-      </Box>
+      </Box> */}
     </Box>
   )
 }

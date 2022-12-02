@@ -4,46 +4,6 @@
   height: calc(100% - 60px);
 }
 
-.tit {
-  font-size: 20px;
-  font-weight: 600;
-  // margin-top: 10px;
-}
-
-.logo {
-  width: 63px;
-  height: 63px;
-  border-radius: 8px;
-  border: 1px solid #ededed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  > img {
-    width: 50px;
-  }
-}
-.id {
-  // width: 97px;
-  margin-left: 12px;
-  height: 24px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #444649;
-  line-height: 24px;
-}
-.addr {
-  margin-left: 12px;
-  width: 142px;
-  height: 29px;
-  line-height: 29px;
-  background: var(--chakra-colors-blackAlpha-100);
-  border-radius: 4px;
-  padding: 0 5px;
-  text-align: center;
-  margin-top: 8px;
-  font-size: 14px;
-}
-
 .amountWrap {
   border-top: 1px solid #ededed;
   padding-top: 10px;

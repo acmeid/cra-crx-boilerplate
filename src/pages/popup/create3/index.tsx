@@ -23,9 +23,8 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { Cosmos } from '../../../utils/cosmos'
-const chainId = 'srspoa'
-const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
+import { SRS } from '../../../utils/cosmos'
+import { addUser, getUser, getUserList } from '@/utils'
 
 export default function Welcome({ style, setTab }: any) {
   const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
@@ -44,14 +43,27 @@ export default function Welcome({ style, setTab }: any) {
   }
 
   useEffect(() => {
-    const _mnemonic = cosmos.getRandomMnemonic(128).split(' ')
+    const _mnemonic = SRS.getRandomMnemonic(128).split(' ')
     setMnemonic(_mnemonic)
-    chrome.storage.local.set({ mnemonic: _mnemonic })
-    chrome.storage.local.get(['mnemonic'], (res) => console.log('chrome.storage.local.get:', res))
   }, [])
 
-  const next = () => {
-    // navigate({ pathname: '/create2' })
+  const next = async () => {
+    const _mnemonic = mnemonic.join(' ')
+    console.log('mnemonic::', _mnemonic)
+
+    try {
+      addUser(_mnemonic)
+
+      const curryUser = await getUser()
+      console.log('curryUser', curryUser)
+
+      const userList = await getUserList()
+      console.log('userList', userList)
+    } catch (error) {
+      console.error('add error', error)
+    }
+
+    navigate({ pathname: '/main/home' })
   }
 
   return (
@@ -122,7 +134,7 @@ export default function Welcome({ style, setTab }: any) {
             <Button variant="outline" minW="187px" onClick={onToggle}>
               Show phrase again
             </Button>
-            <Button variant="solid" minW="120px" ml="20px" onClick={() => navigate({ pathname: '/main/home' })}>
+            <Button variant="solid" minW="120px" ml="20px" onClick={next}>
               Done
             </Button>
           </Box>
