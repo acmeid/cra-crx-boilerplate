@@ -12,6 +12,13 @@ import AddAccount from './addAccount'
 import ImportPrivateKey from './importPrivateKey'
 import ImportMnemonic from './importMnemonic'
 import Network from './network'
+import TransactionDetail from './transactionDetail'
+import CollectibleDetail from './collectibleDetail'
+import Send from './send'
+import ChangeName from './changeName'
+import SecurityAndPrivacy from './securityAndPrivacy'
+import ManageAccount from './manageAccount'
+import RemoveAccount from './removeAccount'
 
 import Home from './home'
 import Collectible from './collectible'
@@ -44,6 +51,13 @@ function Newtab() {
             <Route path={'/importPrivateKey'} element={<ImportPrivateKey />} />
             <Route path={'/importMnemonic'} element={<ImportMnemonic />} />
             <Route path={'/network'} element={<Network />} />
+            <Route path={'/transactionDetail'} element={<TransactionDetail />} />
+            <Route path={'/collectibleDetail'} element={<CollectibleDetail />} />
+            <Route path={'/send'} element={<Send />} />
+            <Route path={'/ChangeName'} element={<ChangeName />} />
+            <Route path={'/SecurityAndPrivacy'} element={<SecurityAndPrivacy />} />
+            <Route path={'/manageAccount'} element={<ManageAccount />} />
+            <Route path={'/removeAccount'} element={<RemoveAccount />} />
 
             <Route path={'/main'} element={<Main />}>
               <Route path={'/main/home'} element={<Home />} />

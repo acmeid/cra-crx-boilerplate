@@ -41,23 +41,23 @@ code {
   white-space: nowrap;
 }
 
-.chakra-table tbody tr:nth-of-type(odd) td {
+#root .chakra-table tbody tr:nth-of-type(odd) td {
   border-bottom-width: 0px;
 }
 
-.chakra-table thead th {
+#root .chakra-table thead th {
   text-transform: none;
   font-weight: normal;
   font-size: 14px;
   color: #444948;
 }
 
-.chakra-input__group .chakra-input {
+#root .chakra-input__group .chakra-input {
   border-color: var(--chakra-colors-gray-300);
   box-shadow: 0 0 0 0px var(--chakra-colors-gray-100);
 }
 
-.chakra-input__group .chakra-input:focus-visible {
+#root .chakra-input__group .chakra-input:focus-visible {
   // border-color: var(--chakra-colors-green-500);
   // box-shadow: 0 0 0 1px var(--chakra-colors-green-500);
 
@@ -65,15 +65,15 @@ code {
   box-shadow: 0 0 1px 1px var(--chakra-colors-gray-300);
 }
 
-.chakra-form-control .chakra-input,
-.chakra-form-control .chakra-textarea {
+#root .chakra-input,
+#root .chakra-textarea {
   &:focus-visible {
     border-color: var(--chakra-colors-gray-400);
     box-shadow: 0 0 1px 1px var(--chakra-colors-gray-200);
   }
 }
 
-.chakra-checkbox {
+#root .chakra-checkbox {
   .chakra-checkbox__control {
     border: 1px solid var(--chakra-colors-gray-400);
   }

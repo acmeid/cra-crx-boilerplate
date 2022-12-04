@@ -3,6 +3,9 @@ import { SRS } from './cosmos'
 export const getUser = () => {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(['currentUser'], ({ currentUser }) => {
+      if (!currentUser) {
+        resolve('')
+      }
       const data = {
         ...currentUser,
         privKey: new Uint8Array(currentUser.privKey),

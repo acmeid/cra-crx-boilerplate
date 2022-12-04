@@ -1,0 +1,33 @@
+.container {
+  position: relative;
+  padding: 18px;
+  height: 100%;
+  // height: calc(100% - 60px);
+  overflow-y: auto;
+}
+
+.tit {
+  font-size: 20px;
+  font-weight: 600;
+  // margin-top: 40px;
+}
+
+.highlight {
+  color: #08ce9e;
+}
+
+.list {
+  .listItem {
+    position: relative;
+    padding: 8px 0px;
+    align-items: center;
+    margin-top: 12px;
+    // border-radius: 8px;
+    // cursor: pointer;
+    // border: 1px solid var(--chakra-colors-blackAlpha-100);
+
+    // &:hover {
+    //   background-color: var(--chakra-colors-blackAlpha-100);
+    // }
+  }
+}

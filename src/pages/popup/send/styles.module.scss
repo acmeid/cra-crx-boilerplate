@@ -1,0 +1,93 @@
+.container {
+  position: relative;
+  padding:  0 18px 18px 18px;
+  min-height: 100%;
+}
+
+.info {
+  margin-top: 16px;
+  border-radius: 8px;
+  border: 1px solid #EDEDED;
+  padding: 13px;
+}
+
+.inp {
+  width: 218px;
+  height: 60px;
+  border-radius: 8px;
+  background-color: var(--chakra-colors-blackAlpha-100);
+  font-size: 32px;
+}
+.tex {
+  font-size: 32px;
+  font-weight: bold;
+  color: #444651;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.popup {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+
+  .mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: var(--chakra-colors-blackAlpha-600);
+  }
+  // .maskIn {
+  //   animation: 0.3s ease-out m1;
+  // }
+  // .maskOut {
+  //   animation: 0.3s ease-out m2;
+  // }
+
+  // @keyframes m1 {
+  //   from {
+  //     background-color: #fff;
+  //   }
+  //   to {
+  //     background-color: var(--chakra-colors-blackAlpha-600);
+  //   }
+  // }
+  // @keyframes m2 {
+  //   from {
+  //     background-color: var(--chakra-colors-blackAlpha-600);
+  //   }
+  //   to {
+  //     background-color: #fff;
+  //     display: none;
+  //   }
+  // }
+
+  .content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    // height: 293px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+    padding: 20px;
+  }
+  // .contentIn {
+  //   animation: 0.3s ease-out c1;
+  // }
+  // @keyframes c1 {
+  //   from {
+  //     transform: translate(0, 100%);
+  //   }
+  //   to {
+  //     transform: translate(0, 0);
+  //   }
+  // }
+}
