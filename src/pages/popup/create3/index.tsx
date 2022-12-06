@@ -27,7 +27,7 @@ import { SRS } from '../../../utils/cosmos'
 import { addUser, getUser, getUserList } from '@/utils'
 
 export default function Welcome({ style, setTab }: any) {
-  const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
+  const [mnemonic, setMnemonic] = useState<any[]>(new Array(24).fill('Wallet'))
   const [showTip, setShowTip] = useState<boolean>(true)
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -43,7 +43,8 @@ export default function Welcome({ style, setTab }: any) {
   }
 
   useEffect(() => {
-    const _mnemonic = SRS.getRandomMnemonic(128).split(' ')
+    const _mnemonic = SRS.getRandomMnemonic(256).split(' ')
+    console.log('_mnemonic:', _mnemonic)
     setMnemonic(_mnemonic)
   }, [])
 

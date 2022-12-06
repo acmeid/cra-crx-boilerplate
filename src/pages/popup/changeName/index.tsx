@@ -19,6 +19,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
+import { storage } from '@/utils'
 
 type IFormInput = {
   password: string
@@ -45,8 +46,8 @@ export default function ChangeName({ style }: any) {
   const navigate = useNavigate()
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log('form data: ', data)
-    chrome.storage.local.set({ pw: data.password })
-    chrome.storage.local.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
+    storage.set({ pw: data.password })
+    storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
     navigate({ pathname: '/create3' })
   }
 
@@ -59,7 +60,7 @@ export default function ChangeName({ style }: any) {
   const sendResult = () => {
     toast({
       title: 'Transaction succeeded',
-      description: "Amount transferred: 1, gas consumed:0.000334 APT",
+      description: 'Amount transferred: 1, gas consumed:0.000334 APT',
       position: 'bottom',
       status: 'success',
       duration: 8000,
@@ -75,7 +76,9 @@ export default function ChangeName({ style }: any) {
   return (
     <Box className={styles.container} style={style}>
       <Header showBack></Header>
-      <Box mt="20px" fontSize="16px" fontWeight="600">View on explorer</Box>
+      <Box mt="20px" fontSize="16px" fontWeight="600">
+        View on explorer
+      </Box>
 
       <Input size="lg" type="text" placeholder="Enter Wallet Name" h="49px" mt="8px"></Input>
 

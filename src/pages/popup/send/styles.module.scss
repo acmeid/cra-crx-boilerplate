@@ -1,29 +1,31 @@
 .container {
   position: relative;
-  padding:  0 18px 18px 18px;
+  padding: 0 18px 18px 18px;
   min-height: 100%;
 }
 
 .info {
   margin-top: 16px;
   border-radius: 8px;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
   padding: 13px;
 }
 
-.inp {
-  width: 218px;
-  height: 60px;
-  border-radius: 8px;
-  background-color: var(--chakra-colors-blackAlpha-100);
-  font-size: 32px;
-}
-.tex {
-  font-size: 32px;
-  font-weight: bold;
-  color: #444651;
-  text-align: center;
-  flex-grow: 1;
+.am {
+  .inp {
+    width: 228px;
+    height: 60px;
+    border-radius: 8px;
+    background-color: var(--chakra-colors-blackAlpha-100);
+    font-size: 24px;
+  }
+  .tex {
+    font-size: 32px;
+    font-weight: bold;
+    color: #444651;
+    text-align: center;
+    flex-grow: 1;
+  }
 }
 
 .popup {

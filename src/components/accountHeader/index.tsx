@@ -21,16 +21,16 @@ export default function AccountHeader({ title, showBack }: any) {
   return (
     <>
       <Box className={styles.tit} onClick={() => showBack && navigate(-1)}>
-        {showBack ? <ChevronLeftIcon mt="-3px"></ChevronLeftIcon> : ''}{title}
+        {showBack ? <ChevronLeftIcon mt="-3px"></ChevronLeftIcon> : ''}
+        {title}
       </Box>
       <Flex mt="15px">
-
         <Box className={styles.logo} onClick={() => navigate({ pathname: '/account' })} cursor="pointer">
           <Image src="logo.svg"></Image>
         </Box>
         <Box flexGrow="1">
           <Box className={styles.id}>
-            Account ID <EditIcon className={styles.edit} />
+            Account ID <EditIcon className={styles.edit} onClick={() => navigate('/changeName')} />
           </Box>
           <Box className={styles.addr}>{cutText(user.address)}</Box>
         </Box>

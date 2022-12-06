@@ -18,10 +18,6 @@ export default function Home({ style, setTab }: any) {
     })
   }, [])
 
-  // const next = () => {
-  //   // navigate({ pathname: '/create2' })
-  // }
-
   return (
     <Box className={styles.container} style={style}>
       <AccountHeader title="Home"></AccountHeader>
@@ -69,7 +65,7 @@ export default function Home({ style, setTab }: any) {
         <Button variant="outline" minW="154px" h="45px" onClick={() => {}}>
           Deposit
         </Button>
-        <Button variant="outline" minW="154px" h="45px" onClick={() => {}}>
+        <Button variant="outline" minW="154px" h="45px" onClick={() => navigate('/send')}>
           Send
         </Button>
       </Flex>

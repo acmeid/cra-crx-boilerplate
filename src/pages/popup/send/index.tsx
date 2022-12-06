@@ -19,6 +19,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
+import { createSend, storage } from '@/utils'
 
 type IFormInput = {
   password: string
@@ -27,8 +28,9 @@ type IFormInput = {
 }
 
 export default function Welcome({ style }: any) {
-  const [show1, setShow1] = useState(false)
+  const [toAddress, setToAddress] = useState<string>('')
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [amount, setAmount] = useState<number | string>(0)
   const toast = useToast()
   const onToggle = () => {
     console.log('onToggle')
@@ -45,12 +47,13 @@ export default function Welcome({ style }: any) {
   const navigate = useNavigate()
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log('form data: ', data)
-    chrome.storage.local.set({ pw: data.password })
-    chrome.storage.local.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
+    storage.set({ pw: data.password })
+    storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
     navigate({ pathname: '/create3' })
   }
 
   const send = () => {
+    createSend({ toAddress, amount })
     setIsOpen(false)
     navigate(-1)
     sendResult()
@@ -59,7 +62,7 @@ export default function Welcome({ style }: any) {
   const sendResult = () => {
     toast({
       title: 'Transaction succeeded',
-      description: "Amount transferred: 1, gas consumed:0.000334 APT",
+      description: 'Amount transferred: 1, gas consumed:0.000334 APT',
       position: 'bottom',
       status: 'success',
       duration: 8000,
@@ -75,22 +78,31 @@ export default function Welcome({ style }: any) {
   return (
     <Box className={styles.container} style={style}>
       <Header showBack></Header>
-      <Box fontSize="16px" fontWeight="600" mt="4px">Add an address and amount</Box>
+      <Box fontSize="16px" fontWeight="600" mt="4px">
+        Add an address and amount
+      </Box>
       <Flex className={styles.info}>
         <Box pr="12px">
-          <Image src='' width="40px" height="40px" borderRadius="100%"></Image>
+          <Image src="" width="40px" height="40px" borderRadius="100%"></Image>
         </Box>
         <Box flexGrow="1">
-          <Box fontSize="16px" fontWeight="600" wordBreak="break-all">0x22ec40b30x22ec40b30x22ec40b3 b340b30</Box>
-          <Box fontSize="12px" color="#08CE9E" mt="6px">Account not found, will be created</Box>
+          <Box fontSize="16px" fontWeight="600" wordBreak="break-all">
+            {/* 0x22ec40b30x22ec40b30x22ec40b3 b340b30 */}
+            <Input className={styles.inp} onChange={(e: any) => setToAddress(e.target.value)}></Input>
+          </Box>
+          <Box fontSize="12px" color="#08CE9E" mt="6px">
+            Account not found, will be created
+          </Box>
         </Box>
       </Flex>
 
-      <Flex alignItems="center" mt="18px">
-        <Input className={styles.inp}></Input>
+      <Flex className={styles.am} alignItems="center" mt="18px">
+        <Input className={styles.inp} onChange={(e) => setAmount(e.target.value)}></Input>
         <Box className={styles.tex}>APT</Box>
       </Flex>
-      <Box color="#B1B6BB" mt="13px">Balance：31 APT,fees: 0.000315 APT</Box>
+      <Box color="#B1B6BB" mt="13px">
+        Balance：31 APT,fees: 0.000315 APT
+      </Box>
 
       <Flex mt="210px" justifyContent="space-around">
         <Button size="lg" variant="outline" minW="154px" h="46px" onClick={() => navigate(-1)}>
@@ -104,7 +116,9 @@ export default function Welcome({ style }: any) {
       <Box className={styles.popup} rounded="md" style={{ display: isOpen ? '' : 'none', zIndex: 12 }}>
         <div className={[styles.mask, isOpen ? styles.maskIn : styles.maskOut].join(' ')} onClick={onToggle}></div>
         <div className={[styles.content, isOpen ? styles.contentIn : styles.contentOut].join(' ')}>
-          <Box fontSize="18px" fontWeight="600">Summary</Box>
+          <Box fontSize="18px" fontWeight="600">
+            Summary
+          </Box>
           <Box mt="10px">
             <Flex justifyContent="space-between" padding="12px 0">
               <Box>Recipient</Box>
@@ -120,8 +134,12 @@ export default function Welcome({ style }: any) {
             </Flex>
             <Box borderTop="1px solid #ededed" mt="10px" mb="9px"></Box>
             <Flex justifyContent="space-between" fontSize="16px" padding="12px 0">
-              <Box><span className='highlight'>Total</span></Box>
-              <Box><span className='highlight'>0.000365 APT</span></Box>
+              <Box>
+                <span className={styles.highlight}>Total</span>
+              </Box>
+              <Box>
+                <span className={styles.highlight}>0.000365 APT</span>
+              </Box>
             </Flex>
           </Box>
 

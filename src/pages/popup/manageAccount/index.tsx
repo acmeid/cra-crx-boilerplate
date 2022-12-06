@@ -20,6 +20,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import CheckPassword from '@/components/checkPassword'
+import { storage } from '@/utils'
 
 type IFormInput = {
   password: string
@@ -46,8 +47,8 @@ export default function ChangeName({ style }: any) {
   const navigate = useNavigate()
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log('form data: ', data)
-    chrome.storage.local.set({ pw: data.password })
-    chrome.storage.local.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
+    storage.set({ pw: data.password })
+    storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
     navigate({ pathname: '/create3' })
   }
 
@@ -60,7 +61,7 @@ export default function ChangeName({ style }: any) {
   const sendResult = () => {
     toast({
       title: 'Transaction succeeded',
-      description: "Amount transferred: 1, gas consumed:0.000334 APT",
+      description: 'Amount transferred: 1, gas consumed:0.000334 APT',
       position: 'bottom',
       status: 'success',
       duration: 8000,
@@ -73,9 +74,7 @@ export default function ChangeName({ style }: any) {
     })
   }
 
-  const next = () => {
-
-  }
+  const next = () => {}
 
   return (
     <Box className={styles.container} style={style}>

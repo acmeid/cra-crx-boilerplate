@@ -17,6 +17,7 @@ import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
+import { storage } from '@/utils'
 
 type IFormInput = {
   password: string
@@ -38,8 +39,8 @@ export default function Welcome({ style }: any) {
   const navigate = useNavigate()
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log('form data: ', data)
-    chrome.storage.local.set({ pw: data.password })
-    chrome.storage.local.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
+    storage.set({ pw: data.password })
+    storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
     navigate({ pathname: '/create3' })
   }
 

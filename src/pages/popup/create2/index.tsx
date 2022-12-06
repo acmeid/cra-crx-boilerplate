@@ -4,20 +4,21 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { Cosmos } from '../../../utils/cosmos'
-const chainId = 'srspoa'
-const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
+import { SRS } from '../../../utils/cosmos'
+// const chainId = 'srspoa'
+// const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 // import message from '../../../utils/message'
 
 export default function Welcome({ style }: any) {
-  const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
+  const [mnemonic, setMnemonic] = useState<any[]>(new Array(24).fill('Wallet'))
   const [showTip, setShowTip] = useState<boolean>(true)
   const navigate = useNavigate()
   const initData = async () => {}
   const a = "You'll use this to unlock your wallet"
 
   const createMnemonic = () => {
-    const _mnemonic = cosmos.getRandomMnemonic(128)
+    const _mnemonic = SRS.getRandomMnemonic(256)
+    console.log('_mnemonic::', _mnemonic)
     setMnemonic(_mnemonic.split(' '))
     setShowTip(false)
   }

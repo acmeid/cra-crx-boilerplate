@@ -2,6 +2,10 @@ import * as bech32 from 'bech32'
 import * as bip32 from 'bip32'
 import * as bip39 from 'bip39'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// var Buffer = require('buffer/').Buffer
+// import Buffer from 'buffer'
+
 // import bitcoinjs from 'bitcoinjs-lib'
 import crypto from 'crypto'
 /*
@@ -13,6 +17,7 @@ import axios from 'axios'
 import message from './messages/proto'
 // import request from 'request'
 import secp256k1 from 'secp256k1'
+// import secp256k1 from '@dashincubator/secp256k1'
 
 export class Cosmos {
   constructor(url, chainId) {
@@ -103,12 +108,14 @@ export class Cosmos {
 
   getAccounts(address) {
     let accountsApi = '/cosmos/auth/v1beta1/accounts/'
-    return axios.get(this.url + accountsApi + address).then(
-      (response) => response.json(),
-      (e) => {
-        console.log('getAccounts error::', e)
-      }
-    )
+    return axios.get(this.url + accountsApi + address)
+
+    // .then(
+    //   (response) => response.json(),
+    //   (e) => {
+    //     console.log('getAccounts error::', e)
+    //   }
+    // )
   }
 
   sign(txBody, authInfo, accountNumber, privKey) {
@@ -122,7 +129,9 @@ export class Cosmos {
     })
     let signMessage = message.cosmos.tx.v1beta1.SignDoc.encode(signDoc).finish()
     const hash = crypto.createHash('sha256').update(signMessage).digest()
+    console.log('Buffer.from(privKey)::', Buffer.from(privKey))
     const sig = secp256k1.sign(hash, Buffer.from(privKey))
+    // const sig = secp256k1.sign(hash, privKey)
     const txRaw = new message.cosmos.tx.v1beta1.TxRaw({
       body_bytes: bodyBytes,
       auth_info_bytes: authInfoBytes,
@@ -137,29 +146,28 @@ export class Cosmos {
   broadcast(signedTxBytes, broadCastMode = 'BROADCAST_MODE_SYNC') {
     const txBytesBase64 = Buffer.from(signedTxBytes, 'binary').toString('base64')
 
-    var options = {
-      method: 'POST',
-      url: this.url + '/cosmos/tx/v1beta1/txs',
-      headers: { 'Content-Type': 'application/json' },
-      body: { tx_bytes: txBytesBase64, mode: broadCastMode },
-      json: true,
-    }
+    // const txBytesBase64 =
+    //   'CpUBCoQBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmQKKnNpbDEwOGZ0a2Z6OGxxc3hhNHZneDM4ZmR0Z2FqZnl3NmR2cGtkeHlwZxIqc2lsMXI1dHdmdXUyOHBxeHF5NmdwbDB1a3F6eG5uaGh2NTBjdjZhdWtkGgoKA3NyYxIDMTAwEgznlZnoqIDmtYvor5USYgpQCkYKHy9jb3Ntb3MuY3J5cHRvLnNlY3AyNTZrMS5QdWJLZXkSIwohApnPqnuTMNuPL62yJZYYa45nnolrrdjTGur8eOTyTxq+EgQKAggBGBUSDgoICgNzcmMSATUQwJoMGkB4MdMjPb91ODQbFjISngJ4J16j6EMdJ3/nycamC6HVemK+ilUjjduUiK3npCx4bjSqGzhVnq/nFW9y1bW3o+Wh'
 
-    return new Promise(function (resolve, reject) {
-      axios.get(options, function (error, response, body) {
-        if (error) return reject(error)
-        try {
-          resolve(body)
-        } catch (e) {
-          reject(e)
-        }
-      })
+    console.log('txBytesBase64:::', txBytesBase64)
+    const params = { tx_bytes: txBytesBase64, mode: broadCastMode }
+
+    // return Promise.resolve()
+    return axios.post(this.url + '/cosmos/tx/v1beta1/txs', params, {
+      headers: { 'Content-Type': 'application/json' },
     })
   }
 }
 
-const chainId = 'srspoa'
-export const SRS = new Cosmos('http://192.168.0.206:1317', chainId)
+const setSrs = () => {
+  const chainId = 'srspoa'
+  const SRS = new Cosmos('http://192.168.0.206:1317', chainId)
+  SRS.setBech32MainPrefix('sil')
+  SRS.setPath("m/44'/118'/0'/0/0")
+  return SRS
+}
+
+export const SRS = setSrs()
 
 function toHex(str, hex) {
   try {
