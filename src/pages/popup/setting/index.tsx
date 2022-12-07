@@ -111,7 +111,7 @@ export default function Welcome({ style, setTab }: any) {
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
           </Box>
         </Flex>
-        <Flex className={styles.listItem}>
+        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/removeAccount' })}>
           <Box flexGrow="1">Remove account</Box>
           <Box>
             <ChevronRightIcon color="blackAlpha.600" boxSize="17px"></ChevronRightIcon>

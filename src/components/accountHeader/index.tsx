@@ -3,18 +3,18 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ChevronLeftIcon, EditIcon } from '@chakra-ui/icons'
-import { getUser } from '@/utils'
+import { getAccount } from '@/utils'
 import { cutText } from '@/utils/tools'
 
 // type cprops = any
 
 export default function AccountHeader({ title, showBack }: any) {
   const navigate = useNavigate()
-  const [user, setUser] = useState<any>({})
+  const [account, setAccount] = useState<any>({})
 
   useEffect(() => {
-    getUser().then((res) => {
-      setUser(res)
+    getAccount().then((res) => {
+      setAccount(res)
     })
   }, [])
 
@@ -32,7 +32,7 @@ export default function AccountHeader({ title, showBack }: any) {
           <Box className={styles.id}>
             Account ID <EditIcon className={styles.edit} onClick={() => navigate('/changeName')} />
           </Box>
-          <Box className={styles.addr}>{cutText(user.address)}</Box>
+          <Box className={styles.addr}>{cutText(account.address)}</Box>
         </Box>
       </Flex>
     </>

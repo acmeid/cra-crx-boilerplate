@@ -1,3 +1,5 @@
+import { reject } from 'lodash-es'
+import { resolve } from 'path'
 import { SRS } from './cosmos'
 import message from './cosmos/messages/proto'
 // import * as bech32 from 'bech32'
@@ -5,9 +7,9 @@ import message from './cosmos/messages/proto'
 // import * as bip39 from 'bip39'
 // import Buffer from 'buffer'
 
-function uint8ArrayTo16(uint8Array: any): any[] {
-  return Array.prototype.map.call(uint8Array, (x) => ('00' + x.toString(16)).slice(-2))
-}
+// function uint8ArrayTo16(uint8Array: any): any[] {
+//   return Array.prototype.map.call(uint8Array, (x) => ('00' + x.toString(16)).slice(-2))
+// }
 
 const customStorage = {
   get: function (keys: string[], callback: (v: any) => void) {
@@ -45,41 +47,68 @@ const customStorage = {
       return Promise.reject(error)
     }
   },
+  remove: function (key: string) {
+    localStorage.removeItem(key)
+  },
+  clear: function () {
+    localStorage.clear()
+  },
 }
+
+console.log('chrome?.storage?.local', chrome?.storage?.local)
 
 export const storage = chrome?.storage?.local || customStorage
 
-export const getUser = () => {
+export const getAccount = () => {
   return new Promise((resolve, reject) => {
-    storage.get(['currentUser'], ({ currentUser }: any) => {
-      if (!currentUser) {
+    storage.get(['currentAccount'], ({ currentAccount }: any) => {
+      if (!currentAccount) {
         resolve({})
       }
+      console.log('currentAccount:::::::', currentAccount)
+      try {
+        const privKey = SRS.getECPairPriv(currentAccount.mnemonic)
+        const pubKeyAny = SRS.getPubKeyAny(privKey)
 
-      const privKey = SRS.getECPairPriv(currentUser.mnemonic)
-      const pubKeyAny = SRS.getPubKeyAny(privKey)
-
-      const data = {
-        ...currentUser,
-        privKey,
-        pubKeyAny,
+        const data = {
+          ...currentAccount,
+          privKey,
+          pubKeyAny,
+        }
+        resolve(data)
+      } catch (error) {
+        resolve({})
       }
-      resolve(data)
     })
   })
 }
 
-export const getUserList = () => {
+export const setAccount = (data: any) => {
   return new Promise((resolve, reject) => {
-    storage.get(['userList'], ({ userList }) => {
-      const list = userList.map((item: any) => {
+    getAccount().then((res: any) => {
+      const account = {
+        ...res,
+        ...data,
+      }
+
+      storage.set({ currentAccount: account }, () => {
+        resolve('success')
+      })
+    })
+  })
+}
+
+export const getAccountList = (): Promise<any[]> => {
+  return new Promise((resolve, reject) => {
+    storage.get(['accountList'], ({ accountList }) => {
+      const list = accountList.map((item: any) => {
+        const privKey = SRS.getECPairPriv(item.mnemonic)
+        const pubKeyAny = SRS.getPubKeyAny(privKey)
+
         return {
           ...item,
-          privKey: new Uint8Array(item.privKey).buffer,
-          pubKeyAny: {
-            ...item.pubKeyAny,
-            value: new Uint8Array(item.pubKeyAny.value).buffer,
-          },
+          privKey,
+          pubKeyAny,
         }
       })
       resolve(list)
@@ -87,7 +116,7 @@ export const getUserList = () => {
   })
 }
 // mnemonic: string
-export const addUser = (mnemonic: string) => {
+export const addAccount = async (mnemonic: string) => {
   mnemonic =
     'reduce submit lawsuit always upgrade sad main dance balance whip vanish act fame coyote artwork robust subject avocado napkin abstract bulb garment gorilla move'
 
@@ -95,32 +124,50 @@ export const addUser = (mnemonic: string) => {
   const privKey = SRS.getECPairPriv(mnemonic)
   const pubKeyAny = SRS.getPubKeyAny(privKey)
 
-  console.log('addUser privKey', privKey)
-  console.log('addUser pubKeyAny', pubKeyAny)
+  console.log('addAccount privKey', privKey)
+  console.log('addAccount pubKeyAny', pubKeyAny)
 
-  const user = {
+  const { pw } = await storage.get(['pw'])
+
+  const account = {
     address,
     mnemonic: mnemonic,
+    pw,
   }
 
+  console.log('account::', account)
+
   return new Promise((resolve, reject) => {
-    storage.get(['userList'], ({ userList }) => {
-      userList = userList || []
-      userList.push(user)
+    storage.get(['accountList'], async ({ accountList }) => {
+      accountList = accountList || []
+      accountList.push(account)
 
-      storage.set({
-        userList: userList,
+      await storage.set({ accountList: accountList })
+      console.log('accountList.length::', accountList.length)
+
+      await storage.set({
+        currentAccount: {
+          ...account,
+          isActive: true,
+        },
       })
-
-      if (userList.length === 1) {
-        storage.set({
-          currentUser: user,
-        })
-      }
-
+      console.log(123)
+      getAccount().then((res) => console.log('res:::', res))
       resolve('success')
     })
   })
+}
+
+export const removeAccount = async (address?: string) => {
+  storage.remove('currentAccount')
+
+  const accountList: any = await getAccountList()
+  const index = accountList.findIndex((item: any) => item.isActive)
+
+  accountList.splice(index, 1)
+  storage.set({ accountList: accountList })
+
+  return accountList
 }
 
 interface params {
@@ -128,7 +175,7 @@ interface params {
   amount: number | string
 }
 export const createSend = async ({ toAddress, amount }: params) => {
-  const { address, pubKeyAny, privKey }: any = await getUser()
+  const { address, pubKeyAny, privKey }: any = await getAccount()
 
   SRS.getAccounts(address).then((data: any) => {
     // signDoc = (1)txBody + (2)authInfo

@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { Box, Flex, Button, Image, effect } from '@chakra-ui/react'
 import styles from './styles.module.scss'
 import { Link, useNavigate } from 'react-router-dom'
-import { getUser, storage } from '@/utils'
+import { getAccount, storage } from '@/utils'
 
 export default function Welcome({ style }: any) {
   const navigate = useNavigate()
   const [show, setShow] = useState(false)
-  storage.get(['currentUser'], (res) => console.log('currentUser:', res))
-  const getCurrentUser = storage.get(['currentUser'])
+  storage.get(['currentAccount'], (res) => console.log('currentAccount:', res))
+  // const getCurrentAccount = storage.get(['currentAccount'])
 
   useEffect(() => {
-    getUser().then((res: any) => {
-      console.log('user:', res)
+    getAccount().then((res: any) => {
+      console.log('Account:', res)
       if (!res?.address) {
         setShow(true)
       } else {

@@ -20,7 +20,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import CheckPassword from '@/components/checkPassword'
-import { storage } from '@/utils'
+import { removeAccount, storage } from '@/utils'
 
 type IFormInput = {
   password: string
@@ -66,15 +66,17 @@ export default function ChangeName({ style }: any) {
       status: 'success',
       duration: 8000,
       isClosable: true,
-      // render: () => (
-      //   <Box color='white' p={3}>
-      //     Hello World
-      //   </Box>
-      // ),
     })
   }
 
-  const next = () => {}
+  const next = async () => {
+    const accountList = await removeAccount()
+    if (accountList?.length) {
+      navigate('/account')
+    } else {
+      navigate('/welcome')
+    }
+  }
 
   return (
     <Box className={styles.container} style={style}>

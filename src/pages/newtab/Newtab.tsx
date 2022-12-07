@@ -4,7 +4,7 @@ import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
 import NotFound from './notFound'
 import Welcome from './welcome'
 import Create1 from './create1'
-import Create2 from './create2'
+// import Create2 from './create2'
 import Create3 from './create3'
 import { Box, Flex } from '@chakra-ui/react'
 
@@ -21,7 +21,7 @@ function Newtab() {
             <Route path={'/'} element={<Navigate to="/welcome" />} />
             <Route path={'/welcome'} element={<Welcome />} />
             <Route path={'/create1'} element={<Create1 />} />
-            <Route path={'/create2'} element={<Create2 />} />
+            {/* <Route path={'/create2'} element={<Create2 />} /> */}
             <Route path={'/create3'} element={<Create3 />} />
           </Routes>
         </Box>

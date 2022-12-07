@@ -5,16 +5,16 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 // import Menu from '../../../components/menu'
 import AccountHeader from '@/components/accountHeader'
-import { getUser } from '@/utils'
+import { getAccount } from '@/utils'
 
 export default function Home({ style, setTab }: any) {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [user, setUser] = useState<any>({})
+  const [account, setAccount] = useState<any>({})
 
   useEffect(() => {
-    getUser().then((res) => {
-      setUser(res)
+    getAccount().then((res) => {
+      setAccount(res)
     })
   }, [])
 

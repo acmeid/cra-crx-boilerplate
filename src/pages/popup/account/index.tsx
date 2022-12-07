@@ -6,6 +6,7 @@ import styles from './styles.module.scss'
 
 import { Cosmos } from '../../../utils/cosmos'
 import Menu from '@/components/menu'
+import { getAccountList } from '@/utils'
 const chainId = 'srspoa'
 const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
@@ -26,7 +27,11 @@ export default function Welcome({ style, setTab }: any) {
     setShowTip(false)
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    getAccountList().then((list) => {
+      setList(list)
+    })
+  }, [])
 
   const next = () => {
     // navigate({ pathname: '/create2' })

@@ -11,6 +11,7 @@ import {
   FormControl,
   FormHelperText,
   FormErrorMessage,
+  useToast,
 } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import styles from './styles.module.scss'
@@ -18,6 +19,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import { storage } from '@/utils'
+import Header from '@/components/header'
 
 type IFormInput = {
   password: string
@@ -27,7 +29,9 @@ type IFormInput = {
 
 export default function Welcome({ style }: any) {
   const [show1, setShow1] = useState(false)
-  // const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('')
+  const [checked, setChecked] = useState(false)
+  const toast = useToast()
   // const [password2, setPassword2] = useState('')
   const {
     control,
@@ -38,17 +42,34 @@ export default function Welcome({ style }: any) {
   } = useForm<IFormInput>()
   const navigate = useNavigate()
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log('form data: ', data)
+    if (!checked) {
+      toast({
+        title: 'Need to agree to the terms of service',
+        position: 'bottom',
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+      })
+      return
+    }
+    // setAccount({ pw: data.password })
+
     storage.set({ pw: data.password })
     storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
+
     navigate({ pathname: '/create3' })
   }
 
+  const rule = {
+    required: true,
+    minLength: 6,
+    validate: (v: any) => {
+      return v === password
+    },
+  }
   return (
     <Box className={styles.create1} style={style}>
-      <Box onClick={() => navigate(-1)} cursor="pointer">
-        <ChevronLeftIcon></ChevronLeftIcon>back
-      </Box>
+      <Header showBack></Header>
       <Image></Image>
       <Box className={styles.tit}>Create a password</Box>
       <Box mt="6px">{"You'll use this to unlock your wallet"}</Box>
@@ -59,7 +80,10 @@ export default function Welcome({ style }: any) {
               name="password"
               control={control}
               rules={{ required: true, minLength: 6 }}
-              render={({ field }) => <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" />}
+              render={({ field }) => {
+                setPassword(field.value)
+                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" />
+              }}
             />
 
             <InputRightElement h="49px">
@@ -72,23 +96,22 @@ export default function Welcome({ style }: any) {
               ></ViewOffIcon>
             </InputRightElement>
           </InputGroup>
-          {errors.password?.type === 'required' && <ErrorMessage>password is required.</ErrorMessage>}
-          {errors.password?.type === 'minLength' && <ErrorMessage>Please enter at least 6 digits.</ErrorMessage>}
+          {errors.password?.type === 'required' && <ErrorMessage>password is required</ErrorMessage>}
+          {errors.password?.type === 'minLength' && <ErrorMessage>Please enter at least 6 digits</ErrorMessage>}
         </Box>
         <Box mt="22px">
           <InputGroup>
             <Controller
               name="password2"
               control={control}
-              rules={{ required: true, minLength: 6 }}
+              rules={rule}
               render={({ field }) => <Input {...field} type="password" h="49px" placeholder="Confirm Password" />}
             />
           </InputGroup>
-          {/* {JSON.stringify(touchedFields)} */}
-          {/* {errors.password?.type === 'required' && <ErrorMessage>Please confirm the password.</ErrorMessage>} */}
+          {errors.password2?.type === 'validate' && <ErrorMessage>Password should match</ErrorMessage>}
         </Box>
         <Box mt="22px">
-          <Checkbox>Iagree to the Terms of Service</Checkbox>
+          <Checkbox onChange={(e) => setChecked(e.target.checked)}>Iagree to the Terms of Service</Checkbox>
         </Box>
 
         <Box className={styles.btnNext}>

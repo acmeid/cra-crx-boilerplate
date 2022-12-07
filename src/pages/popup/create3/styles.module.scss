@@ -1,21 +1,23 @@
 .create2 {
   position: relative;
-  padding: 18px;
-  min-height: 100%;
+  padding: 0px 18px 18px 18px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .tit {
   font-size: 20px;
   font-weight: 600;
-  margin-top: 40px;
+  // margin-top: 10px;
 }
 
 .btnNext {
+  margin-top: 20px;
   height: 49px;
-  position: absolute;
-  bottom: 20px;
-  left: 18px;
-  right: 18px;
+  // position: absolute;
+  // bottom: 20px;
+  // left: 18px;
+  // right: 18px;
   font-weight: 500;
   > button {
     height: 100%;
@@ -53,7 +55,7 @@
   > div {
     width: 110px;
     height: 35px;
-    margin-bottom: 20px;
+    margin: 10px 0;
     line-height: 32px;
     background: var(--chakra-colors-blackAlpha-100);
     border-radius: 4px;
@@ -73,7 +75,7 @@
     position: relative;
     width: 110px;
     height: 35px;
-    margin-top: 20px;
+    margin-top: 10px;
 
     > span {
       color: #b1b6bb;
@@ -106,12 +108,17 @@
 }
 
 .popup {
-  position: absolute;
-  width: 100%;
+  // position: absolute;
+  // width: 100%;
+  // bottom: 0;
+  // right: 0;
+  // left: 0;
+  // top: 0;
+
+  position: fixed;
   bottom: 0;
-  right: 0;
   left: 0;
-  top: 0;
+  width: 375px;
 
   .mask {
     position: absolute;

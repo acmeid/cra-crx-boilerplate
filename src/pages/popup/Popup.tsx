@@ -5,7 +5,7 @@ import Unlock from './unlock'
 import NotFound from './notFound'
 import Welcome from './welcome'
 import Create1 from './create1'
-import Create2 from './create2'
+// import Create2 from './create2'
 import Create3 from './create3'
 import Account from './account'
 import AddAccount from './addAccount'
@@ -44,7 +44,7 @@ function Newtab() {
             <Route path={'/unlock'} element={<Unlock />} />
             <Route path={'/welcome'} element={<Welcome />} />
             <Route path={'/create1'} element={<Create1 />} />
-            <Route path={'/create2'} element={<Create2 />} />
+            {/* <Route path={'/create2'} element={<Create2 />} /> */}
             <Route path={'/create3'} element={<Create3 />} />
             <Route path={'/account'} element={<Account />} />
             <Route path={'/addAccount'} element={<AddAccount />} />
