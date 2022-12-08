@@ -124,7 +124,18 @@ export const getAverageTime = (list: any[]) => {
 }
 
 export const uint8Array = (uint8Array: Uint8Array) => {
-  return Array.prototype.map.call(uint8Array, (x) => ('00' + x.toString(16)).slice(-2)).join('')
+  return (
+    '0x' +
+    Array.prototype.map
+      .call(uint8Array, (x) => {
+        return ('00' + x.toString(16)).slice(-2)
+      })
+      .join('')
+  )
+}
+
+export const uint8ArrayToString = (uint8Array: Uint8Array) => {
+  return '0x' + Array.prototype.map.call(uint8Array, (x) => x.toString(10)).join('')
 }
 
 export const hash16 = (hash: string) => {
@@ -134,6 +145,16 @@ export const hash16 = (hash: string) => {
   const temp = Base64.toUint8Array(hash)
   return uint8Array(temp)
 }
+
+// export function uint8ArrayToString(fileData: Uint8Array) {
+//   let dataString = ''
+//   for (let i = 0; i < fileData.length; i++) {
+//     console.log('aa::', String.fromCharCode(fileData[i]))
+//     dataString += String.fromCharCode(fileData[i])
+//   }
+
+//   return dataString
+// }
 
 export const sliceArray = (array: any[], size: number) => {
   const result = []

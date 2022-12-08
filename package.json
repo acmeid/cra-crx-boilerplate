@@ -16,6 +16,7 @@
     "js-sha256": "^0.9.0",
     "lodash-es": "^4.17.21",
     "protobufjs": "^7.1.2",
+    "qrcode": "^1.5.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-hook-form": "^7.40.0",

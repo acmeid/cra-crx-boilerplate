@@ -70,6 +70,9 @@ export const getAccount = () => {
         const privKey = SRS.getECPairPriv(currentAccount.mnemonic)
         const pubKeyAny = SRS.getPubKeyAny(privKey)
 
+        console.log('privKey::', privKey)
+        console.log('pubKeyAny::', pubKeyAny)
+
         const data = {
           ...currentAccount,
           privKey,
@@ -131,8 +134,10 @@ export const addAccount = async (mnemonic: string) => {
 
   const account = {
     address,
-    mnemonic: mnemonic,
+    mnemonic,
+    mnemonicArr: mnemonic.split(' '),
     pw,
+    accountName: 'Account',
   }
 
   console.log('account::', account)

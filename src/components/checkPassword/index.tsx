@@ -37,7 +37,7 @@ export default function CheckPassword({ next }: any) {
       <Box mt="20px" fontSize="16px" fontWeight="600">
         Enter password
       </Box>
-      <Box mt="6px">
+      <Box mt="10px">
         <InputGroup>
           <Input size="lg" h="49px" type={show1 ? 'text' : 'password'} placeholder="Password" onChange={(e) => setPw(e.target.value)}></Input>
           <InputRightElement h="49px">

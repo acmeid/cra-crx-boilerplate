@@ -30,7 +30,7 @@ export default function AccountHeader({ title, showBack }: any) {
         </Box>
         <Box flexGrow="1">
           <Box className={styles.id}>
-            Account ID <EditIcon className={styles.edit} onClick={() => navigate('/changeName')} />
+            {account.accountName} <EditIcon className={styles.edit} onClick={() => navigate('/changeName')} />
           </Box>
           <Box className={styles.addr}>{cutText(account.address)}</Box>
         </Box>

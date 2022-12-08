@@ -99,7 +99,7 @@ export default function Welcome({ style, setTab }: any) {
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
           </Box>
         </Flex>
-        <Flex className={styles.listItem}>
+        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/manageAccount' })}>
           <Box flexGrow="1">Manage account</Box>
           <Box>
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>

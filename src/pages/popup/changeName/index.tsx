@@ -19,7 +19,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
-import { storage } from '@/utils'
+import { setAccount, storage } from '@/utils'
+import { getSystemErrorName } from 'util'
 
 type IFormInput = {
   password: string
@@ -28,48 +29,24 @@ type IFormInput = {
 }
 
 export default function ChangeName({ style }: any) {
-  const [show1, setShow1] = useState(false)
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const toast = useToast()
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
-
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, touchedFields },
-  } = useForm<IFormInput>()
   const navigate = useNavigate()
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log('form data: ', data)
-    storage.set({ pw: data.password })
-    storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
-    navigate({ pathname: '/create3' })
-  }
+  const toast = useToast()
+  const [walletName, setWalletName] = useState('')
+  // const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  const send = () => {
-    setIsOpen(false)
-    navigate(-1)
-    sendResult()
-  }
+  // const {
+  //   control,
+  //   register,
+  //   handleSubmit,
+  //   watch,
+  //   formState: { errors, touchedFields },
+  // } = useForm<IFormInput>()
 
-  const sendResult = () => {
-    toast({
-      title: 'Transaction succeeded',
-      description: 'Amount transferred: 1, gas consumed:0.000334 APT',
-      position: 'bottom',
-      status: 'success',
-      duration: 8000,
-      isClosable: true,
-      // render: () => (
-      //   <Box color='white' p={3}>
-      //     Hello World
-      //   </Box>
-      // ),
+  const save = () => {
+    setAccount({
+      accountName: walletName,
+    }).then(() => {
+      navigate(-1)
     })
   }
 
@@ -80,13 +57,21 @@ export default function ChangeName({ style }: any) {
         View on explorer
       </Box>
 
-      <Input size="lg" type="text" placeholder="Enter Wallet Name" h="49px" mt="8px"></Input>
+      <Input
+        size="lg"
+        type="text"
+        placeholder="Enter Wallet Name"
+        h="49px"
+        mt="10px"
+        value={walletName}
+        onChange={(e) => setWalletName(e.target.value)}
+      ></Input>
 
       <Flex position="absolute" bottom="18px" left="18px" right="18px" justifyContent="space-around">
         <Button size="lg" variant="outline" minW="154px" height="46px" onClick={() => navigate(-1)}>
           Cancel
         </Button>
-        <Button size="lg" variant="solid" minW="154px" h="46px" onClick={() => {}}>
+        <Button size="lg" variant="solid" minW="154px" h="46px" onClick={() => save()}>
           Save
         </Button>
       </Flex>

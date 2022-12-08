@@ -16,7 +16,7 @@ export default function Welcome({ style }: any) {
       if (!res?.address) {
         setShow(true)
       } else {
-        navigate({ pathname: '/main/home' })
+        navigate({ pathname: '/main/home' }, { replace: true })
       }
     })
   }, [])

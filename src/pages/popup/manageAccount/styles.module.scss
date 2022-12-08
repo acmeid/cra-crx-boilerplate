@@ -1,6 +1,60 @@
 .container {
   position: relative;
-  padding:  0 18px 18px 18px;
+  padding: 0 18px 18px 18px;
   min-height: 100%;
 }
 
+.item {
+  justify-content: space-between;
+  padding: 10px 0;
+
+  .label {
+    font-size: 16px;
+  }
+  .value {
+    cursor: pointer;
+  }
+}
+
+.mnemonicWrap {
+  margin: 0 0 16px 0;
+  position: relative;
+  // min-height: 224px;
+  height: 400px;
+  overflow-y: auto;
+
+  .mnemonic {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    > div {
+      width: 130px;
+      height: 35px;
+      margin: 10px 0;
+      line-height: 32px;
+      background: var(--chakra-colors-blackAlpha-100);
+      border-radius: 4px;
+      padding: 0 5px 0 10px;
+      > span {
+        color: #b1b6bb;
+        margin-right: 6px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.iconCopy {
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 5px;
+}
+.priv {
+  // bg="transparent" w="200px" borderColor="transparent"
+  background: transparent;
+  width: 285px;
+  border-color: transparent;
+  &:focus-visible {
+    outline-offset: 0px;
+    outline: 0;
+  }
+}

@@ -72,9 +72,9 @@ export default function ChangeName({ style }: any) {
   const next = async () => {
     const accountList = await removeAccount()
     if (accountList?.length) {
-      navigate('/account')
+      navigate('/account', { replace: true })
     } else {
-      navigate('/welcome')
+      navigate('/welcome', { replace: true })
     }
   }
 
