@@ -12,6 +12,7 @@
     "bip32": "2.0.6",
     "bip39": "2.6.0",
     "crypto-browserify": "^3.12.0",
+    "dayjs": "^1.11.7",
     "js-base64": "^3.7.3",
     "js-sha256": "^0.9.0",
     "lodash-es": "^4.17.21",
@@ -22,7 +23,8 @@
     "react-hook-form": "^7.40.0",
     "react-router-dom": "^6.4.3",
     "secp256k1": "3.8.0",
-    "uint8arrays": "^4.0.2"
+    "uint8arrays": "^4.0.2",
+    "url-parse": "^1.5.10"
   },
   "scripts": {
     "start": "node scripts/start.js",

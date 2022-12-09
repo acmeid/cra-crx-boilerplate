@@ -13,7 +13,7 @@ export const getTxsByHash = (hash: any): Promise<any> => {
 }
 
 export const getAllTx = (): Promise<any> => {
-  return ajax.get(`//192.168.0.206:8080/srspoa/transactions`, {})
+  return ajax.get(`http://192.168.0.206:8080/srspoa/transactions`, {})
 }
 
 export const getValidatorByLatest = (): Promise<any> => {
@@ -61,5 +61,9 @@ export const delegationByAddress = (address: string): Promise<any> => {
 }
 
 export const messageByAccount = (data: any): Promise<any> => {
-  return ajax.post(`//192.168.0.206:8081/srspoa/transaction/messageByAccount`, data)
+  return ajax.post(`http://192.168.0.206:8081/srspoa/transaction/messageByAccount`, data)
+}
+
+export const getTransByHash = (data: any): Promise<any> => {
+  return ajax.post(`http://192.168.0.206:8081/srspoa/transaction/transByHash`, data)
 }

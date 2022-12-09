@@ -1,64 +1,94 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Box,
-  Flex,
-  Button,
-  Image,
-  Slide,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  SlideFade,
-  Grid,
-  GridItem,
-  Center,
-  StyledStepper,
-  list,
-} from '@chakra-ui/react'
+import { Box, Flex, Button, Image } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
+import { groupBy } from 'lodash-es'
 
 import { Cosmos } from '../../../utils/cosmos'
 import Menu from '@/components/menu'
 import AccountHeader from '@/components/accountHeader'
 import { getAccount } from '@/utils'
-import { messageByAccount } from '@/resources/api'
+import { getTransByHash, messageByAccount } from '@/resources/api'
+import dayjs from 'dayjs'
+import { dealType, cutText } from '@/utils/tools'
+import MsgSend from './typeField/msgSend'
+import MsgCustom from './typeField/msgCustom'
+import MsgDefault from './typeField/msgDefault'
+import Custom from './typeField/msgCustom'
 const chainId = 'srspoa'
 const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
-export default function Welcome({ style, setTab }: any) {
-  const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
-  const [showTip, setShowTip] = useState<boolean>(true)
+export default function Activity({ style, setTab }: any) {
   const navigate = useNavigate()
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [step, setStep] = useState<number>(2)
-  const [list, setList] = useState<any[]>(new Array(3).fill(1))
+  // new Array(3).fill(1)
+  const [list, setList] = useState<any[]>([])
 
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
+  const initData = async () => {
+    const res = await getAccount()
+    res.address = 'sil157ykw7kanea77pkwkrhw6v6a7gpzlwwcwjztup'
+    const res2: any = await messageByAccount({ account: res.address })
+    console.log('res2.data:::', res2.data)
+    const trans = res2.data.map(async (item: any) => {
+      const info = await getTransByHash({ transaction_hash: item.transaction_hash })
+      return {
+        ...item,
+        ...info.data,
+        timestamp: info.timestamp,
+        accountAddress: res.address,
+      }
+    })
+    const res3 = await Promise.all(trans)
 
-  const createMnemonic = () => {
-    setShowTip(false)
+    const category = groupBy(res3, (item) => {
+      // console.log(dayjs(item.timestamp).format('DD MMM YYYY'))
+      return dayjs(item.timestamp).format('DD MMM YYYY')
+    })
+    const list = []
+    for (const key in category) {
+      if (Object.prototype.hasOwnProperty.call(category, key)) {
+        // console.log('key:::', key)
+        const item: any = category[key].map((v) => {
+          const _type = dealType(v.type)
+          // console.log('_type:::', _type)
+          return {
+            ...v,
+            _time: dayjs(v.timestamp).format('h:mm A'),
+            _type,
+            _isForm: _type === 'Send' && res.address === v.value.from_address,
+            _gas: v.fee.amount.find((v2: any) => v2.denom === 'src').amount,
+          }
+        })
+        // console.log('key:::', key)
+        item.time = list.push({
+          date: dayjs(key).format('DD MMM YYYY'),
+          list: item,
+        })
+      }
+    }
+    console.log('res3::', res3)
+    console.log('category::', category)
+    console.log('list::', list)
+    setList(list)
   }
 
   useEffect(() => {
-    getAccount().then((res) => {
-      messageByAccount({ account: 'sil157ykw7kanea77pkwkrhw6v6a7gpzlwwcwjztup' }).then((res2) => {
-        console.log('res2::', res2)
-      })
-    })
+    initData()
   }, [])
 
   const next = () => {
     // navigate({ pathname: '/create2' })
+  }
+
+  const customList = ['Delegate', 'ExitDelegate', 'Undelegate', 'CreateDelegate', 'DoFixedDeposit', 'DoFixedWithdraw', 'AgToAc']
+  const listItem = (data: any) => {
+    if (data._type === 'Send') {
+      return <MsgSend data={data} key={data.hash}></MsgSend>
+    } else if (customList.includes(data._type)) {
+      return <MsgCustom data={data} key={data.hash}></MsgCustom>
+    } else {
+      return <MsgDefault data={data} key={data.hash}></MsgDefault>
+    }
   }
 
   return (
@@ -69,31 +99,17 @@ export default function Welcome({ style, setTab }: any) {
         RECENT TRANSACTIONS
       </Box>
 
-      <Box fontSize="14px" mt="5px">
-        8 October 2022
-      </Box>
-
       <Box className={styles.list}>
         {list.map((item: any, index: any) => {
           return (
-            <Flex className={styles.listItem} key={index}>
-              <Box className={styles.tag}>
-                {/* <Image src="/images/up.svg"></Image> */}
-                <Image src="/images/down.svg"></Image>
+            <Box key={index} mt="10px">
+              <Box fontSize="14px" mt="5px" mb="8px">
+                {item.date}
               </Box>
-              <Box flexGrow="1">
-                <Flex justifyContent="space-between">
-                  <Box className={styles.type}>Received</Box>
-                  <Box className={styles.amount}>+ 2 AC</Box>
-                </Flex>
-                <Flex justifyContent="space-between" mt="4px">
-                  <Box className={styles.form}>
-                    From <span className={styles.highlight}>0x22ec40b3...720fd</span>
-                  </Box>
-                  <Box className={styles.time}>6:44 pm</Box>
-                </Flex>
-              </Box>
-            </Flex>
+              {item.list.map((item2: any, index2: any) => {
+                return listItem(item2)
+              })}
+            </Box>
           )
         })}
       </Box>

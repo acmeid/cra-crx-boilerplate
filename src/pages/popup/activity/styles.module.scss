@@ -54,7 +54,12 @@
     border-radius: 8px;
     border: 1px solid #ededed;
     padding: 12px 12px 12px 0;
-    margin-top: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--chakra-colors-blackAlpha-100);
+    }
   }
 
   .tag {
@@ -67,10 +72,15 @@
     font-size: 16px;
     font-weight: 600;
   }
-  .amount {
+  .amountForm {
     font-size: 16px;
     font-weight: bold;
     color: #08ce9e;
+  }
+  .amountTo {
+    font-size: 16px;
+    font-weight: bold;
+    color: #f21d4d;
   }
   .from {
   }
