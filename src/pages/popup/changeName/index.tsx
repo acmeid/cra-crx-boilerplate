@@ -19,7 +19,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
-import { setAccount, storage } from '@/utils'
+import { getAccount, setAccount, storage } from '@/utils'
 import { getSystemErrorName } from 'util'
 
 type IFormInput = {
@@ -32,15 +32,6 @@ export default function ChangeName({ style }: any) {
   const navigate = useNavigate()
   const toast = useToast()
   const [walletName, setWalletName] = useState('')
-  // const [isOpen, setIsOpen] = useState<boolean>(false)
-
-  // const {
-  //   control,
-  //   register,
-  //   handleSubmit,
-  //   watch,
-  //   formState: { errors, touchedFields },
-  // } = useForm<IFormInput>()
 
   const save = () => {
     setAccount({
@@ -49,6 +40,12 @@ export default function ChangeName({ style }: any) {
       navigate(-1)
     })
   }
+
+  useEffect(() => {
+    getAccount().then((res) => {
+      setWalletName(res.accountName)
+    })
+  }, [])
 
   return (
     <Box className={styles.container} style={style}>

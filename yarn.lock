@@ -7547,6 +7547,11 @@
     "dns-packet" "^5.2.2"
     "thunky" "^1.0.2"
 
+"multiformats@^10.0.0":
+  "integrity" "sha512-nJEHLFOYhO4L+aNApHhCnWqa31FyqAHv9Q77AhmwU3KsM2f1j7tuJpCk5ByZ33smzycNCpSG5klNIejIyfFx2A=="
+  "resolved" "https://registry.npmjs.org/multiformats/-/multiformats-10.0.2.tgz"
+  "version" "10.0.2"
+
 "nan@^2.13.2", "nan@^2.14.0":
   "integrity" "sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ=="
   "resolved" "https://registry.npmjs.org/nan/-/nan-2.17.0.tgz"
@@ -10135,6 +10140,13 @@
   "integrity" "sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg=="
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.6.4.tgz"
   "version" "4.6.4"
+
+"uint8arrays@^4.0.2":
+  "integrity" "sha512-8CWXXZdOvVrIL4SeY/Gnp+idxxiGK4XFkP4FY26Sx/fpTz/b6vv4BVWELMDzQweSyyhdcuAcU14H6izzB6k1Cw=="
+  "resolved" "https://registry.npmjs.org/uint8arrays/-/uint8arrays-4.0.2.tgz"
+  "version" "4.0.2"
+  dependencies:
+    "multiformats" "^10.0.0"
 
 "unbox-primitive@^1.0.2":
   "integrity" "sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw=="

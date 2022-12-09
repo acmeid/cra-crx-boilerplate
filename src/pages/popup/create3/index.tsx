@@ -23,6 +23,7 @@ import styles from './styles.module.scss'
 import { SRS } from '../../../utils/cosmos'
 import { addAccount, getAccount, getAccountList } from '@/utils'
 import Header from '@/components/header'
+import Step from '@/components/setp'
 
 export default function Create3({ style, setTab }: any) {
   const [mnemonic, setMnemonic] = useState<any[]>(new Array(24).fill('Wallet'))
@@ -76,7 +77,7 @@ export default function Create3({ style, setTab }: any) {
     console.log('mnemonic::', _mnemonic)
 
     try {
-      await addAccount(_mnemonic)
+      await addAccount({ mnemonic: _mnemonic })
       navigate({ pathname: '/main/home' })
     } catch (error) {
       console.error('add error', error)
@@ -94,6 +95,7 @@ export default function Create3({ style, setTab }: any) {
   return (
     <Box className={styles.create2} style={style}>
       <Header showBack></Header>
+      <Step total={3} current={step}></Step>
       <Box className={styles.tit}>Enter Your Secret Recovery Phrase</Box>
       <Box mt="5px">Type your phrase exactly as you saw it on the previous screen</Box>
 

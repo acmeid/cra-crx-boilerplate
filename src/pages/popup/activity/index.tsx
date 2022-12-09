@@ -27,6 +27,8 @@ import styles from './styles.module.scss'
 import { Cosmos } from '../../../utils/cosmos'
 import Menu from '@/components/menu'
 import AccountHeader from '@/components/accountHeader'
+import { getAccount } from '@/utils'
+import { messageByAccount } from '@/resources/api'
 const chainId = 'srspoa'
 const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
@@ -47,7 +49,13 @@ export default function Welcome({ style, setTab }: any) {
     setShowTip(false)
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    getAccount().then((res) => {
+      messageByAccount({ account: 'sil157ykw7kanea77pkwkrhw6v6a7gpzlwwcwjztup' }).then((res2) => {
+        console.log('res2::', res2)
+      })
+    })
+  }, [])
 
   const next = () => {
     // navigate({ pathname: '/create2' })

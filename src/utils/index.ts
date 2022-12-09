@@ -2,14 +2,16 @@ import { reject } from 'lodash-es'
 import { resolve } from 'path'
 import { SRS } from './cosmos'
 import message from './cosmos/messages/proto'
-// import * as bech32 from 'bech32'
-// import * as bip32 from 'bip32'
-// import * as bip39 from 'bip39'
-// import Buffer from 'buffer'
+import { toString } from 'uint8arrays/to-string'
+import { fromString } from 'uint8arrays/from-string'
 
-// function uint8ArrayTo16(uint8Array: any): any[] {
-//   return Array.prototype.map.call(uint8Array, (x) => ('00' + x.toString(16)).slice(-2))
-// }
+interface acount {
+  address: string
+  mnemonic: string
+  mnemonicArr: number[]
+  pw: string
+  accountName: string
+}
 
 const customStorage = {
   get: function (keys: string[], callback: (v: any) => void) {
@@ -59,15 +61,28 @@ console.log('chrome?.storage?.local', chrome?.storage?.local)
 
 export const storage = chrome?.storage?.local || customStorage
 
-export const getAccount = () => {
+export const getAccount = (): Promise<acount> => {
   return new Promise((resolve, reject) => {
     storage.get(['currentAccount'], ({ currentAccount }: any) => {
+      const account = {
+        address: '',
+        mnemonic: '',
+        mnemonicArr: [],
+        pw: '',
+        accountName: '',
+      }
       if (!currentAccount) {
-        resolve({})
+        resolve(account)
+        return
       }
       console.log('currentAccount:::::::', currentAccount)
       try {
-        const privKey = SRS.getECPairPriv(currentAccount.mnemonic)
+        let privKey
+        if (currentAccount.priv) {
+          privKey = Buffer.from(fromString(currentAccount.priv.slice(2), 'base16'))
+        } else {
+          privKey = SRS.getECPairPriv(currentAccount?.mnemonic) || new Uint8Array()
+        }
         const pubKeyAny = SRS.getPubKeyAny(privKey)
 
         console.log('privKey::', privKey)
@@ -77,35 +92,77 @@ export const getAccount = () => {
           ...currentAccount,
           privKey,
           pubKeyAny,
+          privKeyString: '0x' + toString(privKey, 'base16'),
+          pubKeyAnyString: '0x' + toString(pubKeyAny.value, 'base16'),
         }
         resolve(data)
       } catch (error) {
-        resolve({})
+        console.error('getAccount:', error)
+        resolve(account)
       }
     })
   })
 }
 
-export const setAccount = (data: any) => {
-  return new Promise((resolve, reject) => {
-    getAccount().then((res: any) => {
-      const account = {
-        ...res,
-        ...data,
-      }
-
-      storage.set({ currentAccount: account }, () => {
-        resolve('success')
-      })
-    })
-  })
+export const getPw = async (): Promise<any> => {
+  const { pw } = await storage.get(['pw'])
+  return pw
 }
+
+export const setPw = async (pw: string): Promise<any> => {
+  await storage.set({ pw: pw })
+  return 'success'
+}
+
+export const resetAccount = async (): Promise<any> => {
+  await storage.remove('currentAccount')
+  await storage.remove('accountList')
+  await storage.remove('pw')
+  return 'success'
+}
+
+export const setAccount = async (data: any) => {
+  const currentAccount = await getAccount()
+  const account = {
+    ...currentAccount,
+    ...data,
+  }
+
+  await storage.set({ currentAccount: account })
+  let accountList = await getAccountList()
+  accountList = accountList.map((item: any) => {
+    if (item.address === account.address) {
+      return account
+    } else if (account.isActive) {
+      return {
+        ...item,
+        isActive: false,
+      }
+    } else {
+      return item
+    }
+  })
+  await storage.set({ currentAccount: account })
+  await storage.set({ accountList: accountList })
+
+  return 'success'
+}
+
+// export const switchAccount = async () => {
+
+// }
 
 export const getAccountList = (): Promise<any[]> => {
   return new Promise((resolve, reject) => {
     storage.get(['accountList'], ({ accountList }) => {
       const list = accountList.map((item: any) => {
-        const privKey = SRS.getECPairPriv(item.mnemonic)
+        let privKey
+        if (item.priv) {
+          privKey = Buffer.from(fromString(item.priv.slice(2), 'base16'))
+        } else {
+          privKey = SRS.getECPairPriv(item?.mnemonic) || new Uint8Array()
+        }
+        // const privKey = SRS.getECPairPriv(item.mnemonic)
         const pubKeyAny = SRS.getPubKeyAny(privKey)
 
         return {
@@ -119,48 +176,66 @@ export const getAccountList = (): Promise<any[]> => {
   })
 }
 // mnemonic: string
-export const addAccount = async (mnemonic: string) => {
-  mnemonic =
-    'reduce submit lawsuit always upgrade sad main dance balance whip vanish act fame coyote artwork robust subject avocado napkin abstract bulb garment gorilla move'
+export const addAccount = async ({ mnemonic, priv }: any) => {
+  // mnemonic =
+  //   'reduce submit lawsuit always upgrade sad main dance balance whip vanish act fame coyote artwork robust subject avocado napkin abstract bulb garment gorilla move'
+  try {
+    let address = ''
+    let privKey
+    if (priv) {
+      privKey = Buffer.from(fromString(priv.slice(2), 'base16'))
+    } else {
+      address = SRS.getAddress(mnemonic)
+      privKey = SRS.getECPairPriv(mnemonic)
+    }
+    console.log('privKey:::', privKey)
 
-  const address = SRS.getAddress(mnemonic)
-  const privKey = SRS.getECPairPriv(mnemonic)
-  const pubKeyAny = SRS.getPubKeyAny(privKey)
+    const pubKeyAny = SRS.getPubKeyAny(privKey)
 
-  console.log('addAccount privKey', privKey)
-  console.log('addAccount pubKeyAny', pubKeyAny)
+    console.log('addAccount privKey', privKey)
+    console.log('addAccount pubKeyAny', pubKeyAny)
 
-  const { pw } = await storage.get(['pw'])
+    const { pw } = await storage.get(['pw'])
 
-  const account = {
-    address,
-    mnemonic,
-    mnemonicArr: mnemonic.split(' '),
-    pw,
-    accountName: 'Account',
-  }
+    const account = {
+      address,
+      mnemonic,
+      mnemonicArr: mnemonic ? mnemonic.split(' ') : [],
+      pw,
+      accountName: 'Account',
+      isActive: true,
+      priv: priv,
+    }
 
-  console.log('account::', account)
+    console.log('account::', account)
 
-  return new Promise((resolve, reject) => {
-    storage.get(['accountList'], async ({ accountList }) => {
-      accountList = accountList || []
-      accountList.push(account)
+    return new Promise((resolve, reject) => {
+      storage.get(['accountList'], async ({ accountList }) => {
+        accountList = accountList || []
 
-      await storage.set({ accountList: accountList })
-      console.log('accountList.length::', accountList.length)
+        if (!accountList.find((item: any) => item.address === address)) {
+          accountList.forEach((item: any) => (item.isActive = false))
+          accountList.push(account)
 
-      await storage.set({
-        currentAccount: {
-          ...account,
-          isActive: true,
-        },
+          await storage.set({ accountList: accountList })
+        }
+
+        console.log('accountList.length::', accountList.length)
+
+        await storage.set({
+          currentAccount: {
+            ...account,
+          },
+        })
+        console.log(123)
+        getAccount().then((res) => console.log('res:::', res))
+        resolve('success')
       })
-      console.log(123)
-      getAccount().then((res) => console.log('res:::', res))
-      resolve('success')
     })
-  })
+  } catch (error) {
+    console.log('addAccount: ', error)
+    return Promise.reject(error)
+  }
 }
 
 export const removeAccount = async (address?: string) => {

@@ -19,13 +19,15 @@ import styles from './styles.module.scss'
 // import Menu from '../../../components/menu'
 import AccountHeader from '@/components/accountHeader'
 import { getAccount } from '@/utils'
-import { getAccountByAddr, getBalanceByAddr } from '@/resources/api'
+import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
+import { round } from 'lodash-es'
 
 export default function Home({ style, setTab }: any) {
   const navigate = useNavigate()
   const [data, setData] = useState<any>({})
   // const [isOpen, setIsOpen] = useState<boolean>(false)
   const [account, setAccount] = useState<any>({})
+  const [maxRate, setMaxRate] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const createQrCode = (data: any) => {
@@ -49,13 +51,12 @@ export default function Home({ style, setTab }: any) {
 
   const initData = async (data: any) => {
     // setLoading(true)
-
-    const res = await getAccountByAddr(data.address)
-    const res2 = await getBalanceByAddr(res.account.address)
-
+    // getAccountByAddr(data.address),
+    const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
+    let staked = 0
     let ac = 0
     let ag = 0
-    res2.balances.forEach((item: any) => {
+    res2?.balances?.forEach((item: any) => {
       if (item.denom === 'src') {
         ac = item.amount
       }
@@ -64,13 +65,26 @@ export default function Home({ style, setTab }: any) {
       }
     })
 
+    if (res3?.kyc) {
+      const res4 = await delegationByAddress(data.address)
+      staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
+
+      const res5 = await getRegionVaultById(res3.kyc.regionId)
+      const max = res5.regionVault.annualRate.reduce((prev: any, item: any) => {
+        return item > prev ? item : prev
+      }, 0)
+
+      setMaxRate(`${round(max * 100, 0)}%`)
+    }
+
     setData({
-      ...res,
+      // ...res,
+      ...data,
       ac,
       ag,
-      power: ac * 400,
+      staked,
+      power: staked * 400,
     })
-    // setAllData(res2.balances)
   }
 
   const showQrCode = () => {
@@ -84,9 +98,13 @@ export default function Home({ style, setTab }: any) {
     getAccount().then((res) => {
       setAccount(res)
       initData(res)
-      createQrCode(res)
+      // createQrCode(res)
     })
   }, [])
+
+  const openStake = () => {
+    chrome.tabs.create({ url: 'http://192.168.0.206/explorer/#/wallet' })
+  }
 
   return (
     <Box className={styles.container} style={style}>
@@ -114,7 +132,7 @@ export default function Home({ style, setTab }: any) {
         <Flex>
           <Box className={styles.name}>Staked</Box>
           <Box className={styles.num}>
-            0 <span>AC</span>
+            {data.staked} <span>AC</span>
           </Box>
           <Box className={styles.num}>{/* 0 <span>AG</span> */}</Box>
         </Flex>
@@ -136,17 +154,21 @@ export default function Home({ style, setTab }: any) {
         </Button>
       </Flex>
 
-      <Flex bg="blackAlpha.100" padding="10px" mt="15px">
-        <Box flexGrow="1">
-          <Box fontSize="16px">Stake</Box>
-          <Box fontSize="13px">Earn up to 18.9% per year</Box>
-        </Box>
-        <Box>
-          <Button variant="solid" minW="75px" h="40px" onClick={() => {}}>
-            Stake
-          </Button>
-        </Box>
-      </Flex>
+      {maxRate ? (
+        <Flex bg="blackAlpha.100" padding="10px" mt="15px">
+          <Box flexGrow="1">
+            <Box fontSize="16px">Stake</Box>
+            <Box fontSize="13px">Earn up to {maxRate} per year</Box>
+          </Box>
+          <Box>
+            <Button variant="solid" minW="75px" h="40px" onClick={() => openStake()}>
+              Stake
+            </Button>
+          </Box>
+        </Flex>
+      ) : (
+        ''
+      )}
 
       <Modal onClose={onClose} size={'xs'} isOpen={isOpen}>
         <ModalOverlay />

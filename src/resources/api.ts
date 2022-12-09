@@ -51,3 +51,15 @@ export const getAccount = (): Promise<any> => {
 export const delegation = (): Promise<any> => {
   return ajax.get(`/srs-poa/srstaking/delegation`)
 }
+
+export const getKyc = (address: string): Promise<any> => {
+  return ajax.get(`/srs-poa/srvault/kyc/${address}`)
+}
+
+export const delegationByAddress = (address: string): Promise<any> => {
+  return ajax.get(`/srs-poa/srstaking/delegation/${address}`)
+}
+
+export const messageByAccount = (data: any): Promise<any> => {
+  return ajax.post(`//192.168.0.206:8081/srspoa/transaction/messageByAccount`, data)
+}

@@ -21,7 +21,8 @@
     "react-dom": "^18.1.0",
     "react-hook-form": "^7.40.0",
     "react-router-dom": "^6.4.3",
-    "secp256k1": "3.8.0"
+    "secp256k1": "3.8.0",
+    "uint8arrays": "^4.0.2"
   },
   "scripts": {
     "start": "node scripts/start.js",

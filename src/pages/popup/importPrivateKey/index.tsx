@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex, Button, Image, InputGroup, InputRightElement, Input } from '@chakra-ui/react'
+import { Box, Flex, Button, Image, InputGroup, InputRightElement, Input, useToast } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon, ChevronRightIcon, EditIcon } from '@chakra-ui/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
@@ -7,15 +7,18 @@ import styles from './styles.module.scss'
 import { Cosmos } from '../../../utils/cosmos'
 import Menu from '@/components/menu'
 import { Controller } from 'react-hook-form'
+import { addAccount } from '@/utils'
 const chainId = 'srspoa'
 const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
 export default function Welcome({ style, setTab }: any) {
-  const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
-  const [showTip, setShowTip] = useState<boolean>(true)
+  const toast = useToast()
   const navigate = useNavigate()
+  // const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
+  const [showTip, setShowTip] = useState<boolean>(true)
+
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [step, setStep] = useState<number>(2)
+  const [privKey, setPrivKey] = useState<string>('')
   const [list, setList] = useState<any[]>(new Array(3).fill(1))
   const [show1, setShow1] = useState(false)
 
@@ -30,7 +33,28 @@ export default function Welcome({ style, setTab }: any) {
 
   useEffect(() => {}, [])
 
-  const next = () => {
+  const submit = () => {
+    addAccount({ priv: privKey })
+      .then(() => {
+        toast({
+          title: 'Import succeeded',
+          position: 'bottom',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        })
+        navigate({ pathname: '/main/home' })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Import failed',
+          description: 'The private key is incorrect',
+          position: 'bottom',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        })
+      })
     // navigate({ pathname: '/create2' })
   }
 
@@ -51,7 +75,7 @@ export default function Welcome({ style, setTab }: any) {
       <Box mt="45px">Access an existing wallet with your private key.</Box>
       <Box mt="11px">
         <InputGroup>
-          <Input h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter private key here" />
+          <Input h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter private key here" onChange={(e) => setPrivKey(e.target.value)} />
           <InputRightElement h="49px">
             <ViewIcon cursor="pointer" color="blackAlpha.600" style={{ display: show1 ? '' : 'none' }} onClick={() => setShow1(!show1)}></ViewIcon>
             <ViewOffIcon
@@ -65,7 +89,7 @@ export default function Welcome({ style, setTab }: any) {
       </Box>
 
       <Box position="absolute" bottom="18px" left="18px" right="18px">
-        <Button variant="solid" minW="100%" h="50px" onClick={() => {}}>
+        <Button variant="solid" minW="100%" h="50px" onClick={() => submit()}>
           Submit
         </Button>
       </Box>

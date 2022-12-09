@@ -39,7 +39,7 @@ export default function Welcome({ style }: any) {
           </Button>
         </Link>
 
-        <Box textDecoration="underline" cursor="pointer" mt="14px" fontSize="16px">
+        <Box textDecoration="underline" cursor="pointer" mt="14px" fontSize="16px" onClick={() => navigate({ pathname: '/importAccount' })}>
           Import Wallet
         </Box>
       </Box>

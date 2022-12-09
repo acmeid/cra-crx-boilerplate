@@ -22,6 +22,8 @@ import CheckPassword from '@/components/checkPassword'
 import { getAccount, storage } from '@/utils'
 import { Base64 } from 'js-base64'
 import copyText, { uint8Array, uint8ArrayToString } from '@/utils/tools'
+// import { toString } from 'uint8arrays/to-string'
+// import { fromString } from 'uint8arrays/from-string'
 
 export default function ManageAccount({ style }: any) {
   const [show1, setShow1] = useState(false)
@@ -38,9 +40,14 @@ export default function ManageAccount({ style }: any) {
       setAccount({
         ...res,
         mnemonicArr: res.mnemonic.split(' '),
-        privKeyString: uint8Array(res.privKey),
-        pubKeyAnyString: uint8Array(res.pubKeyAny.value),
+        // privKeyString: '0x' + toString(res.privKey, 'base16'),
+        // pubKeyAnyString: '0x' + toString(res.pubKeyAny.value, 'base16'),
       })
+
+      // const a = toString(res.privKey, 'base16')
+      // const b = fromString(a, 'base16')
+      // console.log('a::::', a)
+      // console.log('b::::', b)
     })
   }, [])
 

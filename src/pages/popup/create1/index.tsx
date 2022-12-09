@@ -20,6 +20,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import { storage } from '@/utils'
 import Header from '@/components/header'
+import Step from '@/components/setp'
 
 type IFormInput = {
   password: string
@@ -70,7 +71,8 @@ export default function Welcome({ style }: any) {
   return (
     <Box className={styles.create1} style={style}>
       <Header showBack></Header>
-      <Image></Image>
+      {/* <Image></Image> */}
+      <Step total={3} current={1}></Step>
       <Box className={styles.tit}>Create a password</Box>
       <Box mt="6px">{"You'll use this to unlock your wallet"}</Box>
       <form onSubmit={handleSubmit(onSubmit)}>

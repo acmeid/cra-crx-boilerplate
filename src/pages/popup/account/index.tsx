@@ -6,7 +6,8 @@ import styles from './styles.module.scss'
 
 import { Cosmos } from '../../../utils/cosmos'
 import Menu from '@/components/menu'
-import { getAccountList } from '@/utils'
+import { getAccountList, setAccount } from '@/utils'
+import { cutText } from '@/utils/tools'
 const chainId = 'srspoa'
 const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
@@ -16,16 +17,16 @@ export default function Welcome({ style, setTab }: any) {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [step, setStep] = useState<number>(2)
-  const [list, setList] = useState<any[]>(new Array(3).fill(1))
+  const [list, setList] = useState<any[]>([])
 
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
+  // const onToggle = () => {
+  //   console.log('onToggle')
+  //   setIsOpen(!isOpen)
+  // }
 
-  const createMnemonic = () => {
-    setShowTip(false)
-  }
+  // const createMnemonic = () => {
+  //   setShowTip(false)
+  // }
 
   useEffect(() => {
     getAccountList().then((list) => {
@@ -33,8 +34,10 @@ export default function Welcome({ style, setTab }: any) {
     })
   }, [])
 
-  const next = () => {
-    // navigate({ pathname: '/create2' })
+  const switchAccount = (item: any) => {
+    setAccount({ ...item, isActive: true }).then(() => {
+      navigate({ pathname: '/main/home' })
+    })
   }
 
   return (
@@ -54,20 +57,24 @@ export default function Welcome({ style, setTab }: any) {
       <Box className={styles.list} padding="0px 0" mt="20px">
         {list.map((item: any, index: any) => {
           return (
-            <Flex className={styles.listItem} key={index}>
+            <Flex className={styles.listItem} key={index} onClick={() => switchAccount(item)}>
               <Box className={styles.tag}>
                 <Image src="/images/down.svg"></Image>
               </Box>
               <Box flexGrow="1">
-                <Box className={styles.type}>Received</Box>
+                <Box className={styles.type}>{item.accountName || 'Account'}</Box>
                 <Box>
-                  <span className={styles.highlight}>0x22ec40b3...720fd</span>
+                  <span className={styles.highlight}>{cutText(item.address)}</span>
                 </Box>
               </Box>
               <Center>
-                <Center borderRadius="20px" w="20px" h="20px" bg="green.500">
-                  <CheckIcon color="#fff" fontSize="12px"></CheckIcon>
-                </Center>
+                {item.isActive ? (
+                  <Center borderRadius="20px" w="20px" h="20px" bg="green.500">
+                    <CheckIcon color="#fff" fontSize="12px"></CheckIcon>
+                  </Center>
+                ) : (
+                  ''
+                )}
               </Center>
             </Flex>
           )

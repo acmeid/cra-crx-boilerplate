@@ -9,6 +9,7 @@ import Create1 from './create1'
 import Create3 from './create3'
 import Account from './account'
 import AddAccount from './addAccount'
+import ImportAccount from './importAccount'
 import ImportPrivateKey from './importPrivateKey'
 import ImportMnemonic from './importMnemonic'
 import Network from './network'
@@ -48,6 +49,7 @@ function Newtab() {
             <Route path={'/create3'} element={<Create3 />} />
             <Route path={'/account'} element={<Account />} />
             <Route path={'/addAccount'} element={<AddAccount />} />
+            <Route path={'/importAccount'} element={<ImportAccount />} />
             <Route path={'/importPrivateKey'} element={<ImportPrivateKey />} />
             <Route path={'/importMnemonic'} element={<ImportMnemonic />} />
             <Route path={'/network'} element={<Network />} />
