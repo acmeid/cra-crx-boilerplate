@@ -40,7 +40,7 @@ export default function Welcome({ style, setTab }: any) {
       .then(() => {
         toast({
           title: 'Import succeeded',
-          position: 'bottom',
+          position: 'top',
           status: 'success',
           duration: 5000,
           isClosable: true,
@@ -51,7 +51,7 @@ export default function Welcome({ style, setTab }: any) {
         toast({
           title: 'Import failed',
           description: 'The mnemonic is incorrect',
-          position: 'bottom',
+          position: 'top',
           status: 'error',
           duration: 5000,
           isClosable: true,

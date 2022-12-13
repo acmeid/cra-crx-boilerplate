@@ -46,7 +46,7 @@ export default function Welcome({ style }: any) {
     if (!checked) {
       toast({
         title: 'Need to agree to the terms of service',
-        position: 'bottom',
+        position: 'top',
         status: 'info',
         duration: 5000,
         isClosable: true,

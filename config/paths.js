@@ -45,6 +45,9 @@ const entry = pages.reduce((pre, cur) => {
   }
   return pre
 }, {})
+
+// entry.injectedScript = ["src/pages/content/injected-script.ts"]
+
 const htmlPlugins = pages.reduce((pre, cur) => {
   const [name, { template, filename }] = cur
   template &&

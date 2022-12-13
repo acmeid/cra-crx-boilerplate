@@ -56,8 +56,8 @@ function Newtab() {
             <Route path={'/transactionDetail'} element={<TransactionDetail />} />
             <Route path={'/collectibleDetail'} element={<CollectibleDetail />} />
             <Route path={'/send'} element={<Send />} />
-            <Route path={'/ChangeName'} element={<ChangeName />} />
-            <Route path={'/SecurityAndPrivacy'} element={<SecurityAndPrivacy />} />
+            <Route path={'/changeName'} element={<ChangeName />} />
+            <Route path={'/securityAndPrivacy'} element={<SecurityAndPrivacy />} />
             <Route path={'/manageAccount'} element={<ManageAccount />} />
             <Route path={'/removeAccount'} element={<RemoveAccount />} />
 

@@ -272,6 +272,12 @@ module.exports = function (webpackEnv) {
     resolve: {
       fallback: {
         crypto: require.resolve('crypto-browserify'), // 如果不需要，那么就直接改为 false 就可以了
+        // buffer: false,
+        // assert: require.resolve('assert'),
+        // http: require.resolve('stream-http'),
+        // https: require.resolve('https-browserify'),
+        // os: require.resolve('os-browserify/browser'),
+        // stream: require.resolve('stream-browserify'),
       },
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
@@ -311,6 +317,9 @@ module.exports = function (webpackEnv) {
           babelRuntimeEntryHelpers,
           babelRuntimeRegenerator,
         ]),
+        // new webpack.ProvidePlugin({
+        //   Buffer: ["buffer", "Buffer"],
+        // }),
       ],
     },
     module: {

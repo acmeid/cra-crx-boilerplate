@@ -21,6 +21,7 @@ import AccountHeader from '@/components/accountHeader'
 import { getAccount } from '@/utils'
 import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
 import { round } from 'lodash-es'
+import { openTab } from '@/utils/tools'
 
 export default function Home({ style, setTab }: any) {
   const navigate = useNavigate()
@@ -103,7 +104,7 @@ export default function Home({ style, setTab }: any) {
   }, [])
 
   const openStake = () => {
-    chrome.tabs.create({ url: 'http://192.168.0.206/explorer/#/wallet' })
+    openTab({ url: 'http://192.168.0.206/explorer/#/wallet' })
   }
 
   return (

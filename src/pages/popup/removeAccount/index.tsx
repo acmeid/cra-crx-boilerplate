@@ -46,7 +46,7 @@ export default function ChangeName({ style }: any) {
   } = useForm<IFormInput>()
   const navigate = useNavigate()
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log('form data: ', data)
+    // console.log('form data: ', data)
     storage.set({ pw: data.password })
     storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
     navigate({ pathname: '/create3' })
@@ -62,7 +62,7 @@ export default function ChangeName({ style }: any) {
     toast({
       title: 'Transaction succeeded',
       description: 'Amount transferred: 1, gas consumed:0.000334 APT',
-      position: 'bottom',
+      position: 'top',
       status: 'success',
       duration: 8000,
       isClosable: true,

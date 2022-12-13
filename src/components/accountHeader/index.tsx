@@ -1,22 +1,35 @@
-import { Box, Image, Flex } from '@chakra-ui/react'
+import { Box, Image, Flex, useToast } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ChevronLeftIcon, EditIcon } from '@chakra-ui/icons'
+import { ChevronLeftIcon, CopyIcon, EditIcon } from '@chakra-ui/icons'
 import { getAccount } from '@/utils'
-import { cutText } from '@/utils/tools'
+import { cutText, copyText } from '@/utils/tools'
 
 // type cprops = any
 
 export default function AccountHeader({ title, showBack }: any) {
   const navigate = useNavigate()
   const [account, setAccount] = useState<any>({})
+  const toast = useToast()
 
   useEffect(() => {
     getAccount().then((res) => {
       setAccount(res)
     })
   }, [])
+
+  const onCopyAddr = (e: any) => {
+    e.stopPropagation()
+    copyText(account.address, () => {
+      toast({
+        title: 'copied！',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    })
+  }
 
   return (
     <>
@@ -32,7 +45,10 @@ export default function AccountHeader({ title, showBack }: any) {
           <Box className={styles.id}>
             {account.accountName} <EditIcon className={styles.edit} onClick={() => navigate('/changeName')} />
           </Box>
-          <Box className={styles.addr}>{cutText(account.address)}</Box>
+          <Box className={styles.addr}>
+            {cutText(account.address)}
+            <CopyIcon cursor="pointer" mt="-2px" ml="10px" boxSize="12px" onClick={onCopyAddr} />
+          </Box>
         </Box>
       </Flex>
     </>

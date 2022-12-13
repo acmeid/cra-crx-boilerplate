@@ -8,16 +8,26 @@ export default function Welcome({ style }: any) {
   const navigate = useNavigate()
   const [show, setShow] = useState(false)
   storage.get(['currentAccount'], (res) => console.log('currentAccount:', res))
-  // const getCurrentAccount = storage.get(['currentAccount'])
 
+  // const timer = 20000
+  const timer = 30 * 60 * 1000
+  chrome?.runtime?.connect()
   useEffect(() => {
     getAccount().then((res: any) => {
-      console.log('Account:', res)
-      if (!res?.address) {
-        setShow(true)
-      } else {
-        navigate({ pathname: '/main/home' }, { replace: true })
-      }
+      // console.log('Account:', res)
+
+      storage.get(['closeTime'], ({ closeTime }) => {
+        // console.log('closeTime:::', closeTime)
+        const now = new Date().getTime()
+        // console.log('now - closeTime:::', now - closeTime)
+        if (!res?.address) {
+          setShow(true)
+        } else if (now - closeTime > timer) {
+          navigate({ pathname: '/unlock' }, { replace: true })
+        } else {
+          navigate({ pathname: '/main/home' }, { replace: true })
+        }
+      })
     })
   }, [])
 

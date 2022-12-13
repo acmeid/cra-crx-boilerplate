@@ -38,7 +38,7 @@ export default function TransactionDetail({ style }: any) {
   const [list, setList] = useState<any[]>(new Array(3).fill(1))
 
   const onToggle = () => {
-    console.log('onToggle')
+    // console.log('onToggle')
     setIsOpen(!isOpen)
   }
 
@@ -69,9 +69,11 @@ export default function TransactionDetail({ style }: any) {
 
       <Box mt="20px">
         <Box fontSize="18px">Description</Box>
-        <Box mt="10px">By 
-E4C_Deployer
-E4C Rangers consists of avatars derived from 7 champions in the E4Cverse. Holders have special utilities, including the partial in-game IP ownership of the corresponding character and game assets airdrops, such as champions and skins. For more info, please refer to our website https://www.ambrus.studio/</Box>
+        <Box mt="10px">
+          By E4C_Deployer E4C Rangers consists of avatars derived from 7 champions in the E4Cverse. Holders have special utilities, including the
+          partial in-game IP ownership of the corresponding character and game assets airdrops, such as champions and skins. For more info, please
+          refer to our website https://www.ambrus.studio/
+        </Box>
       </Box>
 
       <Box className={styles.list}>

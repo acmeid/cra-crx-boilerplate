@@ -1,53 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Box,
-  Flex,
-  useToast,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalHeader,
-  ModalBody,
-  useDisclosure,
-  Input,
-} from '@chakra-ui/react'
-import { ChevronLeftIcon, CopyIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { Box, Flex, useToast, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalHeader, ModalBody, useDisclosure } from '@chakra-ui/react'
+import { CopyIcon } from '@chakra-ui/icons'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import CheckPassword from '@/components/checkPassword'
-import { getAccount, storage } from '@/utils'
-import { Base64 } from 'js-base64'
-import copyText, { uint8Array, uint8ArrayToString } from '@/utils/tools'
-// import { toString } from 'uint8arrays/to-string'
-// import { fromString } from 'uint8arrays/from-string'
+import { getAccount } from '@/utils'
+import { copyText } from '@/utils/tools'
 
 export default function ManageAccount({ style }: any) {
-  const [show1, setShow1] = useState(false)
+  const navigate = useNavigate()
   const [account, setAccount] = useState<any>({})
   const [isCheck, setIsCheck] = useState<boolean>(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [privateShow, setPrivateShow] = useState<boolean>(false)
 
   const toast = useToast()
-  const navigate = useNavigate()
 
   useEffect(() => {
     getAccount().then((res: any) => {
       setAccount({
         ...res,
         mnemonicArr: res.mnemonic.split(' '),
-        // privKeyString: '0x' + toString(res.privKey, 'base16'),
-        // pubKeyAnyString: '0x' + toString(res.pubKeyAny.value, 'base16'),
       })
-
-      // const a = toString(res.privKey, 'base16')
-      // const b = fromString(a, 'base16')
-      // console.log('a::::', a)
-      // console.log('b::::', b)
     })
   }, [])
 
@@ -61,7 +36,7 @@ export default function ManageAccount({ style }: any) {
       toast({
         title: 'copied！',
         status: 'success',
-        duration: 4000,
+        duration: 3000,
         isClosable: true,
       })
     })
@@ -73,7 +48,7 @@ export default function ManageAccount({ style }: any) {
       toast({
         title: 'copied！',
         status: 'success',
-        duration: 4000,
+        duration: 3000,
         isClosable: true,
       })
     })

@@ -12,6 +12,11 @@ import {
   FormHelperText,
   FormErrorMessage,
   useToast,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerBody,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import styles from './styles.module.scss'
@@ -24,37 +29,43 @@ import { createSend, storage } from '@/utils'
 type IFormInput = {
   password: string
   password2: string
-  // agree: boolean
 }
 
 export default function Welcome({ style }: any) {
-  const [toAddress, setToAddress] = useState<string>('')
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [amount, setAmount] = useState<number | string>(0)
-  const toast = useToast()
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
-
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, touchedFields },
-  } = useForm<IFormInput>()
   const navigate = useNavigate()
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log('form data: ', data)
-    storage.set({ pw: data.password })
-    storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
-    navigate({ pathname: '/create3' })
+  const [toAddress, setToAddress] = useState<string>('')
+  const [amount, setAmount] = useState<number | string>(0)
+  const [fee, setFee] = useState<number | string>(0)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
+
+  const next = () => {
+    let msg = ''
+    if (!toAddress && !amount) {
+      msg = 'Please enter the address and amount'
+    } else if (!toAddress) {
+      msg = 'Please enter the address'
+    } else if (!amount) {
+      msg = 'Please enter the amount'
+    }
+
+    if (msg) {
+      toast({
+        title: 'Please enter the address and amount',
+        position: 'top',
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+      })
+      return
+    }
+
+    onOpen()
   }
 
   const send = () => {
     createSend({ toAddress, amount })
-    setIsOpen(false)
+    onOpen()
     navigate(-1)
     sendResult()
   }
@@ -63,15 +74,10 @@ export default function Welcome({ style }: any) {
     toast({
       title: 'Transaction succeeded',
       description: 'Amount transferred: 1, gas consumed:0.000334 APT',
-      position: 'bottom',
+      position: 'top',
       status: 'success',
       duration: 8000,
       isClosable: true,
-      // render: () => (
-      //   <Box color='white' p={3}>
-      //     Hello World
-      //   </Box>
-      // ),
     })
   }
 
@@ -82,9 +88,9 @@ export default function Welcome({ style }: any) {
         Add an address and amount
       </Box>
       <Flex className={styles.info}>
-        <Box pr="12px">
+        {/* <Box pr="12px">
           <Image src="" width="40px" height="40px" borderRadius="100%"></Image>
-        </Box>
+        </Box> */}
         <Box flexGrow="1">
           <Box fontSize="16px" fontWeight="600" wordBreak="break-all">
             {/* 0x22ec40b30x22ec40b30x22ec40b3 b340b30 */}
@@ -108,51 +114,54 @@ export default function Welcome({ style }: any) {
         <Button size="lg" variant="outline" minW="154px" h="46px" onClick={() => navigate(-1)}>
           cancel
         </Button>
-        <Button size="lg" variant="solid" minW="154px" h="46px" ml="20px" onClick={() => setIsOpen(true)}>
+        <Button size="lg" variant="solid" minW="154px" h="46px" ml="20px" onClick={next}>
           Next
         </Button>
       </Flex>
 
-      <Box className={styles.popup} rounded="md" style={{ display: isOpen ? '' : 'none', zIndex: 12 }}>
-        <div className={[styles.mask, isOpen ? styles.maskIn : styles.maskOut].join(' ')} onClick={onToggle}></div>
-        <div className={[styles.content, isOpen ? styles.contentIn : styles.contentOut].join(' ')}>
-          <Box fontSize="18px" fontWeight="600">
-            Summary
-          </Box>
-          <Box mt="10px">
-            <Flex justifyContent="space-between" padding="12px 0">
-              <Box>Recipient</Box>
-              <Box>1AA2CB…B2C8EB</Box>
-            </Flex>
-            <Flex justifyContent="space-between" padding="12px 0">
-              <Box>Amount</Box>
-              <Box>10 APT</Box>
-            </Flex>
-            <Flex justifyContent="space-between" padding="12px 0">
-              <Box>Fee</Box>
-              <Box>0.000365 APT</Box>
-            </Flex>
-            <Box borderTop="1px solid #ededed" mt="10px" mb="9px"></Box>
-            <Flex justifyContent="space-between" fontSize="16px" padding="12px 0">
-              <Box>
-                <span className={styles.highlight}>Total</span>
-              </Box>
-              <Box>
-                <span className={styles.highlight}>0.000365 APT</span>
-              </Box>
-            </Flex>
-          </Box>
+      <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          {/* <DrawerHeader borderBottomWidth="1px">Basic Drawer</DrawerHeader> */}
+          <DrawerBody>
+            <Box fontSize="18px" fontWeight="600">
+              Summary
+            </Box>
+            <Box mt="10px">
+              <Flex justifyContent="space-between" padding="12px 0">
+                <Box>Recipient</Box>
+                <Box>{toAddress}</Box>
+              </Flex>
+              <Flex justifyContent="space-between" padding="12px 0">
+                <Box>Amount</Box>
+                <Box>{amount} APT</Box>
+              </Flex>
+              <Flex justifyContent="space-between" padding="12px 0">
+                <Box>Fee</Box>
+                <Box>{fee} APT</Box>
+              </Flex>
+              <Box borderTop="1px solid #ededed" mt="10px" mb="9px"></Box>
+              <Flex justifyContent="space-between" fontSize="16px" padding="12px 0">
+                <Box>
+                  <span className={styles.highlight}>Total</span>
+                </Box>
+                <Box>
+                  <span className={styles.highlight}>{Number(amount) + Number(fee)} APT</span>
+                </Box>
+              </Flex>
+            </Box>
 
-          <Flex mt="90px" justifyContent="space-around">
-            <Button size="lg" variant="outline" minW="154px" height="46px" onClick={onToggle}>
-              Back
-            </Button>
-            <Button size="lg" variant="solid" minW="154px" height="46px" ml="20px" onClick={send}>
-              Send
-            </Button>
-          </Flex>
-        </div>
-      </Box>
+            <Flex mt="90px" justifyContent="space-around">
+              <Button size="lg" variant="outline" minW="154px" height="46px" onClick={onClose}>
+                Back
+              </Button>
+              <Button size="lg" variant="solid" minW="154px" height="46px" ml="20px" onClick={send}>
+                Send
+              </Button>
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Box>
   )
 }

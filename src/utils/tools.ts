@@ -166,4 +166,12 @@ export const sliceArray = (array: any[], size: number) => {
   return result
 }
 
+export const openTab = (tab: any) => {
+  if (chrome?.tabs) {
+    chrome.tabs.create(tab)
+  } else {
+    window.open(tab.url)
+  }
+}
+
 export default copyText

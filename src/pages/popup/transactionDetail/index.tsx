@@ -28,7 +28,8 @@ import Header from '@/components/header'
 import { getAccount } from '@/utils'
 import { getTransByHash } from '@/resources/api'
 import dayjs from 'dayjs'
-import { dealType } from '@/utils/tools'
+import { dealType, openTab } from '@/utils/tools'
+import TypeField from './typeField'
 
 export default function TransactionDetail({ style }: any) {
   const navigate = useNavigate()
@@ -54,7 +55,7 @@ export default function TransactionDetail({ style }: any) {
   }, [])
 
   const viewOnExplorer = () => {
-    chrome.tabs.create({ url: `http://192.168.0.206/explorer/#/transactionDetail?hash=${searchs.hash}` })
+    openTab({ url: `http://192.168.0.206/explorer/#/transactionDetail?hash=${searchs.hash}` })
   }
 
   return (
@@ -65,7 +66,7 @@ export default function TransactionDetail({ style }: any) {
       </Box>
 
       <Box className={styles.list}>
-        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/network' })}>
+        <Flex className={styles.listItem}>
           <Box flexGrow="1">Height</Box>
           <Box>
             <span className={styles.highlight}>12519939</span>
@@ -90,7 +91,9 @@ export default function TransactionDetail({ style }: any) {
           <Box flexGrow="1">Type</Box>
           <Box>{data._type}</Box>
         </Flex>
-        <Flex className={styles.listItem}>
+        <TypeField message={data.messages?.[0]}></TypeField>
+
+        {/* <Flex className={styles.listItem}>
           <Box flexGrow="1">From</Box>
           <Box>You</Box>
         </Flex>
@@ -105,7 +108,7 @@ export default function TransactionDetail({ style }: any) {
           <Box>
             0.000323 <span className={styles.highlight}>AC</span>
           </Box>
-        </Flex>
+        </Flex> */}
       </Box>
     </Box>
   )

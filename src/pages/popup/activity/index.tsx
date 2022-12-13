@@ -66,9 +66,9 @@ export default function Activity({ style, setTab }: any) {
         })
       }
     }
-    console.log('res3::', res3)
-    console.log('category::', category)
-    console.log('list::', list)
+    // console.log('res3::', res3)
+    // console.log('category::', category)
+    // console.log('list::', list)
     setList(list)
   }
 

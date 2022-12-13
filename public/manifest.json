@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "version": "1.0.0",
-  "name": "SRS Wallet",
+  "name": "Srs",
   "description": "SRS Wallet",
   "action": {
     "default_popup": "popup.html",
@@ -13,10 +13,13 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "matches": ["http://*/*", "https://*/*", "<all_urls>", "http://localhost:3001/*", "http://localhost:3001/"],
       "js": ["content.js"]
     }
   ],
+  "externally_connectable":{
+    "matches": ["http://*/*", "https://*/*", "<all_urls>", "http://localhost:3001/*", "http://localhost:3001/"]
+  },
   "permissions": ["storage"],
   "options_page": "options.html",
   "icons": {

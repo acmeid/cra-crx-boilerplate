@@ -27,6 +27,7 @@ import { Cosmos } from '../../../utils/cosmos'
 import Menu from '@/components/menu'
 import AccountHeader from '@/components/accountHeader'
 import { getAccount } from '@/utils'
+import { openTab } from '@/utils/tools'
 const chainId = 'srspoa'
 const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
@@ -55,7 +56,7 @@ export default function Welcome({ style, setTab }: any) {
   }, [])
 
   const viewOnExplorer = () => {
-    chrome.tabs.create({ url: `http://192.168.0.206/explorer/#/account?address=${account.address}` })
+    openTab({ url: `http://192.168.0.206/explorer/#/account?address=${account.address}` })
   }
 
   const lock = () => {
@@ -91,12 +92,12 @@ export default function Welcome({ style, setTab }: any) {
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
           </Box>
         </Flex>
-        <Flex className={styles.listItem}>
+        {/* <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/securityAndPrivacy' })}>
           <Box flexGrow="1">Security and Privacy</Box>
           <Box>
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
           </Box>
-        </Flex>
+        </Flex> */}
         {/* <Flex className={styles.listItem}>
           <Box flexGrow="1">Help & Support</Box>
           <Box>

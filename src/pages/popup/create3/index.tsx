@@ -46,7 +46,7 @@ export default function Create3({ style, setTab }: any) {
 
   useEffect(() => {
     const _mnemonic = SRS.getRandomMnemonic(256).split(' ')
-    console.log('_mnemonic:', _mnemonic)
+    // console.log('_mnemonic:', _mnemonic)
     setMnemonic(_mnemonic)
   }, [])
 
@@ -65,7 +65,7 @@ export default function Create3({ style, setTab }: any) {
     if (!isMatch) {
       toast({
         title: 'The mnemonic words are incorrect',
-        position: 'bottom',
+        position: 'top',
         status: 'info',
         duration: 5000,
         isClosable: true,
@@ -74,7 +74,7 @@ export default function Create3({ style, setTab }: any) {
     }
 
     const _mnemonic = mnemonic.join(' ')
-    console.log('mnemonic::', _mnemonic)
+    // console.log('mnemonic::', _mnemonic)
 
     try {
       await addAccount({ mnemonic: _mnemonic })
@@ -87,7 +87,7 @@ export default function Create3({ style, setTab }: any) {
   const checkMn = (index: number, value: string) => {
     setMnemonicAgin((val) => {
       val[index] = value
-      console.log('val:::::', val)
+      // console.log('val:::::', val)
       return val
     })
   }

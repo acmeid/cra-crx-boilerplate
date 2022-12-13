@@ -11,8 +11,10 @@ dayjs.locale('en') // 全局使用西班牙语
 
 import { defaultTheme } from '../../config'
 import { ChakraProvider } from '@chakra-ui/react'
+// ;(window as any).srs = {}
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+
 root.render(
   <React.StrictMode>
     <ChakraProvider theme={defaultTheme}>

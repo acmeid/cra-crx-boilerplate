@@ -37,7 +37,7 @@ export default function Welcome({ style, setTab }: any) {
   const [step, setStep] = useState<number>(2)
 
   const onToggle = () => {
-    console.log('onToggle')
+    // console.log('onToggle')
     setIsOpen(!isOpen)
   }
 

@@ -18,7 +18,7 @@ export default function Welcome({ style, setTab }: any) {
   const [list, setList] = useState<any[]>(new Array(3).fill(1))
 
   const onToggle = () => {
-    console.log('onToggle')
+    // console.log('onToggle')
     setIsOpen(!isOpen)
   }
 

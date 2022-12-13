@@ -24,7 +24,7 @@ export default function CheckPassword({ next }: any) {
     } else {
       toast({
         title: 'Incorrect password',
-        position: 'bottom',
+        position: 'top',
         status: 'error',
         duration: 5000,
         isClosable: true,
