@@ -1,6 +1,12 @@
 import { getAccount, storage } from '@/utils'
 import { openTab } from '@/utils/tools'
 
+const getCurrentTab = async () => {
+  const queryOptions = { active: true }
+  const [tab] = await chrome.tabs.query(queryOptions)
+  return tab
+}
+
 if (process.env.NODE_ENV === 'development') {
   const eventSource = new EventSource(`http://${process.env.REACT_APP__HOST__}:${process.env.REACT_APP__PORT__}/reload/`)
   console.log('--- 开始监听更新消息 ---')
@@ -34,7 +40,7 @@ chrome.runtime.onConnect.addListener(function (externalPort) {
 //   sendResponse({ res: { a: 1, b: 2 } })
 // })
 
-// 打开验证窗口
+// 请求连接-打开验证窗口
 chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
   // console.log('background.js收到信息', request)
   if (request.value === 'requestConnect') {
@@ -44,12 +50,6 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
     const targetOrigin = (connectList || []).find((item: any) => item.origin === request.origin)
 
     if (targetOrigin && targetOrigin.status === 'connected') {
-      const getCurrentTab = async () => {
-        const queryOptions = { active: true }
-        const [tab] = await chrome.tabs.query(queryOptions)
-        return tab
-      }
-
       const tab: any = await getCurrentTab()
       const account: any = await getAccount()
       console.log('tab::', tab)
@@ -74,8 +74,38 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
   }
 })
 
-chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-  console.log('收到消息：', request)
+// 断开连接
+chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
+  // console.log('background.js收到信息', request)
+  if (request.value === 'requestDisconnect') {
+    let { connectList } = await storage.get(['connectList'])
+
+    console.log('connectList::::', connectList)
+    const targetOrigin = (connectList || []).find((item: any) => item.origin === request.origin)
+
+    connectList = connectList.map((item: any) => {
+      return {
+        ...item,
+        status: 'disconnected',
+      }
+    })
+
+    await storage.set({ connectList: connectList })
+    const tab: any = await getCurrentTab()
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        from: 'popup',
+        value: 'disconnectConfirm',
+      },
+      async () => {}
+    )
+    return sendResponse({ msg: '已断开连接' })
+  }
 })
+
+// chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
+//   console.log('收到消息：', request)
+// })
 // ;(window as any).srs = {}
 export {}

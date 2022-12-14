@@ -1,34 +1,38 @@
 declare const window: any
 
-function eventListen() {
-  // 监听请求授权消息
-  const securityDomain = ['http://192.168.0.206/', 'http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002']
-  // const securityDomain = ['http://192.168.0.206/']
-  window.addEventListener(
-    'message',
-    async (event: MessageEvent) => {
-      if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'requestConnectConfirm') {
-        console.log('inejectedScript收到确认的信息')
-      }
-    },
-    false
-  )
-  window.addEventListener(
-    'message',
-    async (event: MessageEvent) => {
-      if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'requestConnectConfirm') {
-        console.log('inejectedScript收到取消的信息')
-      }
-    },
-    false
-  )
-}
+const securityDomain = ['http://192.168.0.206/', 'http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002']
+// const securityDomain = ['http://192.168.0.206/']
+
+// function eventListen() {
+//   // 监听请求授权消息
+//   const securityDomain = ['http://192.168.0.206/', 'http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002']
+//   // const securityDomain = ['http://192.168.0.206/']
+//   window.addEventListener(
+//     'message',
+//     async (event: MessageEvent) => {
+//       if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'requestConnectConfirm') {
+//         console.log('inejectedScript收到确认的信息')
+//       }
+//     },
+//     false
+//   )
+//   window.addEventListener(
+//     'message',
+//     async (event: MessageEvent) => {
+//       if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'requestConnectConfirm') {
+//         console.log('inejectedScript收到取消的信息')
+//       }
+//     },
+//     false
+//   )
+// }
 
 function init() {
   const srs = {
     getKey: function () {
       // window.postMessgae('connect..............................', window.location.origin)
       console.log('getKey.................')
+      // 发送连接的消息
       window.postMessage(
         {
           value: 'requestConnect',
@@ -39,8 +43,6 @@ function init() {
 
       return new Promise((resolve, reject) => {
         // 监听请求授权消息
-        const securityDomain = ['http://192.168.0.206/', 'http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002']
-        // const securityDomain = ['http://192.168.0.206/']
         window.addEventListener(
           'message',
           async (event: MessageEvent) => {
@@ -72,6 +74,32 @@ function init() {
     getOfflineSigner: async () => {
       return 1
     },
+    disconnect: function () {
+      console.log('inejectedScript收到断开连接的请求')
+      return new Promise((resolve, reject) => {
+        // 发送断开连接的消息
+        window.postMessage(
+          {
+            value: 'requestDisconnect',
+            from: 'injectedScript',
+          },
+          window.location.origin
+        )
+
+        window.addEventListener(
+          'message',
+          async (event: MessageEvent) => {
+            if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'disconnectConfirm') {
+              console.log('inejectedScript收到成功断开连接的信息')
+              resolve('断开连接')
+            }
+          },
+          false
+        )
+
+        resolve('断开连接')
+      })
+    },
   }
 
   return srs
@@ -80,6 +108,6 @@ function init() {
   // })
 }
 
-eventListen()
+// eventListen()
 window.srs = init()
 export {}

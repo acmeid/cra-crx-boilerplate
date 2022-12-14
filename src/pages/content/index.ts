@@ -38,7 +38,7 @@ const securityDomain = ['http://192.168.0.206/', 'http://localhost:3001', 'http:
 window.addEventListener(
   'message',
   async (event: MessageEvent) => {
-    if (securityDomain.includes(event.origin) && event.data.from === 'injectedScript') {
+    if (securityDomain.includes(event.origin) && event.data.from === 'injectedScript' && event.data.value === 'requestConnect') {
       chrome.runtime.sendMessage(
         {
           value: event.data.value,
@@ -87,6 +87,40 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     )
 
     return sendResponse()
+  }
+})
+
+// 监听请求断开消息
+window.addEventListener(
+  'message',
+  async (event: MessageEvent) => {
+    if (securityDomain.includes(event.origin) && event.data.from === 'injectedScript' && event.data.value === 'requestDisconnect') {
+      chrome.runtime.sendMessage(
+        {
+          value: event.data.value,
+          origin: event.origin,
+        },
+        (res) => {
+          console.log('请求断开连接', res)
+        }
+      )
+    }
+  },
+  false
+)
+
+// 监听已断开消息
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+  if (request.from === 'popup' && request.value === 'disconnectConfirm') {
+    window.postMessage(
+      {
+        value: request.value,
+        form: 'content',
+      },
+      window.location.origin
+    )
+
+    return sendResponse({ msg: '收到确认授权' })
   }
 })
 
