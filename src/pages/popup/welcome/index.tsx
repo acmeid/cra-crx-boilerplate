@@ -11,7 +11,9 @@ export default function Welcome({ style }: any) {
 
   // const timer = 20000
   const timer = 30 * 60 * 1000
-  chrome?.runtime?.connect()
+  if (chrome?.runtime) {
+    chrome.runtime.connect()
+  }
   useEffect(() => {
     getAccount().then((res: any) => {
       // console.log('Account:', res)

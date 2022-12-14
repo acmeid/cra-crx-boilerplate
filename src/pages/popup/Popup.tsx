@@ -20,6 +20,7 @@ import ChangeName from './changeName'
 import SecurityAndPrivacy from './securityAndPrivacy'
 import ManageAccount from './manageAccount'
 import RemoveAccount from './removeAccount'
+import Authorize from './authorize'
 
 import Home from './home'
 import Collectible from './collectible'
@@ -38,7 +39,7 @@ function Newtab() {
     // bg="#fafafa"
     <Router>
       <Flex justifyContent="center" alignItems="center" bg="#fafafa" h="100%">
-        <Box w="375px" h="600px" bg="#fff" borderRadius="12px">
+        <Box w="375px" h="600px" bg="#fff" borderRadius="12px" margin="auto">
           <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path={'/'} element={<Navigate to="/welcome" />} />
@@ -60,6 +61,7 @@ function Newtab() {
             <Route path={'/securityAndPrivacy'} element={<SecurityAndPrivacy />} />
             <Route path={'/manageAccount'} element={<ManageAccount />} />
             <Route path={'/removeAccount'} element={<RemoveAccount />} />
+            <Route path={'/authorize'} element={<Authorize />} />
 
             <Route path={'/main'} element={<Main />}>
               <Route path={'/main/home'} element={<Home />} />

@@ -7,4 +7,7 @@ declare global {
   interface Window {
     srs: any
   }
+  interface window {
+    srs: any
+  }
 }

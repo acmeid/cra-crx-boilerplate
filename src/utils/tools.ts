@@ -174,4 +174,10 @@ export const openTab = (tab: any) => {
   }
 }
 
+export const getCurrentTab = async () => {
+  const queryOptions = { active: true, currentWindow: true }
+  const [tab] = await chrome.tabs.query(queryOptions)
+  return tab
+}
+
 export default copyText

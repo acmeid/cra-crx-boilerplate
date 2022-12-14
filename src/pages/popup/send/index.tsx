@@ -152,10 +152,10 @@ export default function Welcome({ style }: any) {
             </Box>
 
             <Flex mt="90px" justifyContent="space-around">
-              <Button size="lg" variant="outline" minW="154px" height="46px" onClick={onClose}>
+              <Button size="lg" variant="outline" minW="155px" height="46px" onClick={onClose}>
                 Back
               </Button>
-              <Button size="lg" variant="solid" minW="154px" height="46px" ml="20px" onClick={send}>
+              <Button size="lg" variant="solid" minW="155px" height="46px" ml="20px" onClick={send}>
                 Send
               </Button>
             </Flex>

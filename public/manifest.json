@@ -27,8 +27,8 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["logo@2x.png", "logo@2x.png", "logo@2x.png"],
-      "matches": []
+      "resources": ["logo@2x.png", "logo@2x.png", "logo@2x.png", "injectedScript.js"],
+      "matches": ["<all_urls>"]
     }
   ]
 }

@@ -8,9 +8,9 @@ module.exports = {
   background: {
     entry: 'src/pages/background/index',
   },
-  // injectedScript: {
-  //   entry: 'src/pages/content/injected-script',
-  // },
+  injectedScript: {
+    entry: 'src/pages/content/injected-script',
+  },
   content: {
     entry: 'src/pages/content/index',
   },
