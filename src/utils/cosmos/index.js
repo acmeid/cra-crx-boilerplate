@@ -106,9 +106,16 @@ export class Cosmos {
     )
   }
 
-  getAccounts(address) {
+  async getAccounts(address) {
+    console.log('this.url::', this.url)
     let accountsApi = '/cosmos/auth/v1beta1/accounts/'
-    return axios.get(this.url + accountsApi + address)
+
+    // if (XMLHttpRequest) {
+    //   return axios.get(this.url + accountsApi + address)
+    // } else {
+    const res = await fetch(this.url + accountsApi + address)
+    return res.json()
+    // }
 
     // .then(
     //   (response) => response.json(),
@@ -143,19 +150,27 @@ export class Cosmos {
   }
 
   // "BROADCAST_MODE_UNSPECIFIED", "BROADCAST_MODE_BLOCK", "BROADCAST_MODE_SYNC", "BROADCAST_MODE_ASYNC"
-  broadcast(signedTxBytes, broadCastMode = 'BROADCAST_MODE_SYNC') {
+  async broadcast(signedTxBytes, broadCastMode = 'BROADCAST_MODE_SYNC') {
     const txBytesBase64 = Buffer.from(signedTxBytes, 'binary').toString('base64')
-
-    // const txBytesBase64 =
-    //   'CpUBCoQBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmQKKnNpbDEwOGZ0a2Z6OGxxc3hhNHZneDM4ZmR0Z2FqZnl3NmR2cGtkeHlwZxIqc2lsMXI1dHdmdXUyOHBxeHF5NmdwbDB1a3F6eG5uaGh2NTBjdjZhdWtkGgoKA3NyYxIDMTAwEgznlZnoqIDmtYvor5USYgpQCkYKHy9jb3Ntb3MuY3J5cHRvLnNlY3AyNTZrMS5QdWJLZXkSIwohApnPqnuTMNuPL62yJZYYa45nnolrrdjTGur8eOTyTxq+EgQKAggBGBUSDgoICgNzcmMSATUQwJoMGkB4MdMjPb91ODQbFjISngJ4J16j6EMdJ3/nycamC6HVemK+ilUjjduUiK3npCx4bjSqGzhVnq/nFW9y1bW3o+Wh'
 
     console.log('txBytesBase64:::', txBytesBase64)
     const params = { tx_bytes: txBytesBase64, mode: broadCastMode }
 
     // return Promise.resolve()
-    return axios.post(this.url + '/cosmos/tx/v1beta1/txs', params, {
-      headers: { 'Content-Type': 'application/json' },
-    })
+    // if (XMLHttpRequest) {
+    //   return axios.post(this.url + '/cosmos/tx/v1beta1/txs', params, {
+    //     headers: { 'Content-Type': 'application/json' },
+    //   })
+    // } else {
+      const res = await fetch(this.url + '/cosmos/tx/v1beta1/txs', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params)
+      })
+    
+    return res.json()
+    // }
+    
   }
 }
 

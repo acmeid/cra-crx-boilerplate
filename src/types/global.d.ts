@@ -11,3 +11,9 @@ declare global {
     srs: any
   }
 }
+interface Window {
+  srs: any
+}
+interface window {
+  srs: any
+}

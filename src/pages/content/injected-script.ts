@@ -62,7 +62,7 @@ function init() {
         window.addEventListener(
           'message',
           async (event: MessageEvent) => {
-            if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'requestConnectConfirm') {
+            if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'requestConnectCancel') {
               console.log('inejectedScript收到取消的信息')
               reject('cancel connect')
             }
@@ -98,6 +98,39 @@ function init() {
         )
 
         resolve('断开连接')
+      })
+    },
+    sendTx: function (tx: any, mode: any) {
+      console.log('收到发起交易的消息')
+      return new Promise((resolve, reject) => {
+        resolve('')
+      })
+    },
+    createSend: function (toAddress: string, amount: string, memo: string) {
+      console.log('收到发起交易的消息')
+      window.postMessage(
+        {
+          value: 'createSend',
+          from: 'injectedScript',
+          tx: {
+            toAddress,
+            amount,
+            memo,
+          },
+        },
+        window.location.origin
+      )
+      return new Promise((resolve, reject) => {
+        window.addEventListener(
+          'message',
+          async (event: MessageEvent) => {
+            if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'createSend') {
+              console.log('inejectedScript收到交易结果')
+              resolve(event.data.response)
+            }
+          },
+          false
+        )
       })
     },
   }

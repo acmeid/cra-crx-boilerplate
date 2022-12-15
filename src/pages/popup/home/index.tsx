@@ -53,39 +53,43 @@ export default function Home({ style, setTab }: any) {
   const initData = async (data: any) => {
     // setLoading(true)
     // getAccountByAddr(data.address),
-    const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
-    let staked = 0
-    let ac = 0
-    let ag = 0
-    res2?.balances?.forEach((item: any) => {
-      if (item.denom === 'src') {
-        ac = item.amount
+    try {
+      const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
+      let staked = 0
+      let ac = 0
+      let ag = 0
+      res2?.balances?.forEach((item: any) => {
+        if (item.denom === 'src') {
+          ac = item.amount
+        }
+        if (item.denom === 'srg') {
+          ag = item.amount
+        }
+      })
+
+      if (res3?.kyc) {
+        const res4 = await delegationByAddress(data.address)
+        staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
+
+        const res5 = await getRegionVaultById(res3.kyc.regionId)
+        const max = res5.regionVault.annualRate.reduce((prev: any, item: any) => {
+          return item > prev ? item : prev
+        }, 0)
+
+        setMaxRate(`${round(max * 100, 0)}%`)
       }
-      if (item.denom === 'srg') {
-        ag = item.amount
-      }
-    })
 
-    if (res3?.kyc) {
-      const res4 = await delegationByAddress(data.address)
-      staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
-
-      const res5 = await getRegionVaultById(res3.kyc.regionId)
-      const max = res5.regionVault.annualRate.reduce((prev: any, item: any) => {
-        return item > prev ? item : prev
-      }, 0)
-
-      setMaxRate(`${round(max * 100, 0)}%`)
+      setData({
+        // ...res,
+        ...data,
+        ac,
+        ag,
+        staked,
+        power: staked * 400,
+      })
+    } catch (error) {
+      console.error('InitData Error: ', error)
     }
-
-    setData({
-      // ...res,
-      ...data,
-      ac,
-      ag,
-      staked,
-      power: staked * 400,
-    })
   }
 
   const showQrCode = () => {

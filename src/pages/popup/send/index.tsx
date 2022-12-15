@@ -25,6 +25,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import { createSend, storage } from '@/utils'
+import { cutText } from '@/utils/tools'
 
 type IFormInput = {
   password: string
@@ -65,20 +66,42 @@ export default function Welcome({ style }: any) {
 
   const send = () => {
     createSend({ toAddress, amount })
-    onOpen()
-    navigate(-1)
-    sendResult()
-  }
+      .then((res: any) => {
+        console.log('res:::::', res)
+        if (res.tx_response.code !== 0) {
+          toast({
+            title: 'Transaction failed',
+            // description: 'Amount transferred: 1, gas consumed:0.000334 APT',
+            position: 'top',
+            status: 'error',
+            duration: 6000,
+            isClosable: true,
+          })
 
-  const sendResult = () => {
-    toast({
-      title: 'Transaction succeeded',
-      description: 'Amount transferred: 1, gas consumed:0.000334 APT',
-      position: 'top',
-      status: 'success',
-      duration: 8000,
-      isClosable: true,
-    })
+          return
+        }
+
+        onClose()
+        navigate(-1)
+        toast({
+          title: 'Transaction succeeded',
+          description: `Amount transferred: ${amount}`,
+          position: 'top',
+          status: 'success',
+          duration: 8000,
+          isClosable: true,
+        })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Transaction failed',
+          // description: 'Amount transferred: 1, gas consumed:0.000334 APT',
+          position: 'top',
+          status: 'error',
+          duration: 6000,
+          isClosable: true,
+        })
+      })
   }
 
   return (
@@ -130,7 +153,7 @@ export default function Welcome({ style }: any) {
             <Box mt="10px">
               <Flex justifyContent="space-between" padding="12px 0">
                 <Box>Recipient</Box>
-                <Box>{toAddress}</Box>
+                <Box>{cutText(toAddress)}</Box>
               </Flex>
               <Flex justifyContent="space-between" padding="12px 0">
                 <Box>Amount</Box>

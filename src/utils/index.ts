@@ -4,6 +4,7 @@ import { SRS } from './cosmos'
 import message from './cosmos/messages/proto'
 import { toString } from 'uint8arrays/to-string'
 import { fromString } from 'uint8arrays/from-string'
+import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
 
 interface acount {
   address: string
@@ -188,6 +189,7 @@ export const addAccount = async ({ mnemonic, priv }: any) => {
       address = SRS.getAddress(mnemonic)
       privKey = SRS.getECPairPriv(mnemonic)
     }
+
     console.log('privKey:::', privKey)
 
     const pubKeyAny = SRS.getPubKeyAny(privKey)
@@ -253,56 +255,62 @@ export const removeAccount = async (address?: string) => {
 interface params {
   toAddress: string
   amount: number | string
+  memo?: string
 }
-export const createSend = async ({ toAddress, amount }: params) => {
+export const createSend = async ({ toAddress, amount, memo }: params) => {
+  console.log('createSend')
   const { address, pubKeyAny, privKey }: any = await getAccount()
 
-  SRS.getAccounts(address).then((data: any) => {
-    // signDoc = (1)txBody + (2)authInfo
-    data = data.data
-    // ---------------------------------- (1)txBody ----------------------------------
-    const msgSend = new message.cosmos.bank.v1beta1.MsgSend({
-      from_address: address,
-      // to_address: 'sil1r5twfuu28pqxqy6gpl0ukqzxnnhhv50cv6aukd',
-      to_address: toAddress || 'sil1r5twfuu28pqxqy6gpl0ukqzxnnhhv50cv6aukd',
-      amount: [{ denom: 'src', amount: String(amount) }], // 6 decimal places (1000000 uatom = 1 ATOM)
-    })
+  const data: any = await SRS.getAccounts(address)
+  console.log('res123', data)
+  // const data = res?.body
+  // const { data }: any = await getAccountByAddr(address)
 
-    const msgSendAny = new message.google.protobuf.Any({
-      type_url: '/cosmos.bank.v1beta1.MsgSend',
-      // value: uint8ArrayTo16(message.cosmos.bank.v1beta1.MsgSend.encode(msgSend).finish()),
-      value: message.cosmos.bank.v1beta1.MsgSend.encode(msgSend).finish(),
-    })
+  console.log('createSend222222')
 
-    // const txBody = uint8ArrayTo16(new message.cosmos.tx.v1beta1.TxBody({ messages: [msgSendAny], memo: '留言测试' }))
-    const txBody = new message.cosmos.tx.v1beta1.TxBody({ messages: [msgSendAny], memo: '留言测试' })
-
-    // --------------------------------- (2)authInfo ---------------------------------
-    const signerInfo = new message.cosmos.tx.v1beta1.SignerInfo({
-      public_key: pubKeyAny,
-      mode_info: { single: { mode: message.cosmos.tx.signing.v1beta1.SignMode.SIGN_MODE_DIRECT } },
-      sequence: data?.account?.sequence,
-    })
-
-    const feeValue = new message.cosmos.tx.v1beta1.Fee({
-      amount: [{ denom: 'src', amount: String(5) }],
-      gas_limit: 200000,
-    })
-
-    const authInfo = new message.cosmos.tx.v1beta1.AuthInfo({ signer_infos: [signerInfo], fee: feeValue })
-
-    // -------------------------------- sign --------------------------------
-    // console.log('data:::', data)
-
-    // console.log('txBody:::', txBody)
-    // console.log('authInfo:::', authInfo)
-    // console.log('account_number:::', data.account?.account_number)
-    // console.log('privKey:::', privKey)
-
-    const signedTxBytes = SRS.sign(txBody, authInfo, data.account?.account_number, privKey)
-
-    // console.log('signedTxBytes:::::', signedTxBytes)
-
-    SRS.broadcast(signedTxBytes).then((response: any) => console.log('response::::', response))
+  // signDoc = (1)txBody + (2)authInfo
+  // ---------------------------------- (1)txBody ----------------------------------
+  const msgSend = new message.cosmos.bank.v1beta1.MsgSend({
+    from_address: address,
+    // to_address: 'sil1r5twfuu28pqxqy6gpl0ukqzxnnhhv50cv6aukd',
+    to_address: toAddress || 'sil1r5twfuu28pqxqy6gpl0ukqzxnnhhv50cv6aukd',
+    amount: [{ denom: 'src', amount: String(amount) }], // 6 decimal places (1000000 uatom = 1 ATOM)
   })
+
+  const msgSendAny = new message.google.protobuf.Any({
+    type_url: '/cosmos.bank.v1beta1.MsgSend',
+    // value: uint8ArrayTo16(message.cosmos.bank.v1beta1.MsgSend.encode(msgSend).finish()),
+    value: message.cosmos.bank.v1beta1.MsgSend.encode(msgSend).finish(),
+  })
+
+  // const txBody = uint8ArrayTo16(new message.cosmos.tx.v1beta1.TxBody({ messages: [msgSendAny], memo: '留言测试' }))
+  const txBody = new message.cosmos.tx.v1beta1.TxBody({ messages: [msgSendAny], memo })
+
+  // --------------------------------- (2)authInfo ---------------------------------
+  const signerInfo = new message.cosmos.tx.v1beta1.SignerInfo({
+    public_key: pubKeyAny,
+    mode_info: { single: { mode: message.cosmos.tx.signing.v1beta1.SignMode.SIGN_MODE_DIRECT } },
+    sequence: data?.account?.sequence,
+  })
+
+  const feeValue = new message.cosmos.tx.v1beta1.Fee({
+    amount: [{ denom: 'src', amount: String(amount) }],
+    gas_limit: 200000,
+  })
+
+  const authInfo = new message.cosmos.tx.v1beta1.AuthInfo({ signer_infos: [signerInfo], fee: feeValue })
+
+  // -------------------------------- sign --------------------------------
+  // console.log('txBody:::', txBody)
+  // console.log('authInfo:::', authInfo)
+  // console.log('account_number:::', data.account?.account_number)
+  // console.log('privKey:::', privKey)
+
+  const signedTxBytes = SRS.sign(txBody, authInfo, data.account?.account_number, privKey)
+
+  // console.log('signedTxBytes:::::', signedTxBytes)
+
+  const res2: any = await SRS.broadcast(signedTxBytes)
+  console.log('createSend::', res2)
+  return res2
 }

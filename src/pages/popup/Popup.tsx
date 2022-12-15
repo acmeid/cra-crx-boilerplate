@@ -30,6 +30,8 @@ import Setting from './setting'
 import Main from './main'
 
 import { Box, Flex } from '@chakra-ui/react'
+import { getCurrentTab } from '@/utils/tools'
+// import { createSend } from '@/utils'
 
 function Newtab() {
   // const navigate = useNavigate()

@@ -39,13 +39,14 @@ window.addEventListener(
   'message',
   async (event: MessageEvent) => {
     if (securityDomain.includes(event.origin) && event.data.from === 'injectedScript' && event.data.value === 'requestConnect') {
+      console.log('请求授权消息1:::::::::::::::::')
       chrome.runtime.sendMessage(
         {
           value: event.data.value,
           origin: event.origin,
         },
         (res) => {
-          console.log('请求授权消息:::::::::::::::::', res)
+          console.log('请求授权消息2:::::::::::::::::', res)
         }
       )
     }
@@ -121,6 +122,42 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     )
 
     return sendResponse({ msg: '收到确认授权' })
+  }
+})
+
+// 监听请求交易
+window.addEventListener(
+  'message',
+  async (event: MessageEvent) => {
+    if (securityDomain.includes(event.origin) && event.data.from === 'injectedScript' && event.data.value === 'createSend') {
+      chrome.runtime.sendMessage(
+        {
+          value: event.data.value,
+          origin: event.origin,
+          tx: event.data.tx,
+        },
+        (res) => {
+          console.log('请求交易', res)
+        }
+      )
+    }
+  },
+  false
+)
+
+// 监听交易结果
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+  if (request.from === 'popup' && request.value === 'createSend') {
+    window.postMessage(
+      {
+        value: request.value,
+        form: 'content',
+        response: request.response,
+      },
+      window.location.origin
+    )
+
+    return sendResponse({ msg: '收到交易结果' })
   }
 })
 

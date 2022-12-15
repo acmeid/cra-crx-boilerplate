@@ -1,4 +1,5 @@
-import { getAccount, storage } from '@/utils'
+import { createSend, getAccount, storage } from '@/utils'
+// import { SRS } from '@/utils/cosmos'
 import { openTab } from '@/utils/tools'
 
 const getCurrentTab = async () => {
@@ -81,7 +82,7 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
     let { connectList } = await storage.get(['connectList'])
 
     console.log('connectList::::', connectList)
-    const targetOrigin = (connectList || []).find((item: any) => item.origin === request.origin)
+    // const targetOrigin = (connectList || []).find((item: any) => item.origin === request.origin)
 
     connectList = connectList.map((item: any) => {
       return {
@@ -101,6 +102,32 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
       async () => {}
     )
     return sendResponse({ msg: '已断开连接' })
+  }
+})
+console.log('fetch::', fetch)
+// console.log('window::', window)
+
+// // 交易
+chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
+  const tab: any = await getCurrentTab()
+  if (request.value === 'createSend') {
+    const res: any = await createSend({
+      toAddress: request.tx.toAddress,
+      amount: request.tx.amount,
+      memo: request.tx.memo,
+    })
+
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        from: 'popup',
+        value: 'createSend',
+        response: res,
+      },
+      async () => {}
+    )
+
+    return sendResponse({ msg: '已发起交易' })
   }
 })
 
