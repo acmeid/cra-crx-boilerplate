@@ -92,9 +92,17 @@ export default function Create3({ style, setTab }: any) {
     })
   }
 
+  const backHandle = () => {
+    if (step === 3) {
+      setStep(2)
+    } else {
+      navigate(-1)
+    }
+  }
+
   return (
     <Box className={styles.create2} style={style}>
-      <Header showBack></Header>
+      <Header showBack back={backHandle}></Header>
       <Step total={3} current={step}></Step>
       <Box className={styles.tit}>Enter Your Secret Recovery Phrase</Box>
       <Box mt="5px">Type your phrase exactly as you saw it on the previous screen</Box>
@@ -147,19 +155,26 @@ export default function Create3({ style, setTab }: any) {
         <DrawerContent>
           {/* <DrawerHeader borderBottomWidth="1px">Basic Drawer</DrawerHeader> */}
           <DrawerBody>
-            <Grid h="70px" templateRows="repeat(2, 1fr)" templateColumns="repeat(4, 1fr)" gap={2} mt="20px">
+            <Grid h="78px" templateRows="repeat(2, 1fr)" templateColumns="repeat(4, 1fr)" gap={2} mt="20px">
               <GridItem rowSpan={2} colSpan={1}>
                 <WarningIcon color="green.500" fontSize="78px" mt="3px"></WarningIcon>
               </GridItem>
-              <GridItem rowSpan={1} colSpan={3} fontSize="18px" fontWeight="600" lineHeight="1.4">
+              <GridItem rowSpan={1} colSpan={3} fontSize="18px" fontWeight="600" lineHeight="1.5" pt="4px">
                 Keep your phrase safe!
               </GridItem>
               <GridItem rowSpan={1} colSpan={3} lineHeight="1.4">
                 {"If you lose it you'll have no way of accessing your assets."}
               </GridItem>
             </Grid>
-            <Box mt="90px">
-              <Button variant="outline" minW="187px" onClick={onClose}>
+            <Box mt="90px" mb="10px">
+              <Button
+                variant="outline"
+                minW="187px"
+                onClick={() => {
+                  onClose()
+                  setStep(2)
+                }}
+              >
                 Show phrase again
               </Button>
               <Button variant="solid" minW="120px" ml="20px" onClick={next}>

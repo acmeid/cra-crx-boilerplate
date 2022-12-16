@@ -6,13 +6,20 @@ import { ChevronLeftIcon, EditIcon } from '@chakra-ui/icons'
 
 // type cprops = any
 
-export default function Header({ title, showBack }: any) {
+export default function Header({ title, showBack, back }: any) {
   const navigate = useNavigate()
 
+  const handleBack = () => {
+    if (back && typeof back === 'function') {
+      back()
+    } else {
+      navigate(-1)
+    }
+  }
   return (
     <>
       <Flex className={styles.container}>
-        <Center cursor="pointer" onClick={() => showBack && navigate(-1)}>
+        <Center cursor="pointer" onClick={handleBack}>
           {showBack ? <ChevronLeftIcon mt="-1px"></ChevronLeftIcon> : ''}
         </Center>
         {title}

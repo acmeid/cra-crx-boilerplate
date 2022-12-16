@@ -12,15 +12,22 @@ import {
   FormHelperText,
   FormErrorMessage,
   useToast,
+  Drawer,
+  DrawerOverlay,
+  DrawerBody,
+  DrawerContent,
+  Center,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { ChevronLeftIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/icons'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import CheckPassword from '@/components/checkPassword'
-import { removeAccount, storage } from '@/utils'
+import { getAccount, removeAccount, storage } from '@/utils'
+import { cutText } from '@/utils/tools'
 
 type IFormInput = {
   password: string
@@ -29,47 +36,21 @@ type IFormInput = {
 }
 
 export default function ChangeName({ style }: any) {
-  const [show1, setShow1] = useState(false)
-  const [isOpen, setIsOpen] = useState<boolean>(false)
   const toast = useToast()
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
-
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, touchedFields },
-  } = useForm<IFormInput>()
   const navigate = useNavigate()
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    // console.log('form data: ', data)
-    storage.set({ pw: data.password })
-    storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
-    navigate({ pathname: '/create3' })
-  }
+  const [show1, setShow1] = useState(false)
+  // const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [account, setAccount] = useState<any>({})
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const send = () => {
-    setIsOpen(false)
-    navigate(-1)
-    sendResult()
-  }
-
-  const sendResult = () => {
-    toast({
-      title: 'Transaction succeeded',
-      description: 'Amount transferred: 1, gas consumed:0.000334 APT',
-      position: 'top',
-      status: 'success',
-      duration: 8000,
-      isClosable: true,
+  useEffect(() => {
+    getAccount().then((res) => {
+      setAccount(res)
+      // onOpen()
     })
-  }
+  }, [])
 
-  const next = async () => {
+  const remove = async () => {
     const accountList = await removeAccount()
     if (accountList?.length) {
       navigate('/account', { replace: true })
@@ -81,7 +62,36 @@ export default function ChangeName({ style }: any) {
   return (
     <Box className={styles.container} style={style}>
       <Header showBack title="Remove Account"></Header>
-      <CheckPassword next={next}></CheckPassword>
+      <CheckPassword next={onOpen}></CheckPassword>
+
+      <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          {/* <DrawerHeader borderBottomWidth="1px">Basic Drawer</DrawerHeader> */}
+          <DrawerBody>
+            <Center mt="20px" fontSize="16px" fontWeight="600">
+              <Center borderRadius="100%" bg="gray.100" w="60px" h="60px">
+                <WarningIcon color="gray.600" fontSize="40px"></WarningIcon>
+              </Center>
+            </Center>
+            <Center fontSize="20px" textAlign="center" mt="15px" mb="15px">
+              Remove {cutText(account.address)} ?
+            </Center>
+            <Center textAlign="center">
+              {"Although you are removing this from your Aptos wallet, you'll be able to retrieve if using your mnemonic phrase."}
+            </Center>
+
+            <Flex mt="90px" justifyContent="space-around" pb="10px">
+              <Button size="lg" variant="outline" minW="155px" height="46px" colorScheme="green" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button size="lg" variant="solid" minW="155px" height="46px" colorScheme="green" ml="20px" onClick={remove}>
+                Connfirm
+              </Button>
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Box>
   )
 }

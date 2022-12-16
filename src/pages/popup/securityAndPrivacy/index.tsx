@@ -35,13 +35,13 @@ export default function Welcome({ style, setTab }: any) {
       <Header showBack title="Security and Privacy"></Header>
 
       <Box className={styles.list}>
-        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/network' })}>
+        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/changePassword' })}>
           <Box flexGrow="1">Change password</Box>
           <Box>
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
           </Box>
         </Flex>
-        <Flex className={styles.listItem}>
+        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/autoLock' })}>
           <Box flexGrow="1">Auto-lock Timer</Box>
           <Box>
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>

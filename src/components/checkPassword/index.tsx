@@ -60,7 +60,7 @@ export default function CheckPassword({ next }: any) {
       </Box>
       <Box position="absolute" bottom="20px" left="18px" right="18px">
         <Button size="lg" variant="solid" minW="100%" h="49px" placeholder="Password" onClick={() => check()}>
-          Next
+          Submit
         </Button>
       </Box>
     </>
