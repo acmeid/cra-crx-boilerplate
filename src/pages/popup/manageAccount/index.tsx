@@ -21,7 +21,7 @@ export default function ManageAccount({ style }: any) {
     getAccount().then((res: any) => {
       setAccount({
         ...res,
-        mnemonicArr: res.mnemonic.split(' '),
+        mnemonicArr: res.mnemonic?.split(' '),
       })
     })
   }, [])

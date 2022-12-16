@@ -127,7 +127,7 @@ export default function Welcome({ style }: any) {
 
       <Flex className={styles.am} alignItems="center" mt="18px">
         <Input className={styles.inp} onChange={(e) => setAmount(e.target.value)}></Input>
-        <Box className={styles.tex}>APT</Box>
+        <Box className={styles.tex}>AC</Box>
       </Flex>
       <Box color="#B1B6BB" mt="13px">
         Balance：31 APT,fees: 0.000315 APT

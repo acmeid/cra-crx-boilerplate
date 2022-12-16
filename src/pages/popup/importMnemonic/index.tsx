@@ -4,11 +4,7 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon, ChevronRightIcon, 
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { Cosmos } from '../../../utils/cosmos'
-import Menu from '@/components/menu'
 import { addAccount } from '@/utils'
-const chainId = 'srspoa'
-const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
 export default function Welcome({ style, setTab }: any) {
   const navigate = useNavigate()

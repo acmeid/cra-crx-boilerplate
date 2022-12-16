@@ -4,32 +4,13 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon, ChevronRightIcon, 
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { Cosmos } from '../../../utils/cosmos'
-import Menu from '@/components/menu'
-import { Controller } from 'react-hook-form'
 import { addAccount } from '@/utils'
-const chainId = 'srspoa'
-const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
 export default function Welcome({ style, setTab }: any) {
   const toast = useToast()
   const navigate = useNavigate()
-  // const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
-  const [showTip, setShowTip] = useState<boolean>(true)
-
-  const [isOpen, setIsOpen] = useState<boolean>(false)
   const [privKey, setPrivKey] = useState<string>('')
-  const [list, setList] = useState<any[]>(new Array(3).fill(1))
   const [show1, setShow1] = useState(false)
-
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
-
-  const createMnemonic = () => {
-    setShowTip(false)
-  }
 
   useEffect(() => {}, [])
 

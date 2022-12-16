@@ -4,29 +4,12 @@ import { ChevronLeftIcon, SmallAddIcon, ViewOffIcon, WarningIcon, CheckIcon } fr
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { Cosmos } from '../../../utils/cosmos'
-import Menu from '@/components/menu'
-import { getAccountList, setAccount } from '@/utils'
+import { getAccountList, switchAccount } from '@/utils'
 import { cutText } from '@/utils/tools'
-const chainId = 'srspoa'
-const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
-export default function Welcome({ style, setTab }: any) {
-  const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
-  const [showTip, setShowTip] = useState<boolean>(true)
+export default function Welcome({ style }: any) {
   const navigate = useNavigate()
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [step, setStep] = useState<number>(2)
   const [list, setList] = useState<any[]>([])
-
-  // const onToggle = () => {
-  //   console.log('onToggle')
-  //   setIsOpen(!isOpen)
-  // }
-
-  // const createMnemonic = () => {
-  //   setShowTip(false)
-  // }
 
   useEffect(() => {
     getAccountList().then((list) => {
@@ -34,8 +17,8 @@ export default function Welcome({ style, setTab }: any) {
     })
   }, [])
 
-  const switchAccount = (item: any) => {
-    setAccount({ ...item, isActive: true }).then(() => {
+  const change = (item: any) => {
+    switchAccount(item).then(() => {
       navigate({ pathname: '/main/home' })
     })
   }
@@ -57,7 +40,7 @@ export default function Welcome({ style, setTab }: any) {
       <Box className={styles.list} padding="0px 0" mt="20px">
         {list.map((item: any, index: any) => {
           return (
-            <Flex className={styles.listItem} key={index} onClick={() => switchAccount(item)}>
+            <Flex className={styles.listItem} key={index} onClick={() => change(item)}>
               <Box className={styles.tag}>
                 <Image src="/images/down.svg"></Image>
               </Box>

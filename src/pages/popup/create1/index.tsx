@@ -113,7 +113,9 @@ export default function Welcome({ style }: any) {
           {errors.password2?.type === 'validate' && <ErrorMessage>Password should match</ErrorMessage>}
         </Box>
         <Box mt="22px">
-          <Checkbox onChange={(e) => setChecked(e.target.checked)}>Iagree to the Terms of Service</Checkbox>
+          <Checkbox onChange={(e) => setChecked(e.target.checked)}>
+            Iagree to the <span className="highlight">Terms of Service</span>
+          </Checkbox>
         </Box>
 
         <Box className={styles.btnNext}>

@@ -5,26 +5,9 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
 import { Cosmos } from '../../../utils/cosmos'
-import Menu from '@/components/menu'
-const chainId = 'srspoa'
-const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
 export default function ImportAccount({ style, setTab }: any) {
-  const [mnemonic, setMnemonic] = useState<any[]>(new Array(12).fill('Wallet'))
-  const [showTip, setShowTip] = useState<boolean>(true)
   const navigate = useNavigate()
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [step, setStep] = useState<number>(2)
-  const [list, setList] = useState<any[]>(new Array(3).fill(1))
-
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
-
-  const createMnemonic = () => {
-    setShowTip(false)
-  }
 
   useEffect(() => {}, [])
 
@@ -54,7 +37,7 @@ export default function ImportAccount({ style, setTab }: any) {
           </Box>
         </Flex> */}
         <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/importPrivateKey' })}>
-          <Box flexGrow="1">Import private key</Box>
+          <Box flexGrow="1">Import private key（暂不可用）</Box>
           <Box>
             <ChevronRightIcon boxSize="18px" color="blackAlpha.500"></ChevronRightIcon>
           </Box>

@@ -54,6 +54,7 @@ export default function Home({ style, setTab }: any) {
     // setLoading(true)
     // getAccountByAddr(data.address),
     try {
+      // 如果部署kyc用户，调用getKyc http是404
       const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
       let staked = 0
       let ac = 0
@@ -67,7 +68,9 @@ export default function Home({ style, setTab }: any) {
         }
       })
 
-      if (res3?.kyc) {
+      console.log('res3:::::', res3)
+
+      if (res3.status !== 'rejected' && res3?.reason?.kyc) {
         const res4 = await delegationByAddress(data.address)
         staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
 

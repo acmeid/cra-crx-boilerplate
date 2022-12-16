@@ -15,9 +15,6 @@ import { dealType, cutText } from '@/utils/tools'
 import MsgSend from './typeField/msgSend'
 import MsgCustom from './typeField/msgCustom'
 import MsgDefault from './typeField/msgDefault'
-// import Custom from './typeField/msgCustom'
-// const chainId = 'srspoa'
-// const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
 export default function Activity({ style, setTab }: any) {
   const navigate = useNavigate()

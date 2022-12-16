@@ -1,24 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Box,
-  Flex,
-  Button,
-  Image,
-  Input,
-  Checkbox,
-  InputGroup,
-  InputRightElement,
-  FormControl,
-  FormHelperText,
-  FormErrorMessage,
-  useToast,
-  Drawer,
-  DrawerOverlay,
-  DrawerBody,
-  DrawerContent,
-  Center,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Box, Flex, Button, useToast, Drawer, DrawerOverlay, DrawerBody, DrawerContent, Center, useDisclosure } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/icons'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'

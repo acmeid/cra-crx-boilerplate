@@ -6,13 +6,15 @@ import { toString } from 'uint8arrays/to-string'
 import { fromString } from 'uint8arrays/from-string'
 import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
 
-// interface acount {
-//   address: string
-//   mnemonic: string
-//   mnemonicArr: number[]
-//   pw: string
-//   accountName: string
-// }
+const checkData = (list: any[]) => {
+  const data = list.filter((item: any) => {
+    if (item.address) {
+      return true
+    }
+  })
+
+  return data
+}
 
 const customStorage = {
   get: function (keys: string[], callback: (v: any) => void) {
@@ -81,8 +83,8 @@ export const getAccount = (): Promise<any> => {
         let privKey
         if (currentAccount.priv) {
           privKey = Buffer.from(fromString(currentAccount.priv.slice(2), 'base16'))
-        } else {
-          privKey = SRS.getECPairPriv(currentAccount?.mnemonic) || new Uint8Array()
+        } else if (currentAccount.mnemonic) {
+          privKey = SRS.getECPairPriv(currentAccount.mnemonic) || new Uint8Array()
         }
         const pubKeyAny = SRS.getPubKeyAny(privKey)
 
@@ -93,9 +95,10 @@ export const getAccount = (): Promise<any> => {
           ...currentAccount,
           privKey,
           pubKeyAny,
-          privKeyString: '0x' + toString(privKey, 'base16'),
+          privKeyString: privKey ? '0x' + toString(privKey, 'base16') : '',
           pubKeyAnyString: '0x' + toString(pubKeyAny.value, 'base16'),
         }
+        console.log('getAcount: ', data)
         resolve(data)
       } catch (error) {
         console.error('getAccount:', error)
@@ -123,37 +126,92 @@ export const resetAccount = async (): Promise<any> => {
 }
 
 export const setAccount = async (data: any) => {
-  // console.log(1)
+  console.log(1)
   const currentAccount = await getAccount()
   const account = {
-    // ...currentAccount,
     address: currentAccount.address,
     mnemonic: currentAccount.mnemonic,
     mnemonicArr: currentAccount.mnemonicArr,
     pw: currentAccount.pw,
     isActive: currentAccount.isActive,
     priv: currentAccount.priv,
+    accountName: data.accountName,
     ...data,
   }
-  // console.log(2)
+  console.log(2)
   let accountList = await getAccountList()
   accountList = accountList.map((item: any) => {
+    const newItem = {
+      address: item.address,
+      mnemonic: item.mnemonic,
+      mnemonicArr: item.mnemonicArr,
+      pw: item.pw,
+      priv: item.priv,
+      accountName: item.accountName,
+    }
     if (item.address === account.address) {
       return account
-    } else if (account.isActive) {
+    } else if (item.isActive) {
       return {
-        ...item,
+        ...newItem,
         isActive: false,
       }
     } else {
-      return item
+      return { ...newItem }
+    }
+  })
+  console.log(3)
+  console.log('account:::', account)
+  await storage.set({ currentAccount: account })
+  console.log(4)
+  console.log('accountList:::', accountList)
+  await storage.set({ accountList: checkData(accountList) })
+  console.log(5)
+  return 'success'
+}
+
+export const switchAccount = async (data: any) => {
+  const account: any = {
+    address: data.address,
+    mnemonic: data.mnemonic,
+    mnemonicArr: data.mnemonicArr,
+    pw: data.pw,
+    accountName: data.accountName,
+    priv: data.priv,
+    isActive: true,
+  }
+
+  let accountList = await getAccountList()
+  accountList = accountList.map((item: any) => {
+    const newItem = {
+      address: item.address,
+      mnemonic: item.mnemonic,
+      mnemonicArr: item.mnemonicArr,
+      pw: item.pw,
+      accountName: item.accountName,
+      priv: item.priv,
+    }
+    if (item.address === account.address) {
+      return {
+        ...newItem,
+        isActive: true,
+      }
+    } else if (account.isActive) {
+      return {
+        ...newItem,
+        isActive: false,
+      }
+    } else {
+      return {
+        ...newItem,
+      }
     }
   })
   // console.log(3)
   console.log('account:::', account)
   await storage.set({ currentAccount: account })
   // console.log(4)
-  await storage.set({ accountList: accountList })
+  await storage.set({ accountList: checkData(accountList) })
   // console.log(5)
   return 'success'
 }
@@ -222,7 +280,7 @@ export const addAccount = async ({ mnemonic, priv }: any) => {
 
     return new Promise((resolve, reject) => {
       storage.get(['accountList'], async ({ accountList }) => {
-        accountList = accountList || []
+        accountList = checkData(accountList) || []
 
         if (!accountList.find((item: any) => item.address === address)) {
           accountList.forEach((item: any) => (item.isActive = false))
@@ -238,7 +296,7 @@ export const addAccount = async ({ mnemonic, priv }: any) => {
             ...account,
           },
         })
-        console.log(123)
+        // console.log(123)
         getAccount().then((res) => console.log('res:::', res))
         resolve('success')
       })
@@ -256,7 +314,7 @@ export const removeAccount = async (address?: string) => {
   const index = accountList.findIndex((item: any) => item.isActive)
 
   accountList.splice(index, 1)
-  storage.set({ accountList: accountList })
+  storage.set({ accountList: checkData(accountList) })
 
   return accountList
 }
