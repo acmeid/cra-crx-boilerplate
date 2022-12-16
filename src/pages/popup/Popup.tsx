@@ -21,6 +21,8 @@ import SecurityAndPrivacy from './securityAndPrivacy'
 import ManageAccount from './manageAccount'
 import RemoveAccount from './removeAccount'
 import Authorize from './authorize'
+import AutoLock from './autoLock'
+import ChangePassword from './changePassword'
 
 import Home from './home'
 import Collectible from './collectible'
@@ -64,6 +66,8 @@ function Newtab() {
             <Route path={'/manageAccount'} element={<ManageAccount />} />
             <Route path={'/removeAccount'} element={<RemoveAccount />} />
             <Route path={'/authorize'} element={<Authorize />} />
+            <Route path={'/autoLock'} element={<AutoLock />} />
+            <Route path={'/changePassword'} element={<ChangePassword />} />
 
             <Route path={'/main'} element={<Main />}>
               <Route path={'/main/home'} element={<Home />} />

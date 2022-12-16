@@ -35,6 +35,7 @@ export default function ManageAccount({ style }: any) {
     copyText(account.privKeyString, () => {
       toast({
         title: 'copied！',
+        position: 'top',
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -47,6 +48,7 @@ export default function ManageAccount({ style }: any) {
     copyText(account.pubKeyAnyString, () => {
       toast({
         title: 'copied！',
+        position: 'top',
         status: 'success',
         duration: 3000,
         isClosable: true,

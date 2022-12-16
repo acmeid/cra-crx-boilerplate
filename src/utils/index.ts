@@ -6,13 +6,13 @@ import { toString } from 'uint8arrays/to-string'
 import { fromString } from 'uint8arrays/from-string'
 import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
 
-interface acount {
-  address: string
-  mnemonic: string
-  mnemonicArr: number[]
-  pw: string
-  accountName: string
-}
+// interface acount {
+//   address: string
+//   mnemonic: string
+//   mnemonicArr: number[]
+//   pw: string
+//   accountName: string
+// }
 
 const customStorage = {
   get: function (keys: string[], callback: (v: any) => void) {
@@ -62,7 +62,7 @@ console.log('chrome?.storage?.local', chrome?.storage?.local)
 
 export const storage = chrome?.storage?.local || customStorage
 
-export const getAccount = (): Promise<acount> => {
+export const getAccount = (): Promise<any> => {
   return new Promise((resolve, reject) => {
     storage.get(['currentAccount'], ({ currentAccount }: any) => {
       const account = {
@@ -123,13 +123,19 @@ export const resetAccount = async (): Promise<any> => {
 }
 
 export const setAccount = async (data: any) => {
+  // console.log(1)
   const currentAccount = await getAccount()
   const account = {
-    ...currentAccount,
+    // ...currentAccount,
+    address: currentAccount.address,
+    mnemonic: currentAccount.mnemonic,
+    mnemonicArr: currentAccount.mnemonicArr,
+    pw: currentAccount.pw,
+    isActive: currentAccount.isActive,
+    priv: currentAccount.priv,
     ...data,
   }
-
-  await storage.set({ currentAccount: account })
+  // console.log(2)
   let accountList = await getAccountList()
   accountList = accountList.map((item: any) => {
     if (item.address === account.address) {
@@ -143,9 +149,12 @@ export const setAccount = async (data: any) => {
       return item
     }
   })
+  // console.log(3)
+  console.log('account:::', account)
   await storage.set({ currentAccount: account })
+  // console.log(4)
   await storage.set({ accountList: accountList })
-
+  // console.log(5)
   return 'success'
 }
 

@@ -40,14 +40,14 @@ export default function Welcome({ style, setTab }: any) {
   const [step, setStep] = useState<number>(2)
   const [list, setList] = useState<any[]>(new Array(3).fill(1))
 
-  const onToggle = () => {
-    console.log('onToggle')
-    setIsOpen(!isOpen)
-  }
+  // const onToggle = () => {
+  //   console.log('onToggle')
+  //   setIsOpen(!isOpen)
+  // }
 
-  const createMnemonic = () => {
-    setShowTip(false)
-  }
+  // const createMnemonic = () => {
+  //   setShowTip(false)
+  // }
 
   useEffect(() => {
     getAccount().then((res) => {
@@ -65,24 +65,6 @@ export default function Welcome({ style, setTab }: any) {
 
   return (
     <Box className={styles.container} style={style}>
-      {/* <Box className={styles.tit}>Settings</Box>
-      <Flex mt="15px">
-        <Box className={styles.logo}>
-          <Image src="logo.svg"></Image>
-        </Box>
-        <Box flexGrow="1">
-          <Box className={styles.id}>Account ID</Box>
-          <Flex alignItems="center" justifyContent="space-between" mt="8px" ml="12px">
-            <Box className={styles.addr}>1AA2CB…B2C8EB</Box>
-            <Box>
-              <Button leftIcon={<EditIcon />} size="ms" minW="75px" h="30px" fontSize="12px">
-                Editor
-              </Button>
-            </Box>
-          </Flex>
-        </Box>
-      </Flex> */}
-
       <AccountHeader title="Settings"></AccountHeader>
 
       <Box className={styles.list}>
@@ -92,12 +74,12 @@ export default function Welcome({ style, setTab }: any) {
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
           </Box>
         </Flex>
-        {/* <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/securityAndPrivacy' })}>
+        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/securityAndPrivacy' })}>
           <Box flexGrow="1">Security and Privacy</Box>
           <Box>
             <ChevronRightIcon color="blackAlpha.600"></ChevronRightIcon>
           </Box>
-        </Flex> */}
+        </Flex>
         {/* <Flex className={styles.listItem}>
           <Box flexGrow="1">Help & Support</Box>
           <Box>

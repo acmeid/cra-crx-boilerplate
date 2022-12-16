@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex, Button, Image } from '@chakra-ui/react'
+import { Box, Flex, Button, Image, Center } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
@@ -15,9 +15,9 @@ import { dealType, cutText } from '@/utils/tools'
 import MsgSend from './typeField/msgSend'
 import MsgCustom from './typeField/msgCustom'
 import MsgDefault from './typeField/msgDefault'
-import Custom from './typeField/msgCustom'
-const chainId = 'srspoa'
-const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
+// import Custom from './typeField/msgCustom'
+// const chainId = 'srspoa'
+// const cosmos = new Cosmos('http://192.168.0.206:1317', chainId)
 
 export default function Activity({ style, setTab }: any) {
   const navigate = useNavigate()
@@ -99,20 +99,26 @@ export default function Activity({ style, setTab }: any) {
         RECENT TRANSACTIONS
       </Box>
 
-      <Box className={styles.list}>
-        {list.map((item: any, index: any) => {
-          return (
-            <Box key={index} mt="10px">
-              <Box fontSize="14px" mt="5px" mb="8px">
-                {item.date}
+      {list?.length ? (
+        <Box className={styles.list}>
+          {list.map((item: any, index: any) => {
+            return (
+              <Box key={index} mt="10px">
+                <Box fontSize="14px" mt="5px" mb="8px">
+                  {item.date}
+                </Box>
+                {item.list.map((item2: any, index2: any) => {
+                  return listItem(item2)
+                })}
               </Box>
-              {item.list.map((item2: any, index2: any) => {
-                return listItem(item2)
-              })}
-            </Box>
-          )
-        })}
-      </Box>
+            )
+          })}
+        </Box>
+      ) : (
+        <Center mt="170px" fontSize="16px">
+          No activity yet
+        </Center>
+      )}
     </Box>
   )
 }
