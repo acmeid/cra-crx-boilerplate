@@ -1,24 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Box,
-  Flex,
-  Button,
-  Image,
-  Input,
-  Checkbox,
-  InputGroup,
-  InputRightElement,
-  FormControl,
-  FormHelperText,
-  FormErrorMessage,
-  useToast,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerBody,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Box, Flex, Button, Input, useToast, Drawer, DrawerOverlay, DrawerContent, DrawerBody, useDisclosure } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { debounce, round } from 'lodash-es'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
@@ -35,10 +18,17 @@ type IFormInput = {
 export default function Welcome({ style }: any) {
   const navigate = useNavigate()
   const [toAddress, setToAddress] = useState<string>('')
-  const [amount, setAmount] = useState<number | string>(0)
-  const [fee, setFee] = useState<number | string>(0)
+  const [amount, setAmount] = useState<number>(0)
+  const [fee, setFee] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
+  const gas_limit = 200000
+  const gas_price = 500
+  const baseFee = gas_limit * gas_price
+
+  const changeAmount = debounce((e) => {
+    setAmount(e.target.value)
+  }, 200)
 
   const next = () => {
     let msg = ''
@@ -48,6 +38,14 @@ export default function Welcome({ style }: any) {
       msg = 'Please enter the address'
     } else if (!amount) {
       msg = 'Please enter the amount'
+    } else if (Number.isNaN(Number(amount))) {
+      toast({
+        title: 'Incorrect format',
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
     }
 
     if (msg) {
@@ -104,6 +102,14 @@ export default function Welcome({ style }: any) {
       })
   }
 
+  useEffect(() => {
+    setFee(() => {
+      if (Number.isNaN(Number(amount))) return
+      const amountFee = round(amount * 0.0001, 6)
+      return amount ? baseFee + (amountFee > 20000 ? amountFee : 20000) : 0
+    })
+  }, [amount])
+
   return (
     <Box className={styles.container} style={style}>
       <Header showBack></Header>
@@ -126,11 +132,11 @@ export default function Welcome({ style }: any) {
       </Flex>
 
       <Flex className={styles.am} alignItems="center" mt="18px">
-        <Input className={styles.inp} onChange={(e) => setAmount(e.target.value)}></Input>
-        <Box className={styles.tex}>AC</Box>
+        <Input className={styles.inp} onChange={(e) => changeAmount(e)}></Input>
+        <Box className={styles.tex}>SRC</Box>
       </Flex>
       <Box color="#B1B6BB" mt="13px">
-        Balance：31 APT,fees: 0.000315 APT
+        fees: {fee} SRC
       </Box>
 
       <Flex mt="210px" justifyContent="space-around">

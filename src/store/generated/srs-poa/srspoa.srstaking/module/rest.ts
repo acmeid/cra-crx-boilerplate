@@ -1,0 +1,963 @@
+/* eslint-disable */
+/* tslint:disable */
+/*
+ * ---------------------------------------------------------------
+ * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
+ * ##                                                           ##
+ * ## AUTHOR: acacode                                           ##
+ * ## SOURCE: https://github.com/acacode/swagger-typescript-api ##
+ * ---------------------------------------------------------------
+ */
+
+/**
+* `Any` contains an arbitrary serialized protocol buffer message along with a
+URL that describes the type of the serialized message.
+
+Protobuf library provides support to pack/unpack Any values in the form
+of utility functions or additional generated methods of the Any type.
+
+Example 1: Pack and unpack a message in C++.
+
+    Foo foo = ...;
+    Any any;
+    any.PackFrom(foo);
+    ...
+    if (any.UnpackTo(&foo)) {
+      ...
+    }
+
+Example 2: Pack and unpack a message in Java.
+
+    Foo foo = ...;
+    Any any = Any.pack(foo);
+    ...
+    if (any.is(Foo.class)) {
+      foo = any.unpack(Foo.class);
+    }
+
+ Example 3: Pack and unpack a message in Python.
+
+    foo = Foo(...)
+    any = Any()
+    any.Pack(foo)
+    ...
+    if any.Is(Foo.DESCRIPTOR):
+      any.Unpack(foo)
+      ...
+
+ Example 4: Pack and unpack a message in Go
+
+     foo := &pb.Foo{...}
+     any, err := anypb.New(foo)
+     if err != nil {
+       ...
+     }
+     ...
+     foo := &pb.Foo{}
+     if err := any.UnmarshalTo(foo); err != nil {
+       ...
+     }
+
+The pack methods provided by protobuf library will by default use
+'type.googleapis.com/full.type.name' as the type URL and the unpack
+methods only use the fully qualified type name after the last '/'
+in the type URL, for example "foo.bar.com/x/y.z" will yield type
+name "y.z".
+
+
+JSON
+====
+The JSON representation of an `Any` value uses the regular
+representation of the deserialized, embedded message, with an
+additional field `@type` which contains the type URL. Example:
+
+    package google.profile;
+    message Person {
+      string first_name = 1;
+      string last_name = 2;
+    }
+
+    {
+      "@type": "type.googleapis.com/google.profile.Person",
+      "firstName": <string>,
+      "lastName": <string>
+    }
+
+If the embedded message type is well-known and has a custom JSON
+representation, that representation will be embedded adding a field
+`value` which holds the custom JSON in addition to the `@type`
+field. Example (for message [google.protobuf.Duration][]):
+
+    {
+      "@type": "type.googleapis.com/google.protobuf.Duration",
+      "value": "1.212s"
+    }
+*/
+export interface ProtobufAny {
+  /**
+   * A URL/resource name that uniquely identifies the type of the serialized
+   * protocol buffer message. This string must contain at least
+   * one "/" character. The last segment of the URL's path must represent
+   * the fully qualified name of the type (as in
+   * `path/google.protobuf.Duration`). The name should be in a canonical form
+   * (e.g., leading "." is not accepted).
+   *
+   * In practice, teams usually precompile into the binary all types that they
+   * expect it to use in the context of Any. However, for URLs which use the
+   * scheme `http`, `https`, or no scheme, one can optionally set up a type
+   * server that maps type URLs to message definitions as follows:
+   *
+   * * If no scheme is provided, `https` is assumed.
+   * * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+   *   value in binary format, or produce an error.
+   * * Applications are allowed to cache lookup results based on the
+   *   URL, or have them precompiled into a binary to avoid any
+   *   lookup. Therefore, binary compatibility needs to be preserved
+   *   on changes to types. (Use versioned type names to manage
+   *   breaking changes.)
+   *
+   * Note: this functionality is not currently available in the official
+   * protobuf release, and it is not used for type URLs beginning with
+   * type.googleapis.com.
+   *
+   * Schemes other than `http`, `https` (or the empty scheme) might be
+   * used with implementation specific semantics.
+   */
+  "@type"?: string;
+}
+
+export interface RpcStatus {
+  /** @format int32 */
+  code?: number;
+  message?: string;
+  details?: ProtobufAny[];
+}
+
+export interface SrspoasrstakingValidator {
+  /** operator_address defines the address of the validator's operator; bech encoded in JSON. */
+  operator_address?: string;
+
+  /** consensus_pubkey is the consensus public key of the validator, as a Protobuf Any. */
+  consensus_pubkey?: string;
+
+  /** description defines the description terms for the validator. */
+  description?: SrstakingDescription;
+
+  /** status is the validator status (bonded/unbonding/unbonded). */
+  status?: SrstakingValidatorStatus;
+
+  /** tokens define the delegated tokens (incl. self-delegation). */
+  tokens?: string;
+
+  /** delegator_shares defines total shares issued to a validator's delegators. */
+  delegator_shares?: string;
+  RegionID?: string;
+
+  /**
+   * unbonding_time defines, if unbonding, the min time for the validator to complete unbonding.
+   * @format date-time
+   */
+  unbonding_time?: string;
+
+  /** commission defines the commission parameters. */
+  commission?: SrstakingCommission;
+}
+
+export enum SrstakingApplyAction {
+  APPLY_ACTION_CREATE_REGION = "APPLY_ACTION_CREATE_REGION",
+  APPLY_ACTION_DELETE_REGION = "APPLY_ACTION_DELETE_REGION",
+  APPLY_ACTION_UPDATE_REGION = "APPLY_ACTION_UPDATE_REGION",
+  APPLY_ACTION_CREATE_DELEGATE = "APPLY_ACTION_CREATE_DELEGATE",
+  APPLY_ACTION_DELEGATE = "APPLY_ACTION_DELEGATE",
+  APPLY_ACTION_UNDELEGATE = "APPLY_ACTION_UNDELEGATE",
+  APPLY_ACTION_EXIT_DELEGATE = "APPLY_ACTION_EXIT_DELEGATE",
+  APPLY_ACTION_CREATE_VALIDATOR = "APPLY_ACTION_CREATE_VALIDATOR",
+  APPLY_ACTION_KICK_VALIDATOR = "APPLY_ACTION_KICK_VALIDATOR",
+}
+
+export enum SrstakingApplyEvent {
+  APPLY_EVENT_REGION = "APPLY_EVENT_REGION",
+  APPLY_EVENT_DELEGATION = "APPLY_EVENT_DELEGATION",
+  APPLY_EVENT_VALIDATOR = "APPLY_EVENT_VALIDATOR",
+}
+
+export interface SrstakingApplyPeriod {
+  /** @format int64 */
+  periodBlocks?: string;
+
+  /** @format int64 */
+  prevPeriodNonce?: string;
+
+  /** @format int64 */
+  nextPeriodNonce?: string;
+
+  /** @format int64 */
+  prevPeriodBlockHeight?: string;
+
+  /** @format int64 */
+  nextPeriodBlockHeight?: string;
+  ignoreNotify?: SrstakingNotify[];
+}
+
+/**
+ * Commission defines commission parameters for a given validator.
+ */
+export interface SrstakingCommission {
+  /** commission_rates defines the initial commission rates to be used for creating a validator. */
+  commission_rates?: SrstakingCommissionRates;
+
+  /**
+   * update_time is the last time the commission rate was changed.
+   * @format date-time
+   */
+  update_time?: string;
+}
+
+/**
+* CommissionRates defines the initial commission rates to be used for creating
+a validator.
+*/
+export interface SrstakingCommissionRates {
+  /** rate is the commission rate charged to delegators, as a fraction. */
+  rate?: string;
+
+  /** max_rate defines the maximum commission rate which validator can ever charge, as a fraction. */
+  max_rate?: string;
+
+  /** max_change_rate defines the maximum daily increase of the validator commission, as a fraction. */
+  max_change_rate?: string;
+}
+
+export interface SrstakingDelegation {
+  delegatorAddress?: string;
+  validator_address?: string;
+  belongRegion?: string;
+  bondAmount?: string;
+  commissionPowerAmount?: string;
+  commissionPowerRate?: string;
+  changeBondAmount?: string;
+  bondDenom?: string;
+  commissionPowerDenom?: string;
+  shares?: string;
+
+  /** ValidatorStatus is the status of a validator. */
+  status?: SrstakingDelegationStatus;
+}
+
+/**
+ * ValidatorStatus is the status of a validator.
+ */
+export enum SrstakingDelegationStatus {
+  STATUS_DELEGATE_NOCHANGE = "STATUS_DELEGATE_NOCHANGE",
+  STATUS_CREATE_DELEGATE = "STATUS_CREATE_DELEGATE",
+  STATUS_DELEGATE = "STATUS_DELEGATE",
+  STATUS_UNDELEGATE = "STATUS_UNDELEGATE",
+  STATUS_EXIT_DELEGATE = "STATUS_EXIT_DELEGATE",
+}
+
+/**
+ * Description defines a validator description.
+ */
+export interface SrstakingDescription {
+  /** moniker defines a human-readable name for the validator. */
+  moniker?: string;
+
+  /** identity defines an optional identity signature (ex. UPort or Keybase). */
+  identity?: string;
+
+  /** website defines an optional website link. */
+  website?: string;
+
+  /** security_contact defines an optional email for security contact. */
+  security_contact?: string;
+
+  /** details define other optional details. */
+  details?: string;
+}
+
+export type SrstakingMsgCreateDelegateResponse = object;
+
+export type SrstakingMsgCreateRegionResponse = object;
+
+export type SrstakingMsgCreateValidatorResponse = object;
+
+export type SrstakingMsgDelegateResponse = object;
+
+export type SrstakingMsgDeleteRegionResponse = object;
+
+export type SrstakingMsgExitDelegateResponse = object;
+
+export type SrstakingMsgKickValidatorByAddressResponse = object;
+
+export type SrstakingMsgKickValidatorByPubkeyResponse = object;
+
+export type SrstakingMsgUndelegateResponse = object;
+
+export type SrstakingMsgUpdateRegionResponse = object;
+
+export type SrstakingMsgUpdateValidatorResponse = object;
+
+export interface SrstakingMsgWithdrawResponse {
+  receive_address?: string;
+  region_id?: string;
+
+  /** @format int64 */
+  from_height?: string;
+
+  /** @format int64 */
+  to_height?: string;
+  srs?: string;
+  src?: string;
+  srg?: string;
+}
+
+export interface SrstakingNotifies {
+  notifies?: SrstakingNotify[];
+}
+
+export interface SrstakingNotify {
+  event?: SrstakingApplyEvent;
+  action?: SrstakingApplyAction;
+
+  /** @format int64 */
+  blockHeight?: string;
+
+  /** @format date-time */
+  createdAt?: string;
+  dataCtx?: string[];
+}
+
+/**
+ * Params defines the parameters for the module.
+ */
+export interface SrstakingParams {
+  /** @format int64 */
+  region_delegators_limit?: string;
+  commission_power_denom?: string;
+  bond_denom?: string;
+  gov_power_denom?: string;
+  max_commission_power?: string;
+  denom2_commission_power_rate?: string;
+  gov_power2_denom_rate?: string;
+  gov_power2_commission_power_rate?: string;
+  min_delegate_bond_denom?: string;
+  min_delegate_commission_power?: string;
+
+  /** @format int64 */
+  clear_period_blocks?: string;
+
+  /** @format int64 */
+  historical_entries?: number;
+
+  /** @format int64 */
+  unbonding_time?: string;
+
+  /** @format int64 */
+  max_validators?: number;
+}
+
+export interface SrstakingQueryAllDelegationResponse {
+  delegation?: SrstakingDelegation[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface SrstakingQueryAllRegionResponse {
+  region?: SrstakingRegion[];
+  region_commission?: SrstakingRegionCommission[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface SrstakingQueryAllValidatorResponse {
+  validator?: SrspoasrstakingValidator[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface SrstakingQueryGetDelegationResponse {
+  delegation?: SrstakingDelegation;
+}
+
+export interface SrstakingQueryGetRegionByNameResponse {
+  region?: SrstakingRegion;
+  region_commission?: SrstakingRegionCommission;
+  delegators?: SrstakingRegionDelegators;
+}
+
+export interface SrstakingQueryGetRegionResponse {
+  region?: SrstakingRegion;
+  commission?: SrstakingRegionCommission;
+  delegators?: SrstakingRegionDelegators;
+}
+
+export interface SrstakingQueryGetValidatorResponse {
+  validator?: SrspoasrstakingValidator;
+}
+
+export interface SrstakingQueryKycBonusResponse {
+  kyc_address?: string;
+  region_id?: string;
+
+  /** @format int64 */
+  from_height?: string;
+
+  /** @format int64 */
+  to_height?: string;
+  srs?: string;
+  src?: string;
+  srg?: string;
+}
+
+export interface SrstakingQueryNotifyApplyResponse {
+  apply_period?: SrstakingApplyPeriod;
+  notifies?: SrstakingNotifies;
+}
+
+/**
+ * QueryParamsResponse is response type for the Query/Params RPC method.
+ */
+export interface SrstakingQueryParamsResponse {
+  /** params holds all the parameters of this module. */
+  params?: SrstakingParams;
+}
+
+export interface SrstakingRegion {
+  regionName?: string;
+  regionId?: string;
+  commissionPowerLimit?: string;
+  bondDenomLimit?: string;
+  commissionPowerRate?: string;
+
+  /** @format int64 */
+  delegatorsLimit?: string;
+  minDelegateBondDenom?: string;
+  minDelegateCommissionPower?: string;
+
+  /** @format int64 */
+  clearPeriodBlocks?: string;
+  bondDenom?: string;
+  commissionPowerDenom?: string;
+  regionFeeRate?: string;
+  regionAdminAddress?: string;
+  regionKYCStakeUpQuota?: string;
+}
+
+export interface SrstakingRegionCommission {
+  regionId?: string;
+  regionCommissionPowerLimit?: string;
+  regionBondDenomLimit?: string;
+  regionCommissionPowerRate?: string;
+  delegatorsCommissionPowerAmount?: string;
+  delegatorsCommissionPowerRate?: string;
+  delegatorsBondDenomAmount?: string;
+  bondDenom?: string;
+  commissionPowerDenom?: string;
+  accountName?: string;
+  accountAddress?: string;
+  jailed?: boolean;
+}
+
+export interface SrstakingRegionDelegators {
+  regionId?: string;
+  delegators?: string[];
+}
+
+/**
+* ValidatorStatus is the status of a validator.
+
+ - STATUS_ON_WORKING: ON_WORKING defines an invalid validator status.
+ - STATUS_JAILED: JAILED defines a validator that is jailed.
+ - STATUS_OFF_WORK: OFF_WORKING defines a validator that is off_working.
+*/
+export enum SrstakingValidatorStatus {
+  STATUS_ON_WORKING = "STATUS_ON_WORKING",
+  STATUS_JAILED = "STATUS_JAILED",
+  STATUS_OFF_WORK = "STATUS_OFF_WORK",
+}
+
+/**
+* Coin defines a token with a denomination and an amount.
+
+NOTE: The amount field is an Int which implements the custom method
+signatures required by gogoproto.
+*/
+export interface V1Beta1Coin {
+  denom?: string;
+  amount?: string;
+}
+
+/**
+* message SomeRequest {
+         Foo some_parameter = 1;
+         PageRequest pagination = 2;
+ }
+*/
+export interface V1Beta1PageRequest {
+  /**
+   * key is a value returned in PageResponse.next_key to begin
+   * querying the next page most efficiently. Only one of offset or key
+   * should be set.
+   * @format byte
+   */
+  key?: string;
+
+  /**
+   * offset is a numeric offset that can be used when key is unavailable.
+   * It is less efficient than using key. Only one of offset or key should
+   * be set.
+   * @format uint64
+   */
+  offset?: string;
+
+  /**
+   * limit is the total number of results to be returned in the result page.
+   * If left empty it will default to a value to be set by each app.
+   * @format uint64
+   */
+  limit?: string;
+
+  /**
+   * count_total is set to true  to indicate that the result set should include
+   * a count of the total number of items available for pagination in UIs.
+   * count_total is only respected when offset is used. It is ignored when key
+   * is set.
+   */
+  count_total?: boolean;
+
+  /**
+   * reverse is set to true if results are to be returned in the descending order.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  reverse?: boolean;
+}
+
+/**
+* PageResponse is to be embedded in gRPC response messages where the
+corresponding request message has used PageRequest.
+
+ message SomeResponse {
+         repeated Bar results = 1;
+         PageResponse page = 2;
+ }
+*/
+export interface V1Beta1PageResponse {
+  /** @format byte */
+  next_key?: string;
+
+  /** @format uint64 */
+  total?: string;
+}
+
+export type QueryParamsType = Record<string | number, any>;
+export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
+
+export interface FullRequestParams extends Omit<RequestInit, "body"> {
+  /** set parameter to `true` for call `securityWorker` for this request */
+  secure?: boolean;
+  /** request path */
+  path: string;
+  /** content type of request body */
+  type?: ContentType;
+  /** query params */
+  query?: QueryParamsType;
+  /** format of response (i.e. response.json() -> format: "json") */
+  format?: keyof Omit<Body, "body" | "bodyUsed">;
+  /** request body */
+  body?: unknown;
+  /** base url */
+  baseUrl?: string;
+  /** request cancellation token */
+  cancelToken?: CancelToken;
+}
+
+export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
+
+export interface ApiConfig<SecurityDataType = unknown> {
+  baseUrl?: string;
+  baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
+  securityWorker?: (securityData: SecurityDataType) => RequestParams | void;
+}
+
+export interface HttpResponse<D extends unknown, E extends unknown = unknown> extends Response {
+  data: D;
+  error: E;
+}
+
+type CancelToken = Symbol | string | number;
+
+export enum ContentType {
+  Json = "application/json",
+  FormData = "multipart/form-data",
+  UrlEncoded = "application/x-www-form-urlencoded",
+}
+
+export class HttpClient<SecurityDataType = unknown> {
+  public baseUrl: string = "";
+  private securityData: SecurityDataType = null as any;
+  private securityWorker: null | ApiConfig<SecurityDataType>["securityWorker"] = null;
+  private abortControllers = new Map<CancelToken, AbortController>();
+
+  private baseApiParams: RequestParams = {
+    credentials: "same-origin",
+    headers: {},
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+  };
+
+  constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
+    Object.assign(this, apiConfig);
+  }
+
+  public setSecurityData = (data: SecurityDataType) => {
+    this.securityData = data;
+  };
+
+  private addQueryParam(query: QueryParamsType, key: string) {
+    const value = query[key];
+
+    return (
+      encodeURIComponent(key) +
+      "=" +
+      encodeURIComponent(Array.isArray(value) ? value.join(",") : typeof value === "number" ? value : `${value}`)
+    );
+  }
+
+  protected toQueryString(rawQuery?: QueryParamsType): string {
+    const query = rawQuery || {};
+    const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+    return keys
+      .map((key) =>
+        typeof query[key] === "object" && !Array.isArray(query[key])
+          ? this.toQueryString(query[key] as QueryParamsType)
+          : this.addQueryParam(query, key),
+      )
+      .join("&");
+  }
+
+  protected addQueryParams(rawQuery?: QueryParamsType): string {
+    const queryString = this.toQueryString(rawQuery);
+    return queryString ? `?${queryString}` : "";
+  }
+
+  private contentFormatters: Record<ContentType, (input: any) => any> = {
+    [ContentType.Json]: (input: any) =>
+      input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
+    [ContentType.FormData]: (input: any) =>
+      Object.keys(input || {}).reduce((data, key) => {
+        data.append(key, input[key]);
+        return data;
+      }, new FormData()),
+    [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
+  };
+
+  private mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
+    return {
+      ...this.baseApiParams,
+      ...params1,
+      ...(params2 || {}),
+      headers: {
+        ...(this.baseApiParams.headers || {}),
+        ...(params1.headers || {}),
+        ...((params2 && params2.headers) || {}),
+      },
+    };
+  }
+
+  private createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
+    if (this.abortControllers.has(cancelToken)) {
+      const abortController = this.abortControllers.get(cancelToken);
+      if (abortController) {
+        return abortController.signal;
+      }
+      return void 0;
+    }
+
+    const abortController = new AbortController();
+    this.abortControllers.set(cancelToken, abortController);
+    return abortController.signal;
+  };
+
+  public abortRequest = (cancelToken: CancelToken) => {
+    const abortController = this.abortControllers.get(cancelToken);
+
+    if (abortController) {
+      abortController.abort();
+      this.abortControllers.delete(cancelToken);
+    }
+  };
+
+  public request = <T = any, E = any>({
+    body,
+    secure,
+    path,
+    type,
+    query,
+    format = "json",
+    baseUrl,
+    cancelToken,
+    ...params
+  }: FullRequestParams): Promise<HttpResponse<T, E>> => {
+    const secureParams = (secure && this.securityWorker && this.securityWorker(this.securityData)) || {};
+    const requestParams = this.mergeRequestParams(params, secureParams);
+    const queryString = query && this.toQueryString(query);
+    const payloadFormatter = this.contentFormatters[type || ContentType.Json];
+
+    return fetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
+      ...requestParams,
+      headers: {
+        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
+        ...(requestParams.headers || {}),
+      },
+      signal: cancelToken ? this.createAbortSignal(cancelToken) : void 0,
+      body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
+    }).then(async (response) => {
+      const r = response as HttpResponse<T, E>;
+      r.data = (null as unknown) as T;
+      r.error = (null as unknown) as E;
+
+      const data = await response[format]()
+        .then((data) => {
+          if (r.ok) {
+            r.data = data;
+          } else {
+            r.error = data;
+          }
+          return r;
+        })
+        .catch((e) => {
+          r.error = e;
+          return r;
+        });
+
+      if (cancelToken) {
+        this.abortControllers.delete(cancelToken);
+      }
+
+      if (!response.ok) throw data;
+      return data;
+    });
+  };
+}
+
+/**
+ * @title srstaking/delegation.proto
+ * @version version not set
+ */
+export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDelegationAll
+   * @summary Queries a list of Delegation items.
+   * @request GET:/srs-poa/srstaking/delegation
+   */
+  queryDelegationAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<SrstakingQueryAllDelegationResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/delegation`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDelegation
+   * @summary Queries a Delegation by index.
+   * @request GET:/srs-poa/srstaking/delegation/{index}
+   */
+  queryDelegation = (index: string, params: RequestParams = {}) =>
+    this.request<SrstakingQueryGetDelegationResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/delegation/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryKycBonus
+   * @request GET:/srs-poa/srstaking/kyc_bonus/{address}
+   */
+  queryKycBonus = (address: string, params: RequestParams = {}) =>
+    this.request<SrstakingQueryKycBonusResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/kyc_bonus/${address}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryNotifyApply
+   * @request GET:/srs-poa/srstaking/notify_apply
+   */
+  queryNotifyApply = (params: RequestParams = {}) =>
+    this.request<SrstakingQueryNotifyApplyResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/notify_apply`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryParams
+   * @summary Parameters queries the parameters of the module.
+   * @request GET:/srs-poa/srstaking/params
+   */
+  queryParams = (params: RequestParams = {}) =>
+    this.request<SrstakingQueryParamsResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryRegionAll
+   * @summary Queries a list of Region items.
+   * @request GET:/srs-poa/srstaking/region
+   */
+  queryRegionAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<SrstakingQueryAllRegionResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/region`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryRegion
+   * @summary Queries a Region by id.
+   * @request GET:/srs-poa/srstaking/region/{id}
+   */
+  queryRegion = (id: string, params: RequestParams = {}) =>
+    this.request<SrstakingQueryGetRegionResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/region/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryRegionByName
+   * @summary Queries a Region by name.
+   * @request GET:/srs-poa/srstaking/region_by_name/{name}
+   */
+  queryRegionByName = (name: string, params: RequestParams = {}) =>
+    this.request<SrstakingQueryGetRegionByNameResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/region_by_name/${name}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryValidatorAll
+   * @summary Queries a list of Validator items.
+   * @request GET:/srs-poa/srstaking/validator
+   */
+  queryValidatorAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<SrstakingQueryAllValidatorResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/validator`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryValidator
+   * @summary Queries a Validator by index.
+   * @request GET:/srs-poa/srstaking/validator/{address}
+   */
+  queryValidator = (address: string, params: RequestParams = {}) =>
+    this.request<SrstakingQueryGetValidatorResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/validator/${address}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+}

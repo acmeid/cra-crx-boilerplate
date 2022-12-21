@@ -5,3 +5,4 @@ public
 node_modules
 config
 build
+src/store

@@ -1,6 +1,10 @@
 import * as bech32 from 'bech32'
 import * as bip32 from 'bip32'
 import * as bip39 from 'bip39'
+import CryptoJS from "crypto-js";
+import bs58 from "bs58"
+import bs58check  from "bs58check"
+import { sha256 } from 'js-sha256'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // var Buffer = require('buffer/').Buffer
@@ -51,11 +55,36 @@ export class Cosmos {
     }
     const seed = bip39.mnemonicToSeed(mnemonic)
     const node = bip32.fromSeed(seed)
+    console.log('this.path:::::', node)
     const child = node.derivePath(this.path)
     console.log('child::', child)
     const words = bech32.toWords(child.identifier)
     console.log('words::', words)
     return bech32.encode(this.bech32MainPrefix, words)
+  }
+
+  getAddressByPubKey(pubKey) {
+    let hash = CryptoJS.SHA256(CryptoJS.lib.WordArray.create(pubKey)).toString();
+    hash = CryptoJS.RIPEMD160(CryptoJS.enc.Hex.parse(hash)).toString();
+    // console.log('aaaaaaaa:', bs58check.encode(Buffer.from(CryptoJS.RIPEMD160(CryptoJS.SHA256(pubKey)))))
+    // console.log('hash:::::', hash)
+    // console.log('word:::', CryptoJS.RIPEMD160(CryptoJS.enc.Hex.parse(hash)))
+    // console.log('b32:::::', bech32.decode('sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0'))
+    
+    // const a = bs58check.encode(Buffer.from(hash, "hex"))
+    // console.log('a:::::', a)
+
+    // const a1 = bs58.encode(new Uint8Array(Buffer.from(hash, "hex")))
+    // console.log('a1:::::', a1)
+    // const b = bip32.fromPublicKey()
+    
+
+    // const a2 = bip32.fromPublicKey(Buffer.from(hash, "hex"))
+    // console.log('a2:::::', a2)
+
+    // const b = bip32.fromPublicKey(Buffer.from(hash, "hex")).toBase58()
+    // console.log('b:::::', b)
+    return new Uint8Array(Buffer.from(hash, "hex"));
   }
 
   changeAddress(prefix, address) {
@@ -126,27 +155,32 @@ export class Cosmos {
   }
 
   sign(txBody, authInfo, accountNumber, privKey) {
-    const bodyBytes = message.cosmos.tx.v1beta1.TxBody.encode(txBody).finish()
-    const authInfoBytes = message.cosmos.tx.v1beta1.AuthInfo.encode(authInfo).finish()
-    const signDoc = new message.cosmos.tx.v1beta1.SignDoc({
-      body_bytes: bodyBytes,
-      auth_info_bytes: authInfoBytes,
-      chain_id: this.chainId,
-      account_number: Number(accountNumber),
-    })
-    let signMessage = message.cosmos.tx.v1beta1.SignDoc.encode(signDoc).finish()
-    const hash = crypto.createHash('sha256').update(signMessage).digest()
-    console.log('Buffer.from(privKey)::', Buffer.from(privKey))
-    const sig = secp256k1.sign(hash, Buffer.from(privKey))
-    // const sig = secp256k1.sign(hash, privKey)
-    const txRaw = new message.cosmos.tx.v1beta1.TxRaw({
-      body_bytes: bodyBytes,
-      auth_info_bytes: authInfoBytes,
-      signatures: [sig.signature],
-    })
-    const txBytes = message.cosmos.tx.v1beta1.TxRaw.encode(txRaw).finish()
-    // const txBytesBase64 = Buffer.from(txBytes, 'binary').toString('base64')
-    return txBytes
+    try {
+      const bodyBytes = message.cosmos.tx.v1beta1.TxBody.encode(txBody).finish()
+      const authInfoBytes = message.cosmos.tx.v1beta1.AuthInfo.encode(authInfo).finish()
+      const signDoc = new message.cosmos.tx.v1beta1.SignDoc({
+        body_bytes: bodyBytes,
+        auth_info_bytes: authInfoBytes,
+        chain_id: this.chainId,
+        account_number: Number(accountNumber),
+      })
+      let signMessage = message.cosmos.tx.v1beta1.SignDoc.encode(signDoc).finish()
+      const hash = crypto.createHash('sha256').update(signMessage).digest()
+      console.log('Buffer.from(privKey)::', Buffer.from(privKey))
+      const sig = secp256k1.sign(hash, Buffer.from(privKey))
+      // const sig = secp256k1.sign(hash, privKey)
+      const txRaw = new message.cosmos.tx.v1beta1.TxRaw({
+        body_bytes: bodyBytes,
+        auth_info_bytes: authInfoBytes,
+        signatures: [sig.signature],
+      })
+      const txBytes = message.cosmos.tx.v1beta1.TxRaw.encode(txRaw).finish()
+      // const txBytesBase64 = Buffer.from(txBytes, 'binary').toString('base64')
+      return txBytes
+    } catch (error) {
+      console.log('sign error::::::', error)
+      return ''
+    }
   }
 
   // "BROADCAST_MODE_UNSPECIFIED", "BROADCAST_MODE_BLOCK", "BROADCAST_MODE_SYNC", "BROADCAST_MODE_ASYNC"

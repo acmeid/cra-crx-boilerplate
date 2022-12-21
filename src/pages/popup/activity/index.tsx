@@ -23,7 +23,7 @@ export default function Activity({ style, setTab }: any) {
 
   const initData = async () => {
     const res = await getAccount()
-    res.address = 'sil157ykw7kanea77pkwkrhw6v6a7gpzlwwcwjztup'
+    // res.address = 'sil157ykw7kanea77pkwkrhw6v6a7gpzlwwcwjztup'
     const res2: any = await messageByAccount({ account: res.address })
     console.log('res2.data:::', res2.data)
     const trans = res2.data.map(async (item: any) => {

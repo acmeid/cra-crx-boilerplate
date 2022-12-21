@@ -65,7 +65,9 @@ export default function AutoLock({ style }: any) {
       <InputGroup size="lg" mt="20px">
         {/* <InputLeftAddon children="https://" /> */}
         <Input placeholder="mysite" />
-        <InputRightAddon>minutes</InputRightAddon>
+        <InputRightAddon bg="#fff" border="0">
+          minutes
+        </InputRightAddon>
       </InputGroup>
 
       <Flex position="absolute" bottom="18px" left="18px" right="18px" justifyContent="space-around">

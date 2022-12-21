@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
+  useToast,
 } from '@chakra-ui/react'
 import QRCode from 'qrcode'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/icons'
@@ -20,16 +21,56 @@ import styles from './styles.module.scss'
 import AccountHeader from '@/components/accountHeader'
 import { getAccount } from '@/utils'
 import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
-import { round } from 'lodash-es'
+import { debounce, round } from 'lodash-es'
 import { openTab } from '@/utils/tools'
+import { exchange, storage } from '@/utils'
+import { createDetegate } from '@/utils/staking'
 
 export default function Home({ style, setTab }: any) {
   const navigate = useNavigate()
+  const toast = useToast()
   const [data, setData] = useState<any>({})
   // const [isOpen, setIsOpen] = useState<boolean>(false)
   const [account, setAccount] = useState<any>({})
   const [maxRate, setMaxRate] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  // exchange({})
+  //   .then((res: any) => {
+  //     console.log('res:::::', res)
+  //     if (res.tx_response.code !== 0) {
+  //       toast({
+  //         title: 'Transaction failed',
+  //         position: 'top',
+  //         status: 'error',
+  //         duration: 6000,
+  //         isClosable: true,
+  //       })
+
+  //       return
+  //     }
+
+  //     onClose()
+  //     navigate(-1)
+  //     toast({
+  //       title: 'Transaction succeeded',
+  //       position: 'top',
+  //       status: 'success',
+  //       duration: 8000,
+  //       isClosable: true,
+  //     })
+  //   })
+  //   .catch((error) => {
+  //     toast({
+  //       title: 'Transaction failed',
+  //       // description: 'Amount transferred: 1, gas consumed:0.000334 APT',
+  //       position: 'top',
+  //       status: 'error',
+  //       duration: 6000,
+  //       isClosable: true,
+  //     })
+  //   })
+  // console.log(1111111111111)
 
   const createQrCode = (data: any) => {
     const opts = {
@@ -51,48 +92,57 @@ export default function Home({ style, setTab }: any) {
   }
 
   const initData = async (data: any) => {
+    await createDetegate({})
     // setLoading(true)
     // getAccountByAddr(data.address),
-    try {
-      // 如果部署kyc用户，调用getKyc http是404
-      const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
-      let staked = 0
-      let ac = 0
-      let ag = 0
-      res2?.balances?.forEach((item: any) => {
-        if (item.denom === 'src') {
-          ac = item.amount
-        }
-        if (item.denom === 'srg') {
-          ag = item.amount
-        }
-      })
 
-      console.log('res3:::::', res3)
+    // try {
+    //   // 如果部署kyc用户，调用getKyc http是404
+    //   const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
+    //   console.log('res2:::', res2)
+    //   let staked = 0
+    //   let ac = 0
+    //   let ag = 0
+    //   res2?.value.balances?.forEach((item: any) => {
+    //     if (item.denom === 'src') {
+    //       ac = item.amount
+    //     }
+    //     if (item.denom === 'srg') {
+    //       ag = item.amount
+    //     }
+    //   })
 
-      if (res3.status !== 'rejected' && res3?.reason?.kyc) {
-        const res4 = await delegationByAddress(data.address)
-        staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
+    //   console.log('res3:::::', res3)
 
-        const res5 = await getRegionVaultById(res3.kyc.regionId)
-        const max = res5.regionVault.annualRate.reduce((prev: any, item: any) => {
-          return item > prev ? item : prev
-        }, 0)
+    //   if (res3.status !== 'rejected' && res3?.value?.kyc) {
+    //     try {
+    //       const res4 = await delegationByAddress(data.address)
+    //       staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
 
-        setMaxRate(`${round(max * 100, 0)}%`)
-      }
+    //       const res5 = await getRegionVaultById(res3.kyc.regionId)
+    //       const max = res5.regionVault.annualRate.reduce((prev: any, item: any) => {
+    //         return item > prev ? item : prev
+    //       }, 0)
 
-      setData({
-        // ...res,
-        ...data,
-        ac,
-        ag,
-        staked,
-        power: staked * 400,
-      })
-    } catch (error) {
-      console.error('InitData Error: ', error)
-    }
+    //       setMaxRate(`${round(max * 100, 0)}%`)
+    //     } catch (error) {
+    //       console.error('MaxRate error: ', error)
+    //     }
+    //   }
+    //   console.log('ac:::', ac)
+    //   console.log('ag:::', ag)
+    //   setData({
+    //     // ...res,
+    //     ...data,
+    //     ac,
+    //     ag,
+    //     staked,
+    //     power: staked * 400,
+    //     total: ac + staked,
+    //   })
+    // } catch (error) {
+    //   console.error('InitData Error: ', error)
+    // }
   }
 
   const showQrCode = () => {
@@ -119,8 +169,8 @@ export default function Home({ style, setTab }: any) {
       <AccountHeader title="Home"></AccountHeader>
 
       <Box fontSize="16px" mt="18px">
-        Total Balance: <span style={{ fontSize: '30px' }}>0</span>
-        <span className={styles.highlight}> AC</span>
+        Total Balance: <span style={{ fontSize: '22px' }}>{data.total} </span>
+        <span className={styles.highlight}>AC</span>
       </Box>
 
       {/* <Box fontSize="34px" fontWeight="600" mt="13px">
