@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon, ChevronRightIcon, 
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { getAccount, storage } from '@/utils'
+import { getAccount, storage } from '@/resources/account'
 import { openTab } from '@/utils/tools'
 
 export default function Welcome({ style, setTab }: any) {

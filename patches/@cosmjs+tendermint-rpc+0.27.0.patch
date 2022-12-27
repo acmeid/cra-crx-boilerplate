@@ -1,0 +1,17 @@
+diff --git a/node_modules/@cosmjs/tendermint-rpc/build/tendermint34/tendermint34client.js b/node_modules/@cosmjs/tendermint-rpc/build/tendermint34/tendermint34client.js
+index 3d80ede..6d76c23 100644
+--- a/node_modules/@cosmjs/tendermint-rpc/build/tendermint34/tendermint34client.js
++++ b/node_modules/@cosmjs/tendermint-rpc/build/tendermint34/tendermint34client.js
+@@ -51,7 +51,11 @@ class Tendermint34Client {
+         // (our CI) when skipping the status call before doing other queries. Sleeping a little
+         // while did not help. Thus we query the version as a way to say "hi" to the backend,
+         // even in cases where we don't use the result.
+-        const _version = await this.detectVersion(rpcClient);
++        try {
++            const _version = await this.detectVersion(rpcClient);
++         } catch(error) { 
++            console.log('error: ', error)
++        }
+         return new Tendermint34Client(rpcClient);
+     }
+     static async detectVersion(client) {

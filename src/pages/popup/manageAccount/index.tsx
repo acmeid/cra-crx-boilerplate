@@ -5,7 +5,7 @@ import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Header from '@/components/header'
 import CheckPassword from '@/components/checkPassword'
-import { getAccount } from '@/utils'
+import { getAccount } from '@/resources/account'
 import { copyText } from '@/utils/tools'
 
 export default function ManageAccount({ style }: any) {

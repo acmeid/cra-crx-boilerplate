@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon, ChevronRightIcon, 
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { addAccount } from '@/utils'
+import { addAccount } from '@/resources/account'
 
 export default function Welcome({ style, setTab }: any) {
   const toast = useToast()

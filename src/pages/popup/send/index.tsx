@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
-import { createSend, storage } from '@/utils'
+import { createSend, storage } from '@/resources/account'
 import { cutText } from '@/utils/tools'
 
 type IFormInput = {

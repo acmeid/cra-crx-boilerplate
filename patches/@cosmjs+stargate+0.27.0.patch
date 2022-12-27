@@ -1,0 +1,37 @@
+diff --git a/node_modules/@cosmjs/stargate/build/signingstargateclient.js b/node_modules/@cosmjs/stargate/build/signingstargateclient.js
+index 7595431..1ef67fe 100644
+--- a/node_modules/@cosmjs/stargate/build/signingstargateclient.js
++++ b/node_modules/@cosmjs/stargate/build/signingstargateclient.js
+@@ -174,8 +174,12 @@ class SigningStargateClient extends stargateclient_1.StargateClient {
+         else {
+             usedFee = fee;
+         }
++
++        console.log('signAndBroadcast:::::')
+         const txRaw = await this.sign(signerAddress, messages, usedFee, memo);
++        console.log('txRaw:', txRaw)
+         const txBytes = tx_5.TxRaw.encode(txRaw).finish();
++        console.log('txBytes:', txBytes)
+         return this.broadcastTx(txBytes, this.broadcastTimeoutMs, this.broadcastPollIntervalMs);
+     }
+     /**
+diff --git a/node_modules/@cosmjs/stargate/build/stargateclient.js b/node_modules/@cosmjs/stargate/build/stargateclient.js
+index 6989277..7e518cf 100644
+--- a/node_modules/@cosmjs/stargate/build/stargateclient.js
++++ b/node_modules/@cosmjs/stargate/build/stargateclient.js
+@@ -86,6 +86,7 @@ class StargateClient {
+         return status.syncInfo.latestBlockHeight;
+     }
+     async getAccount(searchAddress) {
++        console.log('getAccount queryClient: ', this.queryClient)
+         try {
+             const account = await this.forceGetQueryClient().auth.account(searchAddress);
+             return account ? (0, accounts_1.accountFromAny)(account) : null;
+@@ -94,6 +95,7 @@ class StargateClient {
+             if (/rpc error: code = NotFound/i.test(error.toString())) {
+                 return null;
+             }
++            console.log('error::', error)
+             throw error;
+         }
+     }

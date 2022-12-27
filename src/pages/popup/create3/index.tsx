@@ -21,7 +21,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
 import { SRS } from '../../../utils/cosmos'
-import { addAccount, getAccount, getAccountList } from '@/utils'
+import { addAccount, getAccount, getAccountList } from '@/resources/account'
 import Header from '@/components/header'
 import Step from '@/components/setp'
 

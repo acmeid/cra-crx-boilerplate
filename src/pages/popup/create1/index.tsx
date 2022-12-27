@@ -18,7 +18,7 @@ import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
-import { storage } from '@/utils'
+import { storage } from '@/resources/account'
 import Header from '@/components/header'
 import Step from '@/components/setp'
 

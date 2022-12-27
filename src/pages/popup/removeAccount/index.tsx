@@ -7,7 +7,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import CheckPassword from '@/components/checkPassword'
-import { getAccount, removeAccount, storage } from '@/utils'
+import { getAccount, removeAccount, storage } from '@/resources/account'
 import { cutText } from '@/utils/tools'
 
 type IFormInput = {

@@ -25,7 +25,7 @@ import styles from './styles.module.scss'
 import { qs } from 'url-parse'
 
 import Header from '@/components/header'
-import { getAccount } from '@/utils'
+import { getAccount } from '@/resources/account'
 import { getTransByHash } from '@/resources/api'
 import dayjs from 'dayjs'
 import { dealType, openTab } from '@/utils/tools'

@@ -1,4 +1,4 @@
-import { createSend, getAccount, storage } from '@/utils'
+import { createSend, getAccount, storage } from '@/resources/account'
 // import { SRS } from '@/utils/cosmos'
 import { openTab } from '@/utils/tools'
 

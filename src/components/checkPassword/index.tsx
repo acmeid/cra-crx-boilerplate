@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ChevronLeftIcon, EditIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { getAccount } from '@/utils'
+import { getAccount } from '@/resources/account'
 import { cutText } from '@/utils/tools'
 
 // type cprops = any

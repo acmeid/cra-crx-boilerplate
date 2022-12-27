@@ -19,7 +19,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
-import { getAccount, setAccount, storage } from '@/utils'
+import { getAccount, setAccount, storage } from '@/resources/account'
 import { getSystemErrorName } from 'util'
 
 type IFormInput = {

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "esnext", "es6"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,5 +21,13 @@
     }
   },
   "include": ["src"],
-  "exclude": ["node_modules", "src/utils/cosmos", "src/utils/cosmos/messages/proto.js", "src/store", "src/store/**/*.ts"]
+  "exclude": [
+    "node_modules",
+    "src/utils/cosmos",
+    "src/utils/cosmos/messages/proto.js",
+    "src/store",
+    "src/store/**/*.ts",
+    "src/ts-client",
+    "src/ts-client/**/*.ts"
+  ]
 }

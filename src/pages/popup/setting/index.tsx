@@ -24,7 +24,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
 import AccountHeader from '@/components/accountHeader'
-import { getAccount } from '@/utils'
+import { getAccount } from '@/resources/account'
 import { openTab } from '@/utils/tools'
 
 export default function Welcome({ style }: any) {

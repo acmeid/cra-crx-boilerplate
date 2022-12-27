@@ -23,7 +23,7 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 import AccountHeader from '@/components/accountHeader'
-import { getAccount } from '@/utils'
+import { getAccount } from '@/resources/account'
 import { delegationByAddress, getBalanceByAddr, getKyc } from '@/resources/api'
 
 export default function Stake({ style, setTab }: any) {

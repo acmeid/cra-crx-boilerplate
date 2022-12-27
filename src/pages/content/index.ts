@@ -1,4 +1,4 @@
-import { storage } from '@/utils'
+import { storage } from '@/resources/account'
 import { getCurrentTab } from '@/utils/tools'
 
 declare const window: any

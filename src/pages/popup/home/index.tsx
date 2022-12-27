@@ -17,14 +17,13 @@ import QRCode from 'qrcode'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
-// import Menu from '../../../components/menu'
 import AccountHeader from '@/components/accountHeader'
-import { getAccount } from '@/utils'
+import { getAccount } from '@/resources/account'
 import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
 import { debounce, round } from 'lodash-es'
 import { openTab } from '@/utils/tools'
-import { exchange, storage } from '@/utils'
-import { createDetegate } from '@/utils/staking'
+// import { exchange, storage } from '@/utils'
+import { msgCreateDetegate, msgDetegate, msgAgToAc } from '@/resources'
 
 export default function Home({ style, setTab }: any) {
   const navigate = useNavigate()
@@ -92,7 +91,9 @@ export default function Home({ style, setTab }: any) {
   }
 
   const initData = async (data: any) => {
-    await createDetegate({})
+    // await msgCreateDetegate({})
+    // await msgDetegate({})
+    await msgAgToAc({})
     // setLoading(true)
     // getAccountByAddr(data.address),
 

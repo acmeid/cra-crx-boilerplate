@@ -20,7 +20,7 @@ import {
 import styles from './styles.module.scss'
 import { Link, useNavigate } from 'react-router-dom'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { getAccount, resetAccount } from '@/utils'
+import { getAccount, resetAccount } from '@/resources/account'
 
 export default function Welcome({ style }: any) {
   const navigate = useNavigate()

@@ -4,7 +4,7 @@ import { ChevronLeftIcon, SmallAddIcon, ViewOffIcon, WarningIcon, CheckIcon } fr
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { getAccountList, switchAccount } from '@/utils'
+import { getAccountList, switchAccount } from '@/resources/account'
 import { cutText } from '@/utils/tools'
 
 export default function Welcome({ style }: any) {
