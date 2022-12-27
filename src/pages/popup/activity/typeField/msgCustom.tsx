@@ -20,9 +20,9 @@ export default function MsgCustom({ data }: any) {
         <Flex justifyContent="space-between">
           <Box className={styles.type}>{data._type}</Box>
           {!data.delegatorAddress ? (
-            <Box className={styles.amountFrom}>+ {data.value?.amount[0]?.amount} AC</Box>
+            <Box className={styles.amountFrom}>+ {data.value?.amount?.[0]?.amount} AC</Box>
           ) : (
-            <Box className={styles.amountTo}>- {data.value?.amount[0]?.amount} AC</Box>
+            <Box className={styles.amountTo}>- {data.value?.amount?.[0]?.amount} AC</Box>
           )}
         </Flex>
         <Flex justifyContent="space-between" mt="4px">

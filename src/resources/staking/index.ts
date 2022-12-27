@@ -9,27 +9,27 @@ const getWallet = async () => {
   // const mnemonic = 'champion session feature cry pretty middle hamster dinner snap grunt glass hire rent notable spoon bachelor gorilla fire salt dice riot brisk hair flag'
   const account: any = await getAccount()
   if (account.mnemonic) {
-    wallet = await DirectSecp256k1HdWallet.fromMnemonic(account.mnemonic, { prefix })
-    return wallet
+    return DirectSecp256k1HdWallet.fromMnemonic(account.mnemonic, { prefix })
   } else {
     throw new Error('通过私钥导入的账户没有mnemonic')
   }
 }
 
-// 添加质押
-export const msgDetegate = async (data?: any) => {
+// 创建质押
+export const msgCreateDetegate = async ({ amount, feeAmount, gas, memo }?: any) => {
   const wallet = await getWallet()
 
   console.log('wallet:::::', wallet)
-  wallet.getAccounts().then((res) => console.log('res::', res))
+  const [account] = await wallet.getAccounts()
+  console.log('wallet.getAccounts::', account)
 
   const client = await txClient(wallet, { addr })
   console.log('client:::', client)
 
   const value = {
-    creator: 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',
-    // belongRegion: 'huabei-01',
-    amount: { denom, amount: '300000000' },
+    creator: account.address, // 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',
+    belongRegion: 'huabei-01',
+    amount: { denom, amount },
   }
 
   const msg = await client.msgDelegate(value)
@@ -39,33 +39,65 @@ export const msgDetegate = async (data?: any) => {
     amount: [
       {
         denom,
-        amount: '100000000',
+        amount: feeAmount,
       },
     ],
-    gas: '200000',
+    gas,
+  }
+  console.log('fee:::::', fee)
+  const result = await client.signAndBroadcast([msg], { fee, memo })
+  console.log('result:::::::', result)
+  return result
+}
+
+// 退回质押
+export const msgExitDelegate = async ({ amount, feeAmount, gas, memo }?: any) => {
+  const wallet = await getWallet()
+
+  console.log('wallet:::::', wallet)
+  const [account] = await wallet.getAccounts()
+  console.log('wallet.getAccounts::', account)
+
+  const client = await txClient(wallet, { addr })
+  console.log('client:::', client)
+
+  const value = {
+    creator: account.address, // 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',-
   }
 
-  const memo = ''
+  const msg = await client.msgDelegate(value)
+  console.log('msg:::', msg)
+
+  const fee = {
+    amount: [
+      {
+        denom,
+        amount: feeAmount,
+      },
+    ],
+    gas,
+  }
 
   const result = await client.signAndBroadcast([msg], { fee, memo })
   console.log('result:::::::', result)
   return result
 }
 
-// 创建质押
-export const msgCreateDetegate = async (data?: any) => {
+// 添加质押
+export const msgDetegate = async ({ amount, feeAmount, gas, memo }?: any) => {
   const wallet = await getWallet()
 
   console.log('wallet:::::', wallet)
-  wallet.getAccounts().then((res) => console.log('wallet.getAccounts::', res))
+  const [account] = await wallet.getAccounts()
+  console.log('wallet.getAccounts::', account)
 
   const client = await txClient(wallet, { addr })
   console.log('client:::', client)
 
   const value = {
-    creator: 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',
-    belongRegion: 'huabei-01',
-    amount: { denom, amount: '300000000' },
+    creator: account.address,
+    //'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',
+    amount: { denom, amount },
   }
 
   const msg = await client.msgDelegate(value)
@@ -75,13 +107,45 @@ export const msgCreateDetegate = async (data?: any) => {
     amount: [
       {
         denom,
-        amount: '100000000',
+        amount: feeAmount,
       },
     ],
-    gas: '200000',
+    gas,
+  }
+  console.log('fee:::::', fee)
+  const result = await client.signAndBroadcast([msg], { fee, memo })
+  console.log('result:::::::', result)
+  return result
+}
+
+// 减少质押
+export const msgUndelegate = async ({ amount, feeAmount, gas, memo }?: any) => {
+  const wallet = await getWallet()
+
+  console.log('wallet:::::', wallet)
+  const [account] = await wallet.getAccounts()
+  console.log('wallet.getAccounts::', account)
+
+  const client = await txClient(wallet, { addr })
+  console.log('client:::', client)
+
+  const value = {
+    creator: account.address, // 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',
+    amount: { denom, amount },
   }
 
-  const memo = ''
+  const msg = await client.msgUndelegate(value)
+  console.log('msg:::', msg)
+
+  const fee = {
+    amount: [
+      {
+        denom,
+        amount: feeAmount,
+      },
+    ],
+    gas,
+  }
 
   const result = await client.signAndBroadcast([msg], { fee, memo })
   console.log('result:::::::', result)

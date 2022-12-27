@@ -27,6 +27,8 @@ const securityDomain = ['http://192.168.0.206/', 'http://localhost:3001', 'http:
 //   )
 // }
 
+console.log('chrome:::', chrome.runtime)
+
 function init() {
   const srs = {
     getKey: function () {
@@ -100,10 +102,32 @@ function init() {
         resolve('断开连接')
       })
     },
-    sendTx: function (tx: any, mode: any) {
+    sendTx: function (tx: any) {
       console.log('收到发起交易的消息')
+      window.postMessage(
+        {
+          value: 'sendTx',
+          from: 'injectedScript',
+          tx,
+        },
+        window.location.origin
+      )
+
       return new Promise((resolve, reject) => {
-        resolve('')
+        window.addEventListener(
+          'message',
+          async (event: MessageEvent) => {
+            if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'sendTx') {
+              console.log('inejectedScript收到交易结果', event.data)
+              if (event.data.response?.tx_response) {
+                resolve(event.data.response)
+              } else {
+                reject(event.data.response)
+              }
+            }
+          },
+          false
+        )
       })
     },
     createSend: function (toAddress: string, amount: string, memo: string) {

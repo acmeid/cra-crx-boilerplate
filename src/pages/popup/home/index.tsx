@@ -93,57 +93,66 @@ export default function Home({ style, setTab }: any) {
   const initData = async (data: any) => {
     // await msgCreateDetegate({})
     // await msgDetegate({})
-    await msgAgToAc({})
+    // await msgAgToAc({})
+
     // setLoading(true)
     // getAccountByAddr(data.address),
 
-    // try {
-    //   // 如果部署kyc用户，调用getKyc http是404
-    //   const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
-    //   console.log('res2:::', res2)
-    //   let staked = 0
-    //   let ac = 0
-    //   let ag = 0
-    //   res2?.value.balances?.forEach((item: any) => {
-    //     if (item.denom === 'src') {
-    //       ac = item.amount
-    //     }
-    //     if (item.denom === 'srg') {
-    //       ag = item.amount
-    //     }
-    //   })
+    try {
+      // 如果部署kyc用户，调用getKyc http是404
+      const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
+      console.log('res2:::', res2)
+      let staked = 0
+      let ac = 0
+      let ag = 0
+      res2?.value.balances?.forEach((item: any) => {
+        if (item.denom === 'src') {
+          ac = item.amount
+        }
+        if (item.denom === 'srg') {
+          ag = item.amount
+        }
+      })
 
-    //   console.log('res3:::::', res3)
+      console.log('res3:::::', res3)
 
-    //   if (res3.status !== 'rejected' && res3?.value?.kyc) {
-    //     try {
-    //       const res4 = await delegationByAddress(data.address)
-    //       staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
+      if (res3 && res3.status !== 'rejected' && res3?.value?.kyc) {
+        try {
+          const res4 = await delegationByAddress(data.address)
+          staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
 
-    //       const res5 = await getRegionVaultById(res3.kyc.regionId)
-    //       const max = res5.regionVault.annualRate.reduce((prev: any, item: any) => {
-    //         return item > prev ? item : prev
-    //       }, 0)
+          const res5 = await getRegionVaultById(res3.value.kyc.regionId)
+          let max = 0
+          for (const key in res5.regionVault.annualRate) {
+            if (Object.prototype.hasOwnProperty.call(res5.regionVault.annualRate, key)) {
+              const element = Number(res5.regionVault.annualRate[key])
+              max = max > element ? max : element
+            }
+          }
 
-    //       setMaxRate(`${round(max * 100, 0)}%`)
-    //     } catch (error) {
-    //       console.error('MaxRate error: ', error)
-    //     }
-    //   }
-    //   console.log('ac:::', ac)
-    //   console.log('ag:::', ag)
-    //   setData({
-    //     // ...res,
-    //     ...data,
-    //     ac,
-    //     ag,
-    //     staked,
-    //     power: staked * 400,
-    //     total: ac + staked,
-    //   })
-    // } catch (error) {
-    //   console.error('InitData Error: ', error)
-    // }
+          // const max = res5.regionVault.annualRate.reduce((prev: any, item: any) => {
+          //   return item > prev ? item : prev
+          // }, 0)
+
+          setMaxRate(`${round(max * 100, 0)}%`)
+        } catch (error) {
+          console.error('MaxRate error: ', error)
+        }
+      }
+      console.log('ac:::', ac)
+      console.log('ag:::', ag)
+      setData({
+        // ...res,
+        ...data,
+        ac,
+        ag,
+        staked,
+        power: staked * 400,
+        total: ac + staked,
+      })
+    } catch (error) {
+      console.error('InitData Error: ', error)
+    }
   }
 
   const showQrCode = () => {
@@ -204,17 +213,17 @@ export default function Home({ style, setTab }: any) {
         </Flex>
       </Box>
 
-      <Flex justifyContent="space-around" mt="70px">
-        <Button variant="outline" minW="154px" h="45px" onClick={() => showQrCode()}>
+      <Flex justifyContent="space-between" mt="60px">
+        <Button variant="outline" minW="158px" h="45px" onClick={() => showQrCode()}>
           Deposit
         </Button>
-        <Button variant="outline" minW="154px" h="45px" onClick={() => navigate('/send')}>
+        <Button variant="outline" minW="158px" h="45px" onClick={() => navigate('/send')}>
           Send
         </Button>
       </Flex>
 
       {maxRate ? (
-        <Flex bg="blackAlpha.100" padding="10px" mt="15px">
+        <Flex bg="blackAlpha.100" padding="10px" mt="15px" borderRadius="8px">
           <Box flexGrow="1">
             <Box fontSize="16px">Stake</Box>
             <Box fontSize="13px">Earn up to {maxRate} per year</Box>

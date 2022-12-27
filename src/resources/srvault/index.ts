@@ -9,20 +9,17 @@ const getWallet = async () => {
   // const mnemonic = 'champion session feature cry pretty middle hamster dinner snap grunt glass hire rent notable spoon bachelor gorilla fire salt dice riot brisk hair flag'
   const account: any = await getAccount()
   if (account.mnemonic) {
-    wallet = await DirectSecp256k1HdWallet.fromMnemonic(account.mnemonic, { prefix })
-    return wallet
+    return DirectSecp256k1HdWallet.fromMnemonic(account.mnemonic, { prefix })
   } else {
     throw new Error('通过私钥导入的账户没有mnemonic')
   }
 }
 
 // 兑换
-export const msgAgToAc = async (data?: any) => {
+export const msgAgToAc = async ({ amount, feeAmount, gas, memo }?: any) => {
   const wallet = await getWallet()
 
   console.log('wallet:::::', wallet)
-  // wallet.getAccounts().then((res) => console.log('wallet.getAccounts::', res))
-  // await wallet.getAccounts()
   const [account] = await wallet.getAccounts()
   console.log('wallet.getAccounts::', account)
 
@@ -31,23 +28,21 @@ export const msgAgToAc = async (data?: any) => {
 
   const value = {
     account: account.address,
-    agAmount: 10,
+    agAmount: amount,
   }
 
-  const msg = await client.msgDelegate(value)
+  const msg = await client.msgAgToAc(value)
   console.log('msg:::', msg)
 
   const fee = {
     amount: [
       {
         denom,
-        amount: '100000000',
+        amount: feeAmount,
       },
     ],
-    gas: '200000',
+    gas,
   }
-
-  const memo = ''
 
   const result = await client.signAndBroadcast([msg], { fee, memo })
   console.log('result:::::::', result)

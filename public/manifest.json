@@ -13,12 +13,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*", "<all_urls>", "http://localhost:3001/*", "http://localhost:3001/"],
+      "matches": ["http://*/*", "https://*/*", "<all_urls>", "http://localhost:3000/", "http://localhost:3000/*"],
       "js": ["content.js"]
     }
   ],
   "externally_connectable":{
-    "matches": ["http://*/*", "https://*/*", "<all_urls>", "http://localhost:3001/*", "http://localhost:3001/"]
+    "matches": ["http://*/*", "https://*/*", "<all_urls>", "http://localhost:3000/*", "http://localhost:3000/"]
   },
   "permissions": ["storage"],
   "options_page": "options.html",

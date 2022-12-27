@@ -1,6 +1,7 @@
 import { createSend, getAccount, storage } from '@/resources/account'
-// import { SRS } from '@/utils/cosmos'
-import { openTab } from '@/utils/tools'
+import { msgCreateDetegate, msgExitDelegate, msgDetegate, msgUndelegate, msgAgToAc } from '@/resources'
+// // import { SRS } from '@/utils/cosmos'
+// import { openTab } from '@/utils/tools'
 
 const getCurrentTab = async () => {
   const queryOptions = { active: true }
@@ -27,23 +28,23 @@ if (process.env.NODE_ENV === 'development') {
 }
 console.log('This is the background page.')
 
-// 用于锁定
-chrome.runtime.onConnect.addListener(function (externalPort) {
-  externalPort.onDisconnect.addListener(function () {
-    // var ignoreError = chrome.runtime.lastError;
-    console.log('onDisconnect')
-    chrome?.storage?.local.set({ closeTime: new Date().getTime() })
-  })
-})
-
-// chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
-//   console.log('background.js收到popup.js信息', request)
-//   sendResponse({ res: { a: 1, b: 2 } })
+// // 用于锁定
+// chrome.runtime.onConnect.addListener(function (externalPort) {
+//   externalPort.onDisconnect.addListener(function () {
+//     // var ignoreError = chrome.runtime.lastError;
+//     console.log('onDisconnect')
+//     chrome?.storage?.local.set({ closeTime: new Date().getTime() })
+//   })
 // })
+
+// // chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+// //   console.log('background.js收到popup.js信息', request)
+// //   sendResponse({ res: { a: 1, b: 2 } })
+// // })
 
 // 请求连接-打开验证窗口
 chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
-  // console.log('background.js收到信息', request)
+  console.log('background.js收到信息', request)
   if (request.value === 'requestConnect') {
     const { connectList } = await storage.get(['connectList'])
 
@@ -64,14 +65,16 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
         },
         async () => {}
       )
-      return sendResponse({ msg: '已授权' })
+      sendResponse({ msg: '已授权' })
+      return true
     }
 
     await storage.set({ currentConnectOrigin: request.origin })
 
     // chrome.runtime.getURL('popup.html/#/welcome')
     chrome.windows.create({ url: `${chrome.runtime.getURL('popup.html')}#/authorize`, type: 'popup', width: 375, height: 639 })
-    return sendResponse({ msg: '成功打开窗口' })
+    sendResponse({ msg: '成功打开窗口' })
+    return true
   }
 })
 
@@ -101,13 +104,14 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
       },
       async () => {}
     )
-    return sendResponse({ msg: '已断开连接' })
+    sendResponse({ msg: '已断开连接' })
+    return true
   }
 })
 console.log('fetch::', fetch)
 // console.log('window::', window)
 
-// // 交易
+// 普通交易
 chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
   const tab: any = await getCurrentTab()
   if (request.value === 'createSend') {
@@ -127,12 +131,113 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
       async () => {}
     )
 
-    return sendResponse({ msg: '已发起交易' })
+    sendResponse({ msg: '已发起交易' })
+    return true
   }
 })
 
-// chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-//   console.log('收到消息：', request)
-// })
-// ;(window as any).srs = {}
+// 其他交易
+chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
+  console.log('background 收到其他交易请求')
+  const tab: any = await getCurrentTab()
+  if (request.value === 'sendTx') {
+    let send: Promise<any> = Promise.resolve('缺少msgType')
+    try {
+      switch (request.tx.msgType) {
+        case 'msgCreateDetegate':
+          send = msgCreateDetegate({
+            amount: String(request.tx.amount),
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: request.tx.memo,
+          })
+          break
+
+        case 'msgExitDelegate':
+          send = msgExitDelegate({
+            amount: String(request.tx.amount),
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: request.tx.memo,
+          })
+          break
+
+        case 'msgDetegate':
+          send = msgDetegate({
+            amount: String(request.tx.amount),
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: request.tx.memo,
+          })
+          break
+
+        case 'msgUndelegate':
+          send = msgUndelegate({
+            amount: String(request.tx.amount),
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: request.tx.memo,
+          })
+          break
+
+        case 'msgAgToAc':
+          send = msgAgToAc({
+            amount: String(request.tx.amount),
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: request.tx.memo,
+          })
+          break
+
+        default:
+          send = Promise.reject('缺少msgType')
+          break
+      }
+    } catch (error) {
+      console.log('交易失败error:::::', error)
+    }
+
+    const notice = (res: any) => {
+      // console.log('res::::::', res)
+      chrome.tabs.sendMessage(
+        tab.id,
+        {
+          from: 'popup',
+          value: 'sendTx',
+          response: res,
+        },
+        async () => {}
+      )
+    }
+
+    if (send) {
+      send.then(notice).catch(notice)
+    }
+
+    // try {
+    //   const res: any = await msgCreateDetegate({
+    //     amount: String(request.tx.amount),
+    //     feeAmount: String(request.tx.feeAmount),
+    //     gas: String(request.tx.gas),
+    //     memo: request.tx.memo,
+    //   })
+
+    //   chrome.tabs.sendMessage(
+    //     tab.id,
+    //     {
+    //       from: 'popup',
+    //       value: 'createSend',
+    //       response: res,
+    //     },
+    //     async () => {}
+    //   )
+    // } catch (error) {
+    //   console.log('交失败error:::::', error)
+    // }
+
+    sendResponse({ msg: '已发起交易' })
+    return true
+  }
+})
+
 export {}

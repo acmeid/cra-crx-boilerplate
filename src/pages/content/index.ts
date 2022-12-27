@@ -35,20 +35,25 @@ scriptElement.remove()
 // 监听请求授权消息
 const securityDomain = ['http://192.168.0.206/', 'http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002']
 // const securityDomain = ['http://192.168.0.206/']
+
 window.addEventListener(
   'message',
   async (event: MessageEvent) => {
     if (securityDomain.includes(event.origin) && event.data.from === 'injectedScript' && event.data.value === 'requestConnect') {
-      console.log('请求授权消息1:::::::::::::::::')
-      chrome.runtime.sendMessage(
-        {
-          value: event.data.value,
-          origin: event.origin,
-        },
-        (res) => {
-          console.log('请求授权消息2:::::::::::::::::', res)
-        }
-      )
+      console.log('请求授权消息1:::::::::::::::::', event)
+      try {
+        chrome.runtime.sendMessage(
+          {
+            value: event.data.value,
+            origin: event.origin,
+          },
+          (res) => {
+            console.log('请求授权消息2:::::::::::::::::', res)
+          }
+        )
+      } catch (error) {
+        console.log('error::', error)
+      }
     }
   },
   false
@@ -125,7 +130,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   }
 })
 
-// 监听请求交易
+// 监听普通交易请求
 window.addEventListener(
   'message',
   async (event: MessageEvent) => {
@@ -145,7 +150,46 @@ window.addEventListener(
   false
 )
 
-// 监听交易结果
+// 监听其他交易请求
+window.addEventListener(
+  'message',
+  async (event: MessageEvent) => {
+    // console.log('event::', event)
+    if (securityDomain.includes(event.origin) && event.data.from === 'injectedScript' && event.data.value === 'sendTx') {
+      console.log('content收到发起其他交易的消息', event)
+      chrome.runtime.sendMessage(
+        {
+          value: event.data.value,
+          origin: event.origin,
+          tx: event.data.tx,
+        },
+        (res) => {
+          console.log('其他交易请求', res)
+        }
+      )
+    }
+  },
+  false
+)
+
+// 监听其他交易结果
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+  if (request.from === 'popup' && request.value === 'sendTx') {
+    console.log('content收到其他交易结果的消息', request)
+    window.postMessage(
+      {
+        value: request.value,
+        form: 'content',
+        response: request.response,
+      },
+      window.location.origin
+    )
+
+    return sendResponse({ msg: '收到其他交易结果' })
+  }
+})
+
+// 监听普通交易结果
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.from === 'popup' && request.value === 'createSend') {
     window.postMessage(
@@ -157,7 +201,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
       window.location.origin
     )
 
-    return sendResponse({ msg: '收到交易结果' })
+    return sendResponse({ msg: '收到普通交易结果' })
   }
 })
 
