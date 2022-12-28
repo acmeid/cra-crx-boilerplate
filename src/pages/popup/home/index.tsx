@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
+  Text,
   Box,
   Flex,
   Button,
@@ -144,25 +145,32 @@ export default function Home({ style, setTab }: any) {
         <Flex>
           <Box className={styles.name}>Available</Box>
           <Box className={styles.num}>
-            {data.ac} <span>SRC</span>
+            <Text>
+              {data.ac} <span>SRC</span>
+            </Text>
+            <Text>
+              {data.ag} <span>SRG</span>
+            </Text>
           </Box>
-          <Box className={styles.num}>
-            {data.ag} <span>SRG</span>
-          </Box>
+          {/* <Box className={styles.num}>
+            
+          </Box> */}
         </Flex>
         <Flex>
           <Box className={styles.name}>Staked</Box>
           <Box className={styles.num}>
             {data.staked} <span>SRC</span>
           </Box>
-          <Box className={styles.num}>{/* 0 <span>SRG</span> */}</Box>
+          {/* <Box className={styles.num}>
+            0 <span>SRG</span>
+          </Box> */}
         </Flex>
         <Flex>
           <Box className={styles.name}>Power</Box>
           <Box className={styles.num}>
             {data.power} <span>AS</span>
           </Box>
-          <Box className={styles.num}>{/* 0 <span>SRG</span> */}</Box>
+          {/* <Box className={styles.num}>0 <span>SRG</span></Box> */}
         </Flex>
       </Box>
 

@@ -28,14 +28,14 @@ if (process.env.NODE_ENV === 'development') {
 }
 console.log('This is the background page.')
 
-// // 用于锁定
-// chrome.runtime.onConnect.addListener(function (externalPort) {
-//   externalPort.onDisconnect.addListener(function () {
-//     // var ignoreError = chrome.runtime.lastError;
-//     console.log('onDisconnect')
-//     chrome?.storage?.local.set({ closeTime: new Date().getTime() })
-//   })
-// })
+// 用于锁定
+chrome.runtime.onConnect.addListener(function (externalPort) {
+  externalPort.onDisconnect.addListener(function () {
+    // var ignoreError = chrome.runtime.lastError;
+    console.log('onDisconnect')
+    chrome?.storage?.local.set({ closeTime: new Date().getTime() })
+  })
+})
 
 // // chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 // //   console.log('background.js收到popup.js信息', request)
