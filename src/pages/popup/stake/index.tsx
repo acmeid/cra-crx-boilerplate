@@ -76,13 +76,13 @@ export default function Stake({ style, setTab }: any) {
       <Flex justifyContent="space-between" mt="18px">
         <Box fontSize="15px">Staking</Box>
         <Box>
-          {data.staked} <span className="highlight">AC</span>
+          {data.staked} <span className="highlight">SRC</span>
         </Box>
       </Flex>
       <Flex justifyContent="space-between" mt="15px">
         <Box fontSize="15px">Available</Box>
         <Box>
-          {data.ag} <span className="highlight">AG</span>
+          {data.ag} <span className="highlight">SRG</span>
         </Box>
       </Flex>
 
@@ -99,7 +99,7 @@ export default function Stake({ style, setTab }: any) {
             <Flex key={index} justifyContent="space-between" padding="10px 15px">
               <Box>1M</Box>
               <Box pl="5px">
-                0 <span className="highlight">AC</span>
+                0 <span className="highlight">SRC</span>
               </Box>
             </Flex>
           )
@@ -113,7 +113,7 @@ export default function Stake({ style, setTab }: any) {
         <Flex justifyContent="space-between" padding="12px 15px">
           <Box>Total</Box>
           <Box>
-            {data.bondAmount} <span className="highlight">AC</span>
+            {data.bondAmount} <span className="highlight">SRC</span>
           </Box>
         </Flex>
       </Box>

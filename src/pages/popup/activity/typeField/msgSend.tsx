@@ -20,9 +20,9 @@ export default function MsgSend({ data }: any) {
         <Flex justifyContent="space-between">
           <Box className={styles.type}>Received</Box>
           {data._isForm ? (
-            <Box className={styles.amountFrom}>+ {data.value?.amount[0]?.amount} AC</Box>
+            <Box className={styles.amountFrom}>+ {data.value?.amount[0]?.amount} SRC</Box>
           ) : (
-            <Box className={styles.amountTo}>- {data.value?.amount[0]?.amount} AC</Box>
+            <Box className={styles.amountTo}>- {data.value?.amount[0]?.amount} SRC</Box>
           )}
         </Flex>
         <Flex justifyContent="space-between" mt="4px">

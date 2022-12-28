@@ -119,7 +119,7 @@ function init() {
           async (event: MessageEvent) => {
             if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'sendTx') {
               console.log('inejectedScript收到交易结果', event.data)
-              if (event.data.response?.tx_response) {
+              if (event.data.response?.tx_response?.code === 0 || event.data.response?.code === 0) {
                 resolve(event.data.response)
               } else {
                 reject(event.data.response)

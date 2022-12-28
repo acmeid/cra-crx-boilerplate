@@ -1,5 +1,5 @@
 import { createSend, getAccount, storage } from '@/resources/account'
-import { msgCreateDetegate, msgExitDelegate, msgDetegate, msgUndelegate, msgAgToAc } from '@/resources'
+import { msgCreateDetegate, msgExitDelegate, msgDetegate, msgUndelegate, msgAgToAc, msgDoFixedDeposit, msgDoFixedWithdraw } from '@/resources'
 // // import { SRS } from '@/utils/cosmos'
 // import { openTab } from '@/utils/tools'
 
@@ -189,6 +189,25 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
           })
           break
 
+        case 'msgDoFixedDeposit':
+          send = msgDoFixedDeposit({
+            amount: String(request.tx.amount),
+            period: request.tx.period,
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: request.tx.memo,
+          })
+          break
+
+        case 'msgDoFixedWithdraw':
+          send = msgDoFixedWithdraw({
+            id: request.tx.id,
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: request.tx.memo,
+          })
+          break
+
         default:
           send = Promise.reject('缺少msgType')
           break
@@ -198,7 +217,7 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
     }
 
     const notice = (res: any) => {
-      // console.log('res::::::', res)
+      console.log('res::::::', res)
       chrome.tabs.sendMessage(
         tab.id,
         {

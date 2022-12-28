@@ -22,54 +22,14 @@ import { getAccount } from '@/resources/account'
 import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
 import { debounce, round } from 'lodash-es'
 import { openTab } from '@/utils/tools'
-// import { exchange, storage } from '@/utils'
-import { msgCreateDetegate, msgDetegate, msgAgToAc } from '@/resources'
 
 export default function Home({ style, setTab }: any) {
   const navigate = useNavigate()
   const toast = useToast()
   const [data, setData] = useState<any>({})
-  // const [isOpen, setIsOpen] = useState<boolean>(false)
   const [account, setAccount] = useState<any>({})
   const [maxRate, setMaxRate] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  // exchange({})
-  //   .then((res: any) => {
-  //     console.log('res:::::', res)
-  //     if (res.tx_response.code !== 0) {
-  //       toast({
-  //         title: 'Transaction failed',
-  //         position: 'top',
-  //         status: 'error',
-  //         duration: 6000,
-  //         isClosable: true,
-  //       })
-
-  //       return
-  //     }
-
-  //     onClose()
-  //     navigate(-1)
-  //     toast({
-  //       title: 'Transaction succeeded',
-  //       position: 'top',
-  //       status: 'success',
-  //       duration: 8000,
-  //       isClosable: true,
-  //     })
-  //   })
-  //   .catch((error) => {
-  //     toast({
-  //       title: 'Transaction failed',
-  //       // description: 'Amount transferred: 1, gas consumed:0.000334 APT',
-  //       position: 'top',
-  //       status: 'error',
-  //       duration: 6000,
-  //       isClosable: true,
-  //     })
-  //   })
-  // console.log(1111111111111)
 
   const createQrCode = (data: any) => {
     const opts = {
@@ -91,15 +51,8 @@ export default function Home({ style, setTab }: any) {
   }
 
   const initData = async (data: any) => {
-    // await msgCreateDetegate({})
-    // await msgDetegate({})
-    // await msgAgToAc({})
-
-    // setLoading(true)
-    // getAccountByAddr(data.address),
-
     try {
-      // 如果部署kyc用户，调用getKyc http是404
+      // 如果不是kyc用户，调用getKyc http是404
       const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
       console.log('res2:::', res2)
       let staked = 0
@@ -178,9 +131,9 @@ export default function Home({ style, setTab }: any) {
     <Box className={styles.container} style={style}>
       <AccountHeader title="Home"></AccountHeader>
 
-      <Box fontSize="16px" mt="18px">
+      <Box fontSize="18px" mt="18px">
         Total Balance: <span style={{ fontSize: '22px' }}>{data.total} </span>
-        <span className={styles.highlight}>AC</span>
+        <span className={styles.highlight}>SRC</span>
       </Box>
 
       {/* <Box fontSize="34px" fontWeight="600" mt="13px">
@@ -191,25 +144,25 @@ export default function Home({ style, setTab }: any) {
         <Flex>
           <Box className={styles.name}>Available</Box>
           <Box className={styles.num}>
-            {data.ac} <span>AC</span>
+            {data.ac} <span>SRC</span>
           </Box>
           <Box className={styles.num}>
-            {data.ag} <span>AG</span>
+            {data.ag} <span>SRG</span>
           </Box>
         </Flex>
         <Flex>
           <Box className={styles.name}>Staked</Box>
           <Box className={styles.num}>
-            {data.staked} <span>AC</span>
+            {data.staked} <span>SRC</span>
           </Box>
-          <Box className={styles.num}>{/* 0 <span>AG</span> */}</Box>
+          <Box className={styles.num}>{/* 0 <span>SRG</span> */}</Box>
         </Flex>
         <Flex>
           <Box className={styles.name}>Power</Box>
           <Box className={styles.num}>
             {data.power} <span>AS</span>
           </Box>
-          <Box className={styles.num}>{/* 0 <span>AG</span> */}</Box>
+          <Box className={styles.num}>{/* 0 <span>SRG</span> */}</Box>
         </Flex>
       </Box>
 

@@ -83,7 +83,7 @@ export default function TransactionDetail({ style }: any) {
         <Flex className={styles.listItem}>
           <Box flexGrow="1">Gas used</Box>
           <Box>
-            {data._gas} <span className={styles.highlight}>AC</span>
+            {data._gas} <span className={styles.highlight}>SRC</span>
           </Box>
         </Flex>
         <Box mt="11px" borderBottom="1px solid #EDEDED"></Box>
@@ -106,7 +106,7 @@ export default function TransactionDetail({ style }: any) {
         <Flex className={styles.listItem}>
           <Box flexGrow="1">Amount</Box>
           <Box>
-            0.000323 <span className={styles.highlight}>AC</span>
+            0.000323 <span className={styles.highlight}>SRC</span>
           </Box>
         </Flex> */}
       </Box>

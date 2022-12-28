@@ -21,7 +21,7 @@ export default function MsgDefault({ data }: any) {
       <Box flexGrow="1">
         <Flex justifyContent="space-between">
           <Box className={styles.type}>{data._type}</Box>
-          <Box className={styles.amount}>- {data._gas} AC</Box>
+          <Box className={styles.amount}>- {data._gas} SRC</Box>
         </Flex>
         <Flex justifyContent="space-between" mt="4px">
           <Box className={styles.form}>{/* From <span className={styles.highlight}>0x22ec40b3...720fd</span> */}</Box>
