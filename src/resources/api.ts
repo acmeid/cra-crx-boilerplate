@@ -67,3 +67,7 @@ export const messageByAccount = (data: any): Promise<any> => {
 export const getTransByHash = (data: any): Promise<any> => {
   return ajax.post(`http://192.168.0.206:8081/srspoa/transaction/transByHash`, data)
 }
+
+export const getFixedDeposit = (address: any): Promise<any> => {
+  return ajax.get(`/srs-poa/srvault/fixed_deposit_by_acct/${address}`)
+}

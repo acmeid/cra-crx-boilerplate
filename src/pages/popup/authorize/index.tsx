@@ -93,7 +93,7 @@ export default function Welcome({ style, setTab }: any) {
       </Center>
       <Center mt="5px">
         <Box w="66%" textAlign="center" fontSize="14px">
-          <span className="highlight">{origin} </span> is requesting to connect to your <span className="highlight">{account.accountName}</span>
+          <span className="highlight">{origin} </span> is requesting to connect to your <span className="highlight">{account.accountName}</span>{' '}
           account
         </Box>
       </Center>

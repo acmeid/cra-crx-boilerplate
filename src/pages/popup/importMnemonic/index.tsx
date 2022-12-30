@@ -9,19 +9,11 @@ import { addAccount } from '@/resources/account'
 export default function Welcome({ style, setTab }: any) {
   const navigate = useNavigate()
   const toast = useToast()
-  // const [mnemonic, setMnemonic] = useState<any[]>(new Array(24).fill('Wallet'))
   const [showTip, setShowTip] = useState<boolean>(true)
 
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [step, setStep] = useState<number>(2)
-  const [list, setList] = useState<any[]>(new Array(3).fill(1))
   const [mnemonicAgin, setMnemonicAgin] = useState<any[]>(new Array(24).fill(''))
 
   useEffect(() => {}, [])
-
-  const next = () => {
-    // navigate({ pathname: '/create2' })
-  }
 
   const checkMn = (index: number, value: string) => {
     setMnemonicAgin((val) => {

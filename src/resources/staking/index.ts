@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { txClient } from '@/store/generated/srs-poa/srspoa.srstaking/module'
-import { DirectSecp256k1HdWallet, Registry } from '@cosmjs/proto-signing'
+import { DirectSecp256k1HdWallet, DirectSecp256k1Wallet, Registry } from '@cosmjs/proto-signing'
 import { getAccount } from '../account'
 import { prefix, addr, denom } from '@/resources/constants'
 
@@ -10,8 +10,10 @@ const getWallet = async () => {
   const account: any = await getAccount()
   if (account.mnemonic) {
     return DirectSecp256k1HdWallet.fromMnemonic(account.mnemonic, { prefix })
+  } else if (account.privKey) {
+    return DirectSecp256k1Wallet.fromKey(account.privKey, prefix)
   } else {
-    throw new Error('通过私钥导入的账户没有mnemonic')
+    throw new Error('The account has no mnemonics and no private key')
   }
 }
 

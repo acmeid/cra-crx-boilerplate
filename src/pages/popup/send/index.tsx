@@ -69,7 +69,7 @@ export default function Welcome({ style }: any) {
         if (res.tx_response.code !== 0) {
           toast({
             title: 'Transaction failed',
-            // description: 'Amount transferred: 1, gas consumed:0.000334 APT',
+            // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
             position: 'top',
             status: 'error',
             duration: 6000,
@@ -93,7 +93,7 @@ export default function Welcome({ style }: any) {
       .catch((error) => {
         toast({
           title: 'Transaction failed',
-          // description: 'Amount transferred: 1, gas consumed:0.000334 APT',
+          // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
           position: 'top',
           status: 'error',
           duration: 6000,
@@ -153,7 +153,7 @@ export default function Welcome({ style }: any) {
         <DrawerContent>
           {/* <DrawerHeader borderBottomWidth="1px">Basic Drawer</DrawerHeader> */}
           <DrawerBody>
-            <Box fontSize="18px" fontWeight="600">
+            <Box fontSize="18px" fontWeight="600" mt="8px">
               Summary
             </Box>
             <Box mt="10px">
@@ -163,11 +163,11 @@ export default function Welcome({ style }: any) {
               </Flex>
               <Flex justifyContent="space-between" padding="12px 0">
                 <Box>Amount</Box>
-                <Box>{amount} APT</Box>
+                <Box>{amount} SRC</Box>
               </Flex>
               <Flex justifyContent="space-between" padding="12px 0">
                 <Box>Fee</Box>
-                <Box>{fee} APT</Box>
+                <Box>{fee} SRC</Box>
               </Flex>
               <Box borderTop="1px solid #ededed" mt="10px" mb="9px"></Box>
               <Flex justifyContent="space-between" fontSize="16px" padding="12px 0">
@@ -175,12 +175,12 @@ export default function Welcome({ style }: any) {
                   <span className={styles.highlight}>Total</span>
                 </Box>
                 <Box>
-                  <span className={styles.highlight}>{Number(amount) + Number(fee)} APT</span>
+                  <span className={styles.highlight}>{Number(amount) + Number(fee)} SRC</span>
                 </Box>
               </Flex>
             </Box>
 
-            <Flex mt="90px" justifyContent="space-around">
+            <Flex mt="80px" mb="12px" justifyContent="space-around">
               <Button size="lg" variant="outline" minW="155px" height="46px" onClick={onClose}>
                 Back
               </Button>

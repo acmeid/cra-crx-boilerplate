@@ -174,30 +174,32 @@ export default function Home({ style, setTab }: any) {
         </Flex>
       </Box>
 
-      <Flex justifyContent="space-between" mt="60px">
-        <Button variant="outline" minW="158px" h="45px" onClick={() => showQrCode()}>
-          Deposit
-        </Button>
-        <Button variant="outline" minW="158px" h="45px" onClick={() => navigate('/send')}>
-          Send
-        </Button>
-      </Flex>
-
-      {maxRate ? (
-        <Flex bg="blackAlpha.100" padding="10px" mt="15px" borderRadius="8px">
-          <Box flexGrow="1">
-            <Box fontSize="16px">Stake</Box>
-            <Box fontSize="13px">Earn up to {maxRate} per year</Box>
-          </Box>
-          <Box>
-            <Button variant="solid" minW="75px" h="40px" onClick={() => openStake()}>
-              Stake
-            </Button>
-          </Box>
+      <Box position="absolute" bottom="15px" left="18px" right="18px">
+        <Flex justifyContent="space-between" mt="60px">
+          <Button variant="outline" minW="158px" h="45px" onClick={() => showQrCode()}>
+            Deposit
+          </Button>
+          <Button variant="outline" minW="158px" h="45px" onClick={() => navigate('/send')}>
+            Send
+          </Button>
         </Flex>
-      ) : (
-        ''
-      )}
+
+        {maxRate ? (
+          <Flex bg="blackAlpha.100" padding="10px" mt="15px" borderRadius="8px">
+            <Box flexGrow="1">
+              <Box fontSize="16px">Stake</Box>
+              <Box fontSize="13px">Earn up to {maxRate} per year</Box>
+            </Box>
+            <Box>
+              <Button variant="solid" minW="75px" h="40px" onClick={() => openStake()}>
+                Stake
+              </Button>
+            </Box>
+          </Flex>
+        ) : (
+          ''
+        )}
+      </Box>
 
       <Modal onClose={onClose} size={'xs'} isOpen={isOpen}>
         <ModalOverlay />

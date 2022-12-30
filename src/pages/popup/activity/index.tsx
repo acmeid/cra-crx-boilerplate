@@ -20,8 +20,10 @@ export default function Activity({ style, setTab }: any) {
   const navigate = useNavigate()
   // new Array(3).fill(1)
   const [list, setList] = useState<any[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   const initData = async () => {
+    setLoading(true)
     const res = await getAccount()
     // res.address = 'sil157ykw7kanea77pkwkrhw6v6a7gpzlwwcwjztup'
     const res2: any = await messageByAccount({ account: res.address })
@@ -67,6 +69,7 @@ export default function Activity({ style, setTab }: any) {
     // console.log('category::', category)
     // console.log('list::', list)
     setList(list)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -111,6 +114,8 @@ export default function Activity({ style, setTab }: any) {
             )
           })}
         </Box>
+      ) : loading ? (
+        <div></div>
       ) : (
         <Center mt="170px" fontSize="16px">
           No activity yet

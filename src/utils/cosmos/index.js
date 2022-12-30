@@ -115,11 +115,11 @@ export class Cosmos {
   getPubKeyAny(privKey) {
     const pubKeyByte = secp256k1.publicKeyCreate(privKey)
     var buf1 = new Buffer.from([10])
-    console.log('buf1::', buf1)
+    // console.log('buf1::', buf1)
     var buf2 = new Buffer.from([pubKeyByte.length])
-    console.log('buf2::', buf2)
+    // console.log('buf2::', buf2)
     var buf3 = new Buffer.from(pubKeyByte)
-    console.log('buf3::', buf3)
+    // console.log('buf3::', buf3)
 
     const pubKey = Buffer.concat([buf3])
     const pubKeyAny = new message.google.protobuf.Any({

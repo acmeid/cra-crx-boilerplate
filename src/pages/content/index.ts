@@ -33,7 +33,7 @@ container.insertBefore(scriptElement, container.children[0])
 scriptElement.remove()
 
 // 监听请求授权消息
-const securityDomain = ['http://192.168.0.206/', 'http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002']
+const securityDomain = ['http://192.168.0.206', 'http://localhost:3001', 'http://localhost:3000', 'http://localhost:3002']
 // const securityDomain = ['http://192.168.0.206/']
 
 window.addEventListener(

@@ -13,6 +13,7 @@ export default function Welcome({ style }: any) {
 
   useEffect(() => {
     getAccountList().then((list) => {
+      console.log('list::::', list)
       setList(list)
     })
   }, [])

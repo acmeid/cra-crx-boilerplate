@@ -29,7 +29,7 @@ export default function Welcome({ style, setTab }: any) {
       .catch((error) => {
         toast({
           title: 'Import failed',
-          description: 'The private key is incorrect',
+          description: error?.msg || 'The private key is incorrect',
           position: 'top',
           status: 'error',
           duration: 5000,

@@ -21,7 +21,7 @@ export const copyText = (value: any, callback: () => void): void => {
 
 // 将文本，转换为中间是...
 export const cutText = (val: string, startNum = 6, endNum = 6): string => {
-  if (typeof val !== 'string') {
+  if (!val || typeof val !== 'string') {
     return ''
   }
   return `${val?.slice(0, startNum)}...${val?.slice(0 - endNum)}`

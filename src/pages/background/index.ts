@@ -4,7 +4,7 @@ import { msgCreateDetegate, msgExitDelegate, msgDetegate, msgUndelegate, msgAgTo
 // import { openTab } from '@/utils/tools'
 
 const getCurrentTab = async () => {
-  const queryOptions = { active: true }
+  const queryOptions = { active: true, currentWindow: true }
   const [tab] = await chrome.tabs.query(queryOptions)
   return tab
 }
@@ -50,7 +50,7 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
 
     console.log('connectList::::', connectList)
     const targetOrigin = (connectList || []).find((item: any) => item.origin === request.origin)
-
+    console.log('targetOrigin:::::::', targetOrigin)
     if (targetOrigin && targetOrigin.status === 'connected') {
       const tab: any = await getCurrentTab()
       const account: any = await getAccount()
@@ -63,7 +63,15 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
           value: 'requestConnectConfirm',
           account: account,
         },
-        async () => {}
+        async (result) => {
+          if (!chrome.runtime.lastError) {
+            // message processing code goes here
+            console.log('result:::::', result)
+          } else {
+            console.log('result:::::', result)
+            // error handling code goes here
+          }
+        }
       )
       sendResponse({ msg: '已授权' })
       return true

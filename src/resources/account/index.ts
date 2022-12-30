@@ -269,11 +269,11 @@ export const addAccount = async ({ mnemonic, priv }: any) => {
     // console.log('privKey:::', privKey)
 
     const pubKeyAny = SRS.getPubKeyAny(privKey)
-    console.log('pubKeyAny.value', pubKeyAny.value)
-    console.log('pubKeyAny.value', pubKeyAny.value.length)
+    // console.log('pubKeyAny.value', pubKeyAny.value)
+    // console.log('pubKeyAny.value', pubKeyAny.value.length)
     const addr = toBech32('sil', rawSecp256k1PubkeyToRawAddress(pubKeyAny.value))
 
-    console.log('addr:::::::::::::::::::::::::::::', addr)
+    // console.log('addr:::::::::::::::::::::::::::::', addr)
 
     // console.log('addAccount privKey', privKey)
     // console.log('addAccount pubKeyAny', pubKeyAny)
@@ -296,11 +296,13 @@ export const addAccount = async ({ mnemonic, priv }: any) => {
       storage.get(['accountList'], async ({ accountList }) => {
         accountList = checkData(accountList) || []
 
-        if (!accountList.find((item: any) => item.address === address)) {
+        if (!accountList.find((item: any) => item.address === account.address)) {
           accountList.forEach((item: any) => (item.isActive = false))
           accountList.push(account)
 
           await storage.set({ accountList: accountList })
+        } else {
+          reject({ code: 10004, msg: 'The imported account already exists' })
         }
 
         // console.log('accountList.length::', accountList.length)
@@ -326,9 +328,21 @@ export const removeAccount = async (address?: string) => {
 
   const accountList: any = await getAccountList()
   const index = accountList.findIndex((item: any) => item.isActive)
-
+  console.log('index::', index)
   accountList.splice(index, 1)
-  storage.set({ accountList: checkData(accountList) })
+
+  const newList = accountList.map((item: any) => {
+    return {
+      address: item.address,
+      mnemonic: item.mnemonic,
+      mnemonicArr: item.mnemonicArr,
+      pw: item.pw,
+      accountName: item.accountName,
+      priv: item.priv,
+    }
+  })
+  console.log('accountList')
+  storage.set({ accountList: checkData(newList) })
 
   return accountList
 }
