@@ -4,11 +4,12 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { debounce, round } from 'lodash-es'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import ErrorMessage from '@/components/errorMessage'
+// import { useForm, SubmitHandler, Controller } from 'react-hook-form'
+// import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
-import { createSend, storage } from '@/resources/account'
+// import { createSend, storage } from '@/resources/account'
 import { cutText } from '@/utils/tools'
+import { msgSend } from '@/resources/bank'
 
 type IFormInput = {
   password: string
@@ -39,13 +40,7 @@ export default function Welcome({ style }: any) {
     } else if (!amount) {
       msg = 'Please enter the amount'
     } else if (Number.isNaN(Number(amount))) {
-      toast({
-        title: 'Incorrect format',
-        position: 'top',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      })
+      msg = 'Incorrect format of amount'
     }
 
     if (msg) {
@@ -62,44 +57,27 @@ export default function Welcome({ style }: any) {
     onOpen()
   }
 
-  const send = () => {
-    createSend({ toAddress, amount })
-      .then((res: any) => {
-        console.log('res:::::', res)
-        if (res.tx_response.code !== 0) {
-          toast({
-            title: 'Transaction failed',
-            // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
-            position: 'top',
-            status: 'error',
-            duration: 6000,
-            isClosable: true,
-          })
-
-          return
-        }
-
-        onClose()
-        navigate(-1)
-        toast({
-          title: 'Transaction succeeded',
-          description: `Amount transferred: ${amount}`,
-          position: 'top',
-          status: 'success',
-          duration: 8000,
-          isClosable: true,
-        })
+  const send = async () => {
+    const res: any = msgSend({ amount, toAddress, feeAmount: fee, gas: 200000, memo: '' })
+    if (res?.code === 0) {
+      toast({
+        title: 'Transaction failed',
+        // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
+        position: 'top',
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
       })
-      .catch((error) => {
-        toast({
-          title: 'Transaction failed',
-          // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
-          position: 'top',
-          status: 'error',
-          duration: 6000,
-          isClosable: true,
-        })
+    } else {
+      toast({
+        title: 'Transaction failed',
+        // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
+        position: 'top',
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
       })
+    }
   }
 
   useEffect(() => {

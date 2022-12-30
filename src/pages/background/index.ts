@@ -1,5 +1,14 @@
 import { createSend, getAccount, storage } from '@/resources/account'
-import { msgCreateDetegate, msgExitDelegate, msgDetegate, msgUndelegate, msgAgToAc, msgDoFixedDeposit, msgDoFixedWithdraw } from '@/resources'
+import {
+  msgCreateDetegate,
+  msgExitDelegate,
+  msgDetegate,
+  msgUndelegate,
+  msgAgToAc,
+  msgDoFixedDeposit,
+  msgDoFixedWithdraw,
+  msgSend,
+} from '@/resources'
 // // import { SRS } from '@/utils/cosmos'
 // import { openTab } from '@/utils/tools'
 
@@ -213,6 +222,15 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
             feeAmount: String(request.tx.feeAmount),
             gas: String(request.tx.gas),
             memo: request.tx.memo,
+          })
+          break
+        case 'msgSend':
+          send = msgSend({
+            amount: String(request.tx.amount),
+            toAddress: request.tx.toAddress,
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: '',
           })
           break
 
