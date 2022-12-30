@@ -24,7 +24,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 import AccountHeader from '@/components/accountHeader'
 import { getAccount } from '@/resources/account'
-import { delegationByAddress, getBalanceByAddr, getKyc } from '@/resources/api'
+import { delegationByAddress, getBalanceByAddr, getFixedDeposit, getKyc } from '@/resources/api'
+import { FixedDepositData } from '@/resources/constants'
 
 export default function Stake({ style, setTab }: any) {
   const navigate = useNavigate()
@@ -32,7 +33,7 @@ export default function Stake({ style, setTab }: any) {
   const [data, setData] = useState<any>({})
 
   const initData = async (data: any) => {
-    const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
+    const [res2, res3, res5]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address), getFixedDeposit(data.address)])
     let bondAmount = 0
     let staked = 0
     let ac = 0
@@ -46,12 +47,13 @@ export default function Stake({ style, setTab }: any) {
       }
     })
 
-    if (res3?.kyc) {
+    if (res3 && res3.status !== 'rejected' && res3?.value?.kyc) {
       const res4 = await delegationByAddress(data.address)
       bondAmount = res4.delegation?.bondAmount ? res4.delegation?.bondAmount / 100000000 : 0
-      staked = bondAmount + 1
+      staked = bondAmount
     }
 
+    console.log('res5:::::', res5)
     setData({
       ...data,
       ac,
@@ -59,6 +61,7 @@ export default function Stake({ style, setTab }: any) {
       staked,
       bondAmount,
       power: staked * 400,
+      fixedList: res5?.value.FixedDeposit || [],
     })
   }
 
@@ -94,12 +97,12 @@ export default function Stake({ style, setTab }: any) {
         <Box borderBottom="1px solid #ededed" padding="12px 15px">
           Staked Amount
         </Box>
-        {new Array(6).fill(10).map((item, index) => {
+        {data.fixedList?.map((item: any, index: any) => {
           return (
             <Flex key={index} justifyContent="space-between" padding="10px 15px">
-              <Box>1M</Box>
+              <Box>{FixedDepositData[item.period].period} M</Box>
               <Box pl="5px">
-                0 <span className="highlight">SRC</span>
+                {item.amount} <span className="highlight">SRC</span>
               </Box>
             </Flex>
           )

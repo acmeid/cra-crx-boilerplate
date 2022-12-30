@@ -4,8 +4,6 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon, ChevronRightIcon, 
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-import { Cosmos } from '../../../utils/cosmos'
-
 export default function ImportAccount({ style, setTab }: any) {
   const navigate = useNavigate()
 
@@ -37,7 +35,7 @@ export default function ImportAccount({ style, setTab }: any) {
           </Box>
         </Flex> */}
         <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/importPrivateKey' })}>
-          <Box flexGrow="1">Import private key（暂不可用）</Box>
+          <Box flexGrow="1">Import private key</Box>
           <Box>
             <ChevronRightIcon boxSize="18px" color="blackAlpha.500"></ChevronRightIcon>
           </Box>

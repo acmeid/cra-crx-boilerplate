@@ -61,10 +61,10 @@ export default function Home({ style, setTab }: any) {
       let ag = 0
       res2?.value.balances?.forEach((item: any) => {
         if (item.denom === 'src') {
-          ac = item.amount
+          ac = Number(item.amount)
         }
         if (item.denom === 'srg') {
-          ag = item.amount
+          ag = Number(item.amount)
         }
       })
 
@@ -95,6 +95,7 @@ export default function Home({ style, setTab }: any) {
       }
       console.log('ac:::', ac)
       console.log('ag:::', ag)
+      console.log('staked:::', staked)
       setData({
         // ...res,
         ...data,
