@@ -18,13 +18,13 @@ export default function Welcome({ style }: any) {
     getAccount().then((res: any) => {
       // console.log('Account:', res)
 
-      storage.get(['closeTime'], ({ closeTime }) => {
+      storage.get(['closeTime', 'autoLockTime'], ({ closeTime, autoLockTime }) => {
         // console.log('closeTime:::', closeTime)
         const now = new Date().getTime()
         // console.log('now - closeTime:::', now - closeTime)
         if (!res?.address) {
           setShow(true)
-        } else if (now - closeTime > timer) {
+        } else if (now - closeTime > autoLockTime * 60 * 1000) {
           navigate({ pathname: '/unlock' }, { replace: true })
         } else {
           navigate({ pathname: '/main/home' }, { replace: true })

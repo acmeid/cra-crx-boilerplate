@@ -20,7 +20,7 @@ import {
 import styles from './styles.module.scss'
 import { Link, useNavigate } from 'react-router-dom'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { getAccount, resetAccount } from '@/resources/account'
+import { getAccount, resetAccount, storage } from '@/resources/account'
 
 export default function Welcome({ style }: any) {
   const navigate = useNavigate()
@@ -30,11 +30,12 @@ export default function Welcome({ style }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const check = async () => {
-    const account: any = await getAccount()
-    console.log('account::::', account)
-    console.log('pw::::', pw)
+    const data: any = await storage.get(['pw'])
+    // const account: any = await getAccount()
+    // console.log('account::::', account)
+    // console.log('pw::::', pw)
 
-    if (account.pw === pw) {
+    if (data.pw === pw) {
       navigate('/main/home')
     } else {
       toast({

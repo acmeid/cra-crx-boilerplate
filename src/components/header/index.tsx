@@ -4,8 +4,6 @@ import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ChevronLeftIcon, EditIcon } from '@chakra-ui/icons'
 
-// type cprops = any
-
 export default function Header({ title, showBack, back }: any) {
   const navigate = useNavigate()
 

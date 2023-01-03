@@ -61,12 +61,12 @@ export default function ManageAccount({ style }: any) {
       <Header showBack title="Manage Account"></Header>
       {isCheck ? (
         <Box>
-          <Flex className={styles.item}>
+          {/* <Flex className={styles.item}>
             <Box className={styles.label}>Show secret recovery phrase</Box>
             <Box className={styles.value} onClick={() => onOpen()}>
               Show
             </Box>
-          </Flex>
+          </Flex> */}
           <Flex className={styles.item}>
             <Box className={styles.label}>Private Key</Box>
             <Box className={styles.value} onClick={() => setPrivateShow(!privateShow)}>

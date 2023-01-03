@@ -1,19 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Box,
-  Flex,
-  Button,
-  Image,
-  Input,
-  Checkbox,
-  InputGroup,
-  InputRightElement,
-  FormControl,
-  FormHelperText,
-  FormErrorMessage,
-  useToast,
-  Center,
-} from '@chakra-ui/react'
+import { Box, Button, Input, InputGroup, InputRightElement, useToast, Center } from '@chakra-ui/react'
 import { ChevronLeftIcon, LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -21,22 +7,20 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import { getAccount, setAccount, storage } from '@/resources/account'
-import { getSystemErrorName } from 'util'
 
 type IFormInput = {
   cpassword: string
   password: string
   password2: string
-  // agree: boolean
 }
 
-export default function ChangeName({ style }: any) {
+export default function ChangePassword({ style }: any) {
   const navigate = useNavigate()
   const toast = useToast()
   const [password, setPassword] = useState('')
-  const [checked, setChecked] = useState(false)
   const [show1, setShow1] = useState(false)
   const [show2, setShow2] = useState(false)
+  const [currentPw, setCurrentPw] = useState('')
   const {
     control,
     register,
@@ -45,36 +29,49 @@ export default function ChangeName({ style }: any) {
     formState: { errors, touchedFields },
   } = useForm<IFormInput>()
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    if (!checked) {
-      toast({
-        title: 'Need to agree to the terms of service',
-        position: 'top',
-        status: 'info',
-        duration: 5000,
-        isClosable: true,
-      })
-      return
-    }
-    // setAccount({ pw: data.password })
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    // const res: any = await storage.get(['pw'])
+
+    // if (data.cpassword !== res.pw) {
+    //   toast({
+    //     title: 'The current password is incorrect',
+    //     position: 'top',
+    //     status: 'error',
+    //     duration: 5000,
+    //     isClosable: true,
+    //   })
+
+    //   return
+    // }
+
+    // if (data.password !== data.password2) {
+    //   toast({
+    //     title: 'The current password is incorrect',
+    //     position: 'top',
+    //     status: 'error',
+    //     duration: 5000,
+    //     isClosable: true,
+    //   })
+
+    //   return
+    // }
 
     storage.set({ pw: data.password })
     storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
 
-    navigate({ pathname: '/create3' })
-  }
-
-  const save = () => {
-    // setAccount({
-    //   accountName: walletName,
-    // }).then(() => {
-    //   navigate(-1)
-    // })
+    toast({
+      title: 'Modification succeeded',
+      position: 'top',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
+    navigate(-1)
   }
 
   useEffect(() => {
-    getAccount().then((res) => {
-      // setWalletName(res.accountName)
+    storage.get(['pw'], ({ pw }) => {
+      setCurrentPw(pw)
     })
   }, [])
   const rule = {
@@ -82,6 +79,12 @@ export default function ChangeName({ style }: any) {
     minLength: 6,
     validate: (v: any) => {
       return v === password
+    },
+  }
+  const oldPwRule = {
+    required: true,
+    validate: (v: any) => {
+      return v === currentPw
     },
   }
   return (
@@ -103,7 +106,7 @@ export default function ChangeName({ style }: any) {
             <Controller
               name="cpassword"
               control={control}
-              rules={{ required: true, minLength: 6 }}
+              rules={oldPwRule}
               render={({ field }) => {
                 setPassword(field.value)
                 return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" />
@@ -120,6 +123,8 @@ export default function ChangeName({ style }: any) {
               ></ViewOffIcon>
             </InputRightElement>
           </InputGroup>
+          {errors.cpassword?.type === 'required' && <ErrorMessage>Password is required</ErrorMessage>}
+          {errors.cpassword?.type === 'validate' && <ErrorMessage>The current password is incorrect</ErrorMessage>}
 
           <InputGroup mt="22px">
             <Controller
@@ -128,7 +133,7 @@ export default function ChangeName({ style }: any) {
               rules={{ required: true, minLength: 6 }}
               render={({ field }) => {
                 setPassword(field.value)
-                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" />
+                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="New Password" />
               }}
             />
 
@@ -142,7 +147,7 @@ export default function ChangeName({ style }: any) {
               ></ViewOffIcon>
             </InputRightElement>
           </InputGroup>
-          {errors.password?.type === 'required' && <ErrorMessage>password is required</ErrorMessage>}
+          {errors.password?.type === 'required' && <ErrorMessage>Password is required</ErrorMessage>}
           {errors.password?.type === 'minLength' && <ErrorMessage>Please enter at least 6 digits</ErrorMessage>}
         </Box>
         <Box mt="22px">
@@ -157,7 +162,7 @@ export default function ChangeName({ style }: any) {
           {errors.password2?.type === 'validate' && <ErrorMessage>Password should match</ErrorMessage>}
         </Box>
 
-        <Button position="absolute" bottom="18px" left="18px" right="18px" type="submit" size="lg" variant="solid" h="46px" onClick={() => save()}>
+        <Button position="absolute" bottom="18px" left="18px" right="18px" type="submit" size="lg" variant="solid" h="46px">
           Submit
         </Button>
       </form>

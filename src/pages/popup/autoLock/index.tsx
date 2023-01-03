@@ -1,28 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Box,
-  Flex,
-  Button,
-  Image,
-  Input,
-  Checkbox,
-  InputGroup,
-  InputRightElement,
-  FormControl,
-  FormHelperText,
-  FormErrorMessage,
-  useToast,
-  Center,
-  InputRightAddon,
-} from '@chakra-ui/react'
+import { Box, Flex, Button, Input, InputGroup, useToast, Center, InputRightAddon } from '@chakra-ui/react'
 import { ChevronLeftIcon, TimeIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import { getAccount, setAccount, storage } from '@/resources/account'
-import { getSystemErrorName } from 'util'
 
 type IFormInput = {
   password: string
@@ -34,6 +17,7 @@ export default function AutoLock({ style }: any) {
   const navigate = useNavigate()
   const toast = useToast()
   const [walletName, setWalletName] = useState('')
+  const [minute, setMinute] = useState('')
 
   const save = () => {
     setAccount({
@@ -48,6 +32,31 @@ export default function AutoLock({ style }: any) {
       setWalletName(res.accountName)
     })
   }, [])
+
+  const onSubmit = () => {
+    if (Number.isNaN(Number(minute))) {
+      toast({
+        title: 'Please enter a number',
+        position: 'top',
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+      })
+
+      return
+    }
+    storage.set({ autoLockTime: minute })
+    storage.get(['autoLockTime'], (res) => console.log('chrome.storage.local.get:', res))
+
+    toast({
+      title: 'Setting succeeded',
+      position: 'top',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
+    navigate(-1)
+  }
 
   return (
     <Box className={styles.container} style={style}>
@@ -64,17 +73,15 @@ export default function AutoLock({ style }: any) {
 
       <InputGroup size="lg" mt="20px">
         {/* <InputLeftAddon children="https://" /> */}
-        <Input placeholder="mysite" />
-        <InputRightAddon bg="#fff" border="0">
-          minutes
-        </InputRightAddon>
+        <Input placeholder="" onChange={(e) => setMinute(e.target.value)} />
+        <InputRightAddon bg="blackAlpha.100">minutes</InputRightAddon>
       </InputGroup>
 
       <Flex position="absolute" bottom="18px" left="18px" right="18px" justifyContent="space-around">
         {/* <Button size="lg" variant="outline" minW="154px" height="46px" onClick={() => navigate(-1)}>
           Cancel
         </Button> */}
-        <Button size="lg" variant="solid" w="100%" h="46px" onClick={() => save()}>
+        <Button size="lg" variant="solid" w="100%" h="46px" onClick={onSubmit}>
           Save
         </Button>
       </Flex>

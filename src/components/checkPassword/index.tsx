@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ChevronLeftIcon, EditIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { getAccount } from '@/resources/account'
+import { getAccount, storage } from '@/resources/account'
 import { cutText } from '@/utils/tools'
 
 // type cprops = any
@@ -15,11 +15,13 @@ export default function CheckPassword({ next }: any) {
   const toast = useToast()
 
   const check = async () => {
-    const account: any = await getAccount()
-    console.log('account::::', account)
-    console.log('pw::::', pw)
+    const data: any = await storage.get(['pw'])
 
-    if (account.pw === pw) {
+    // const account: any = await getAccount()
+    // console.log('account::::', account)
+    // console.log('data::::', data)
+
+    if (data.pw === pw) {
       next()
     } else {
       toast({
