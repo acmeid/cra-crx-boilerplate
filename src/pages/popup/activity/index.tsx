@@ -15,18 +15,24 @@ import { dealType, cutText } from '@/utils/tools'
 import MsgSend from './typeField/msgSend'
 import MsgCustom from './typeField/msgCustom'
 import MsgDefault from './typeField/msgDefault'
+import { Pagination } from 'antd'
 
 export default function Activity({ style, setTab }: any) {
   const navigate = useNavigate()
-  // new Array(3).fill(1)
   const [list, setList] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [page, setPage] = useState<any>({
+    page: 0,
+    pageSize: 10,
+    total: 0,
+    // totalPage: 0,
+  })
 
-  const initData = async () => {
+  const initData = async (page_number = 1) => {
     setLoading(true)
     const res = await getAccount()
     // res.address = 'sil157ykw7kanea77pkwkrhw6v6a7gpzlwwcwjztup'
-    const res2: any = await messageByAccount({ account: res.address })
+    const res2: any = await messageByAccount({ account: res.address, page_number })
     console.log('res2.data:::', res2.data)
     const trans = res2.data.map(async (item: any) => {
       const info = await getTransByHash({ transaction_hash: item.transaction_hash })
@@ -68,6 +74,13 @@ export default function Activity({ style, setTab }: any) {
     // console.log('res3::', res3)
     // console.log('category::', category)
     // console.log('list::', list)
+
+    setPage((val: any) => {
+      return {
+        ...val,
+        total: res2.amount,
+      }
+    })
     setList(list)
     setLoading(false)
   }
@@ -120,6 +133,12 @@ export default function Activity({ style, setTab }: any) {
         <Center mt="170px" fontSize="16px">
           No activity yet
         </Center>
+      )}
+
+      {page.total > 10 && (
+        <Flex justifyContent="flex-end" mt="15px">
+          <Pagination total={page.total} simple showSizeChanger={false} showQuickJumper={false} onChange={(page, pagesize) => initData(page)} />
+        </Flex>
       )}
     </Box>
   )

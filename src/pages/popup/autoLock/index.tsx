@@ -39,7 +39,7 @@ export default function AutoLock({ style }: any) {
         title: 'Please enter a number',
         position: 'top',
         status: 'info',
-        duration: 5000,
+        duration: 4000,
         isClosable: true,
       })
 

@@ -153,3 +153,36 @@ export const msgUndelegate = async ({ amount, feeAmount, gas, memo }?: any) => {
   console.log('result:::::::', result)
   return result
 }
+
+// 提取赠送src的收益
+export const msgWithdraw = async ({ amount, feeAmount, gas, memo }?: any) => {
+  const wallet = await getWallet()
+
+  console.log('wallet:::::', wallet)
+  const [account] = await wallet.getAccounts()
+  console.log('wallet.getAccounts::', account)
+
+  const client = await txClient(wallet, { addr })
+  console.log('client:::', client)
+
+  const value = {
+    creator: account.address, // 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',-
+  }
+
+  const msg = await client.msgWithdraw(value)
+  console.log('msg:::', msg)
+
+  const fee = {
+    amount: [
+      {
+        denom,
+        amount: feeAmount,
+      },
+    ],
+    gas,
+  }
+
+  const result = await client.signAndBroadcast([msg], { fee, memo })
+  console.log('result:::::::', result)
+  return result
+}

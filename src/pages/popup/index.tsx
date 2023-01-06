@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Popup from './Popup'
 import './index.scss'
+import { ConfigProvider } from 'antd'
 
 import dayjs from 'dayjs'
 
@@ -17,8 +18,16 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <React.StrictMode>
-    <ChakraProvider theme={defaultTheme}>
-      <Popup />
-    </ChakraProvider>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#08CE9E',
+        },
+      }}
+    >
+      <ChakraProvider theme={defaultTheme}>
+        <Popup />
+      </ChakraProvider>
+    </ConfigProvider>
   </React.StrictMode>
 )

@@ -20,14 +20,24 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 import AccountHeader from '@/components/accountHeader'
 import { getAccount } from '@/resources/account'
-import { delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
+import { delegationAmount, delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
 import { debounce, round } from 'lodash-es'
 import { openTab } from '@/utils/tools'
 
 export default function Home({ style, setTab }: any) {
   const navigate = useNavigate()
   const toast = useToast()
-  const [data, setData] = useState<any>({})
+  const [data, setData] = useState<any>({
+    ac: 0,
+    ag: 0,
+    totalFixed: 0,
+    showTotalFixed: '0',
+    flexibleBalance: 0,
+    showFlexibleBalance: '0',
+    totalStaked: 0,
+    showTotalStaked: '0',
+    power: '',
+  })
   const [account, setAccount] = useState<any>({})
   const [maxRate, setMaxRate] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -56,7 +66,7 @@ export default function Home({ style, setTab }: any) {
       // 如果不是kyc用户，调用getKyc http是404
       const [res2, res3]: any = await Promise.allSettled([getBalanceByAddr(data.address), getKyc(data.address)])
       console.log('res2:::', res2)
-      let staked = 0
+      // let staked = 0
       let ac = 0
       let ag = 0
       res2?.value.balances?.forEach((item: any) => {
@@ -72,8 +82,8 @@ export default function Home({ style, setTab }: any) {
 
       if (res3 && res3.status !== 'rejected' && res3?.value?.kyc) {
         try {
-          const res4 = await delegationByAddress(data.address)
-          staked = res4.delegation?.bondAmount ? 1 + res4.delegation?.bondAmount / 100000000 : 0
+          // const res4 = await delegationByAddress(data.address)
+          // staked = res4.delegation?.bondAmount ? 100000000 + Number(res4.delegation?.bondAmount) : 0
 
           const res5 = await getRegionVaultById(res3.value.kyc.regionId)
           let max = 0
@@ -95,15 +105,15 @@ export default function Home({ style, setTab }: any) {
       }
       console.log('ac:::', ac)
       console.log('ag:::', ag)
-      console.log('staked:::', staked)
-      setData({
-        // ...res,
-        ...data,
-        ac,
-        ag,
-        staked,
-        power: staked * 400,
-        total: ac + staked,
+      // console.log('staked:::', staked)
+      setData((val: any) => {
+        return {
+          ...val,
+          ac,
+          ag,
+          showAc: Number(ac).toLocaleString('en-US'),
+          showAg: Number(ag).toLocaleString('en-US'),
+        }
       })
     } catch (error) {
       console.error('InitData Error: ', error)
@@ -117,13 +127,42 @@ export default function Home({ style, setTab }: any) {
     }, 50)
   }
 
+  // 获取质押相关值
+  const getDelegationAmount = async (data: any) => {
+    const res = await delegationAmount(data.address)
+    console.log('getDelegationAmount::', res)
+    setData((val: any) => {
+      const totalStaked = Number(res.fixedBalance) + Number(res.flexibleBalance) + Number(res.kycBalance)
+      return {
+        ...val,
+        totalFixed: Number(res.fixedBalance),
+        showTotalFixed: Number(res.fixedBalance).toLocaleString('en-US'),
+        flexibleBalance: Number(res.flexibleBalance),
+        showFlexibleBalance: Number(res.flexibleBalance).toLocaleString('en-US'),
+        totalStaked,
+        showTotalStaked: Number(totalStaked).toLocaleString('en-US'),
+        power: (Number(res.flexibleBalance) + Number(res.kycBalance)) / 400 + 0.0025,
+      }
+    })
+  }
+
   useEffect(() => {
     getAccount().then((res) => {
       setAccount(res)
+      getDelegationAmount(res)
       initData(res)
       // createQrCode(res)
     })
   }, [])
+
+  useEffect(() => {
+    setData((val: any) => {
+      return {
+        ...data,
+        total: Number(val.totalStaked + val.ac).toLocaleString('en-US'),
+      }
+    })
+  }, [data.totalStaked, data.ac])
 
   const openStake = () => {
     openTab({ url: 'http://192.168.0.206/explorer/#/wallet' })
@@ -147,10 +186,10 @@ export default function Home({ style, setTab }: any) {
           <Box className={styles.name}>Available</Box>
           <Box className={styles.num}>
             <Text>
-              {data.ac} <span>SRC</span>
+              {data.showAc} <span>SRC</span>
             </Text>
             <Text>
-              {data.ag} <span>SRG</span>
+              {data.showAg} <span>SRG</span>
             </Text>
           </Box>
           {/* <Box className={styles.num}>
@@ -160,7 +199,7 @@ export default function Home({ style, setTab }: any) {
         <Flex>
           <Box className={styles.name}>Staked</Box>
           <Box className={styles.num}>
-            {data.staked} <span>SRC</span>
+            {data.showTotalStaked} <span>SRC</span>
           </Box>
           {/* <Box className={styles.num}>
             0 <span>SRG</span>

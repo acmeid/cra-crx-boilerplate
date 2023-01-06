@@ -7,7 +7,7 @@ import styles from './styles.module.scss'
 import { getAccountList, switchAccount } from '@/resources/account'
 import { cutText } from '@/utils/tools'
 
-export default function Welcome({ style }: any) {
+export default function Account({ style }: any) {
   const navigate = useNavigate()
   const [list, setList] = useState<any[]>([])
 

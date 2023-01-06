@@ -38,7 +38,6 @@ export default function ManageAccount({ style }: any) {
         position: 'top',
         status: 'success',
         duration: 3000,
-        isClosable: true,
       })
     })
   }
@@ -51,7 +50,6 @@ export default function ManageAccount({ style }: any) {
         position: 'top',
         status: 'success',
         duration: 3000,
-        isClosable: true,
       })
     })
   }

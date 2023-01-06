@@ -8,6 +8,7 @@ import {
   msgDoFixedDeposit,
   msgDoFixedWithdraw,
   msgSend,
+  msgWithdraw,
 } from '@/resources'
 // // import { SRS } from '@/utils/cosmos'
 // import { openTab } from '@/utils/tools'
@@ -51,7 +52,7 @@ chrome.runtime.onConnect.addListener(function (externalPort) {
 // //   sendResponse({ res: { a: 1, b: 2 } })
 // // })
 
-// 请求连接-打开验证窗口
+// 请求授权-打开验证窗口
 chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
   console.log('background.js收到信息', request)
   if (request.value === 'requestConnect') {
@@ -230,7 +231,14 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
             toAddress: request.tx.toAddress,
             feeAmount: String(request.tx.feeAmount),
             gas: String(request.tx.gas),
-            memo: '',
+            memo: request.tx.memo,
+          })
+          break
+        case 'msgWithdraw':
+          send = msgWithdraw({
+            feeAmount: String(request.tx.feeAmount),
+            gas: String(request.tx.gas),
+            memo: request.tx.memo,
           })
           break
 
@@ -282,6 +290,42 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
 
     sendResponse({ msg: '已发起交易' })
     return true
+  }
+})
+
+// 确认授权
+chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
+  console.log('确认授权::', request)
+  if (request.from === 'popup' && request.value === 'connectConfirm') {
+    console.log('background.js收到popup.js信息')
+    sendResponse('background收到确认授权的消息')
+
+    // setTimeout(async () => {
+    const tabs: any = await chrome.tabs.query({ active: true })
+
+    // const tab: any = await getCurrentTab()
+    const account: any = await getAccount()
+    console.log('给content发送确认授权的消息....', tabs)
+    tabs.forEach((tab: any) => {
+      chrome.tabs.sendMessage(
+        tab.id,
+        {
+          from: 'popup',
+          value: 'requestConnectConfirm',
+          account: account,
+        },
+        async (result) => {
+          if (!chrome.runtime.lastError) {
+            // message processing code goes here
+            console.log('result:::::', result)
+          } else {
+            console.log('result:::::', result)
+            // error handling code goes here
+          }
+        }
+      )
+    })
+    // }, 200)
   }
 })
 

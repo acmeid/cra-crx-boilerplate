@@ -4,9 +4,14 @@ import { ChevronLeftIcon, SmallAddIcon, ViewOffIcon, WarningIcon, CheckIcon } fr
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import styles from './styles.module.scss'
 
-export default function Welcome({ style, setTab }: any) {
+export default function Network({ style }: any) {
   const navigate = useNavigate()
-  const [list, setList] = useState<any[]>(new Array(3).fill(1))
+  const [list, setList] = useState<any[]>([
+    {
+      address: '0x22ec40b3...720fd',
+      name: 'devnet',
+    },
+  ])
 
   useEffect(() => {}, [])
 
@@ -25,7 +30,7 @@ export default function Welcome({ style, setTab }: any) {
             navigate(-1)
           }}
         ></ChevronLeftIcon>
-        Accounts
+        Network
       </Box>
 
       <Box className={styles.list} padding="0px 0" mt="20px">
@@ -36,9 +41,9 @@ export default function Welcome({ style, setTab }: any) {
                 <Image src="/images/down.svg"></Image>
               </Box> */}
               <Box flexGrow="1">
-                <Box className={styles.type}>Testnet</Box>
+                <Box className={styles.type}>{item.name}</Box>
                 <Box>
-                  <span className={styles.highlight}>0x22ec40b3...720fd</span>
+                  <span className={styles.highlight}>{item.address}</span>
                 </Box>
               </Box>
               <Center>
@@ -51,14 +56,14 @@ export default function Welcome({ style, setTab }: any) {
         })}
       </Box>
 
-      <Box position="absolute" bottom="18px" left="18px" right="18px">
+      {/* <Box position="absolute" bottom="18px" left="18px" right="18px">
         <Link to={{ pathname: '/addAccount' }}>
           <Button variant="solid" minW="100%" h="50px" onClick={() => {}}>
             <SmallAddIcon boxSize="18px" mr="4px" mt="-2px" />
             Add
           </Button>
         </Link>
-      </Box>
+      </Box> */}
     </Box>
   )
 }

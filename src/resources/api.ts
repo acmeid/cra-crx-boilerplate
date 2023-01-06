@@ -61,13 +61,18 @@ export const delegationByAddress = (address: string): Promise<any> => {
 }
 
 export const messageByAccount = (data: any): Promise<any> => {
-  return ajax.post(`http://192.168.0.206:8081/srspoa/transaction/messageByAccount`, data)
+  return ajax.post(`http://192.168.0.206:8080/srspoa/transaction/messageByAccount`, data)
 }
 
 export const getTransByHash = (data: any): Promise<any> => {
-  return ajax.post(`http://192.168.0.206:8081/srspoa/transaction/transByHash`, data)
+  return ajax.post(`http://192.168.0.206:8080/srspoa/transaction/transByHash`, data)
 }
 
 export const getFixedDeposit = (address: any): Promise<any> => {
   return ajax.get(`/srs-poa/srvault/fixed_deposit_by_acct/${address}`)
+}
+
+// 获取质押的值
+export const delegationAmount = (address: any): Promise<any> => {
+  return ajax.get(`/srs-poa/srstaking/delegationAmount/${address}`)
 }
