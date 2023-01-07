@@ -15,7 +15,11 @@ export default function Welcome({ style, setTab }: any) {
   useEffect(() => {}, [])
 
   const submit = () => {
-    addAccount({ priv: privKey })
+    let _priv = privKey
+    if (!/^0x/.test(_priv)) {
+      _priv = `0x${privKey}`
+    }
+    addAccount({ priv: _priv })
       .then(() => {
         toast({
           title: 'Import succeeded',

@@ -21,6 +21,7 @@ import ErrorMessage from '@/components/errorMessage'
 import { storage } from '@/resources/account'
 import Header from '@/components/header'
 import Step from '@/components/setp'
+import { openTab } from '@/utils/tools'
 
 type IFormInput = {
   password: string
@@ -68,6 +69,12 @@ export default function Welcome({ style }: any) {
       return v === password
     },
   }
+
+  const viewOnExplorer = (e: any) => {
+    openTab({ url: `http://srs9595.com/termsofService` })
+    e.stopPropagation()
+    e.preventDefault()
+  }
   return (
     <Box className={styles.create1} style={style}>
       <Header showBack></Header>
@@ -114,7 +121,10 @@ export default function Welcome({ style }: any) {
         </Box>
         <Box mt="22px">
           <Checkbox onChange={(e) => setChecked(e.target.checked)}>
-            Iagree to the <span className="highlight">Terms of Service</span>
+            Iagree to the{' '}
+            <span className="highlight" onClick={viewOnExplorer}>
+              Terms of Service
+            </span>
           </Checkbox>
         </Box>
 

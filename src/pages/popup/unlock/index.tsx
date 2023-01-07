@@ -93,7 +93,7 @@ export default function Welcome({ style }: any) {
       <Modal onClose={onClose} size={'xs'} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Are you sure you want to reset the password?</ModalHeader>
+          <ModalHeader pl="15px">Are you sure you want to reset the password?</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Box mb="20px">
