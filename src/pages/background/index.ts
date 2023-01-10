@@ -1,6 +1,6 @@
 import { createSend, getAccount, storage } from '@/resources/account'
 import {
-  msgCreateDetegate,
+  msgCreateDelegate,
   msgExitDelegate,
   msgDetegate,
   msgUndelegate,
@@ -162,10 +162,11 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
     let send: Promise<any> = Promise.resolve('缺少msgType')
     try {
       switch (request.tx.msgType) {
-        case 'msgCreateDetegate':
-          send = msgCreateDetegate({
+        case 'msgCreateDelegate':
+          send = msgCreateDelegate({
             amount: String(request.tx.amount),
             feeAmount: String(request.tx.feeAmount),
+            regionID: request.tx.regionID,
             gas: String(request.tx.gas),
             memo: request.tx.memo,
           })

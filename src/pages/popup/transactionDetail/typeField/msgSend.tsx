@@ -26,7 +26,7 @@ export default function MsgSend(props: any) {
       <div className={styles.line}>
         <div className={styles.key}>Amount</div>
         <div className={styles.val}>
-          {setDigit(props.message?.['amount']?.[0]?.['amount'] || '0', 6)}
+          {setDigit(props.message?.['amount']?.[0]?.['amount'] || '0')}
           <span className={styles.highlight}> SRC</span>
         </div>
       </div>

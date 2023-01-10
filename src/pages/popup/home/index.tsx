@@ -141,7 +141,7 @@ export default function Home({ style, setTab }: any) {
         showFlexibleBalance: Number(res.flexibleBalance).toLocaleString('en-US'),
         totalStaked,
         showTotalStaked: Number(totalStaked).toLocaleString('en-US'),
-        power: (Number(res.flexibleBalance) + Number(res.kycBalance)) / 400 + 0.0025,
+        power: (Number(res.flexibleBalance) + Number(res.kycBalance)) / 400,
       }
     })
   }

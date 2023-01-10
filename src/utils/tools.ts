@@ -29,6 +29,7 @@ export const cutText = (val: string, startNum = 6, endNum = 6): string => {
 
 // 计算某个时间距离当前时间多少秒
 export const howLongAgo = (val: string): string => {
+  if (!val) return ''
   const date = new Date(val)
   const now = new Date()
   // const offset = now.getTimezoneOffset() * 60 * 1000
@@ -36,11 +37,11 @@ export const howLongAgo = (val: string): string => {
   if (diff < 60) {
     return `${diff > 0 ? diff : 0}s ago`
   } else if (diff >= 60 && diff < 3600) {
-    return `${round(diff / 60, 0)}minutes  ago`
+    return `${round(diff / 60, 0)}m  ago`
   } else if (diff >= 3600 && diff < 86400) {
-    return `${round(diff / 3600, 0)}hours ago`
+    return `${round(diff / 3600, 0)}h ago`
   }
-  return `${round(diff / 86400, 0)}days ago`
+  return `${round(diff / 86400, 0)}d ago`
 }
 
 // 总费用
@@ -62,7 +63,7 @@ export const dealType = (type: string) => {
 }
 
 // 固定小数位数
-export const setDigit = (val: string, len: number) => {
+export const setDigit = (val: string, len = 0) => {
   if (val === null || val === undefined) {
     return ''
   }

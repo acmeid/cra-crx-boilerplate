@@ -89,7 +89,7 @@ export default function Stake({ style, setTab }: any) {
       <Flex justifyContent="space-between" mt="15px">
         <Box fontSize="15px">Available</Box>
         <Box>
-          {data.showAc} <span className="highlight">SRG</span>
+          {data.showAc} <span className="highlight">SRC</span>
         </Box>
       </Flex>
 

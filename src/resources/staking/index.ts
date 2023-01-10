@@ -18,7 +18,7 @@ const getWallet = async () => {
 }
 
 // 创建质押
-export const msgCreateDetegate = async ({ amount, feeAmount, gas, memo }?: any) => {
+export const msgCreateDelegate = async ({ amount, feeAmount, regionID, gas, memo }?: any) => {
   const wallet = await getWallet()
 
   console.log('wallet:::::', wallet)
@@ -30,11 +30,12 @@ export const msgCreateDetegate = async ({ amount, feeAmount, gas, memo }?: any) 
 
   const value = {
     creator: account.address, // 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',
-    belongRegion: 'huabei-01',
+    // delegatorAddress: account.address,
+    belongRegion: regionID,
     amount: { denom, amount },
   }
 
-  const msg = await client.msgDelegate(value)
+  const msg = await client.msgCreateDelegate(value)
   console.log('msg:::', msg)
 
   const fee = {
@@ -65,9 +66,10 @@ export const msgExitDelegate = async ({ amount, feeAmount, gas, memo }?: any) =>
 
   const value = {
     creator: account.address, // 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',-
+    // delegatorAddress: string;
   }
 
-  const msg = await client.msgDelegate(value)
+  const msg = await client.msgExitDelegate(value)
   console.log('msg:::', msg)
 
   const fee = {
