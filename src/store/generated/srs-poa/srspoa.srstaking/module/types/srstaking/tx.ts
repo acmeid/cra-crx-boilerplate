@@ -1792,15 +1792,15 @@ export const MsgCreateDelegate = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    // if (message.delegatorAddress !== "") {
-    //   writer.uint32(18).string(message.delegatorAddress);
-    // }
-    // if (message.belongRegion !== "") {
-    //   writer.uint32(26).string(message.belongRegion);
-    // }
-    if (message['region-id'] !== "") {
+    if (message.delegatorAddress !== "") {
+      writer.uint32(18).string(message.delegatorAddress);
+    }
+    if (message.belongRegion !== "") {
       writer.uint32(26).string(message.belongRegion);
     }
+    // if (message['region-id'] !== "") {
+    //   writer.uint32(26).string(message.belongRegion);
+    // }
     if (message.amount !== undefined) {
       Coin.encode(message.amount, writer.uint32(34).fork()).ldelim();
     }
@@ -1887,14 +1887,13 @@ export const MsgCreateDelegate = {
     ) {
       message.delegatorAddress = object.delegatorAddress;
     } else {
-      // message.delegatorAddress = "";
-      message.delegatorAddress = undefined;
+      message.delegatorAddress = "";
     }
-    // if (object.belongRegion !== undefined && object.belongRegion !== null) {
-    //   message.belongRegion = object.belongRegion;
-    // } else {
-    //   message.belongRegion = "";
-    // }
+    if (object.belongRegion !== undefined && object.belongRegion !== null) {
+      message.belongRegion = object.belongRegion;
+    } else {
+      message.belongRegion = "";
+    }
     if (object['region-id'] !== undefined && object['region-id'] !== null) {
       message['region-id'] = object['region-id'];
     } else {

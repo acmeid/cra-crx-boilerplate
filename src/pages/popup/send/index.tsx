@@ -10,26 +10,28 @@ import Header from '@/components/header'
 // import { createSend, storage } from '@/resources/account'
 import { cutText } from '@/utils/tools'
 import { msgSend } from '@/resources/bank'
+import { baseFee, amountThreshold, rate, gas, minFee } from '@/resources/constants'
 
-type IFormInput = {
-  password: string
-  password2: string
-}
+// type IFormInput = {
+//   password: string
+//   password2: string
+// }
 
-export default function Welcome({ style }: any) {
+export default function Send({ style }: any) {
   const navigate = useNavigate()
   const [toAddress, setToAddress] = useState<string>('')
-  const [amount, setAmount] = useState<number>(0)
+  const [amount, setAmount] = useState<any>('')
   const [fee, setFee] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
-  const gas_limit = 200000
-  const gas_price = 500
-  const baseFee = gas_limit * gas_price
+  const [sendLoading, setSendLoading] = useState<boolean>(false)
+  // const gas_limit = 200000
+  // const gas_price = 500
+  // const baseFee = gas_limit * gas_price
 
-  const changeAmount = debounce((e) => {
-    setAmount(e.target.value)
-  }, 200)
+  // const changeAmount = debounce((e) => {
+  //   setAmount(e.target.value)
+  // }, 200)
 
   const next = () => {
     let msg = ''
@@ -58,14 +60,16 @@ export default function Welcome({ style }: any) {
   }
 
   const send = async () => {
-    const res: any = msgSend({ amount, toAddress, feeAmount: fee, gas: 200000, memo: '' })
+    setSendLoading(true)
+    const res: any = await msgSend({ amount, toAddress, feeAmount: fee, gas, memo: '' })
+    console.log('send res::', res)
     if (res?.code === 0) {
       toast({
-        title: 'Transaction failed',
+        title: 'Transaction success',
         // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
         position: 'top',
-        status: 'error',
-        duration: 6000,
+        status: 'success',
+        duration: 4000,
         isClosable: true,
       })
     } else {
@@ -74,19 +78,27 @@ export default function Welcome({ style }: any) {
         // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
         position: 'top',
         status: 'error',
-        duration: 6000,
+        duration: 4000,
         isClosable: true,
       })
     }
+    setSendLoading(false)
+    close()
   }
 
   useEffect(() => {
     setFee(() => {
       if (Number.isNaN(Number(amount))) return
-      const amountFee = round(amount * 0.0001, 6)
-      return amount ? baseFee + (amountFee > 20000 ? amountFee : 20000) : 0
+      const amountFee = round(amount * rate, 6)
+      return amount ? baseFee + (amountFee > minFee ? amountFee : minFee) : 0
     })
   }, [amount])
+
+  const close = () => {
+    setAmount('')
+    setToAddress('')
+    onClose()
+  }
 
   return (
     <Box className={styles.container} style={style}>
@@ -101,7 +113,7 @@ export default function Welcome({ style }: any) {
         <Box flexGrow="1">
           <Box fontSize="16px" fontWeight="600" wordBreak="break-all">
             {/* 0x22ec40b30x22ec40b30x22ec40b3 b340b30 */}
-            <Input className={styles.inp} onChange={(e: any) => setToAddress(e.target.value)}></Input>
+            <Input className={styles.inp} value={toAddress} onChange={(e: any) => setToAddress(e.target.value)}></Input>
           </Box>
           <Box fontSize="12px" color="#08CE9E" mt="6px">
             Account not found, will be created
@@ -110,7 +122,7 @@ export default function Welcome({ style }: any) {
       </Flex>
 
       <Flex className={styles.am} alignItems="center" mt="18px">
-        <Input className={styles.inp} onChange={(e) => changeAmount(e)}></Input>
+        <Input className={styles.inp} value={amount} onChange={(e) => setAmount(e.target.value)}></Input>
         <Box className={styles.tex}>SRC</Box>
       </Flex>
       <Box color="#B1B6BB" mt="13px">
@@ -162,7 +174,16 @@ export default function Welcome({ style }: any) {
               <Button size="lg" variant="outline" minW="155px" height="46px" onClick={onClose}>
                 Back
               </Button>
-              <Button size="lg" variant="solid" minW="155px" height="46px" ml="20px" onClick={send}>
+              <Button
+                size="lg"
+                variant="solid"
+                minW="155px"
+                height="46px"
+                ml="20px"
+                isLoading={sendLoading}
+                isDisabled={!amount || !toAddress}
+                onClick={send}
+              >
                 Send
               </Button>
             </Flex>

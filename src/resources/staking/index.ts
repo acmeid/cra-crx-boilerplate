@@ -31,14 +31,14 @@ export const msgCreateDelegate = async ({ amount, feeAmount, regionID, gas, memo
   const value = {
     creator: account.address, // 'sil1wugfmfmacj2ssjj2fyu9ylv5j2cgajpqzp59x0',
     // delegatorAddress: account.address,
-    // belongRegion: regionID,
-    'region-id': regionID,
+    belongRegion: regionID,
+    // 'region-id': regionID,
     amount: { denom, amount },
   }
 
   const msg = await client.msgCreateDelegate(value)
-  delete msg.value.delegatorAddress
-  delete msg.value.belongRegion
+  // delete msg.value.delegatorAddress
+  // delete msg.value.belongRegion
   console.log('msg:::', msg)
 
   const fee = {

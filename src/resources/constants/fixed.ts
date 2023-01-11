@@ -68,3 +68,14 @@ export const FixedDepositData2: any = (() => {
 const gas_limit = 200000
 const gas_price = 500
 export const baseFee = gas_limit * gas_price
+
+// 最小交易费
+export const minFee = 20000
+
+// 费率
+export const rate = 0.0001
+
+// 交易费用阙值对应的金额阙值
+export const amountThreshold = 20000 / 0.0001
+
+export const gas = 200000
