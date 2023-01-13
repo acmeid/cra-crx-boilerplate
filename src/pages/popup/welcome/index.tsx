@@ -45,13 +45,19 @@ export default function Welcome({ style }: any) {
         <Box fontSize="13px" ml="18px" mr="18px">
           The most reliable way to engage on SRS. Buy, store, and offer tokens & NFTs.
         </Box>
-        <Link to={{ pathname: '/create1' }}>
+        <Link to={{ pathname: '/create1', search: `?type=create` }}>
           <Button colorScheme="green" w="100%" h="49px" mt="150px" fontWeight="500">
             Create New Wallet
           </Button>
         </Link>
-
-        <Box textDecoration="underline" cursor="pointer" mt="14px" fontSize="16px" onClick={() => navigate({ pathname: '/importAccount' })}>
+        {/* importAccount */}
+        <Box
+          textDecoration="underline"
+          cursor="pointer"
+          mt="14px"
+          fontSize="16px"
+          onClick={() => navigate({ pathname: '/create1', search: `?type=import` })}
+        >
           Import Wallet
         </Box>
       </Box>

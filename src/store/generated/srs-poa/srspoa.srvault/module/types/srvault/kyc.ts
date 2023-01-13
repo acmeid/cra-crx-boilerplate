@@ -43,7 +43,6 @@ export interface Kyc {
   regionId: string;
   LastClearHeight: number;
   role: KYC_ROLE;
-  AgAmount: string;
   minStaking: string;
   maxStaking: string;
 }
@@ -53,7 +52,6 @@ const baseKyc: object = {
   regionId: "",
   LastClearHeight: 0,
   role: 0,
-  AgAmount: "",
   minStaking: "",
   maxStaking: "",
 };
@@ -72,14 +70,11 @@ export const Kyc = {
     if (message.role !== 0) {
       writer.uint32(32).int32(message.role);
     }
-    if (message.AgAmount !== "") {
-      writer.uint32(42).string(message.AgAmount);
-    }
     if (message.minStaking !== "") {
-      writer.uint32(50).string(message.minStaking);
+      writer.uint32(42).string(message.minStaking);
     }
     if (message.maxStaking !== "") {
-      writer.uint32(58).string(message.maxStaking);
+      writer.uint32(50).string(message.maxStaking);
     }
     return writer;
   },
@@ -104,12 +99,9 @@ export const Kyc = {
           message.role = reader.int32() as any;
           break;
         case 5:
-          message.AgAmount = reader.string();
-          break;
-        case 6:
           message.minStaking = reader.string();
           break;
-        case 7:
+        case 6:
           message.maxStaking = reader.string();
           break;
         default:
@@ -145,11 +137,6 @@ export const Kyc = {
     } else {
       message.role = 0;
     }
-    if (object.AgAmount !== undefined && object.AgAmount !== null) {
-      message.AgAmount = String(object.AgAmount);
-    } else {
-      message.AgAmount = "";
-    }
     if (object.minStaking !== undefined && object.minStaking !== null) {
       message.minStaking = String(object.minStaking);
     } else {
@@ -170,7 +157,6 @@ export const Kyc = {
     message.LastClearHeight !== undefined &&
       (obj.LastClearHeight = message.LastClearHeight);
     message.role !== undefined && (obj.role = kYC_ROLEToJSON(message.role));
-    message.AgAmount !== undefined && (obj.AgAmount = message.AgAmount);
     message.minStaking !== undefined && (obj.minStaking = message.minStaking);
     message.maxStaking !== undefined && (obj.maxStaking = message.maxStaking);
     return obj;
@@ -200,11 +186,6 @@ export const Kyc = {
       message.role = object.role;
     } else {
       message.role = 0;
-    }
-    if (object.AgAmount !== undefined && object.AgAmount !== null) {
-      message.AgAmount = object.AgAmount;
-    } else {
-      message.AgAmount = "";
     }
     if (object.minStaking !== undefined && object.minStaking !== null) {
       message.minStaking = object.minStaking;

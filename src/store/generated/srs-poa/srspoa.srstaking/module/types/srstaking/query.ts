@@ -74,6 +74,19 @@ export interface QueryGetDelegationRequest {
   index: string;
 }
 
+export interface QueryGetDelegationAmountRequest {
+  addr: string;
+}
+
+export interface QueryGetDelegationAmountResponse {
+  /** 活期质押额(不包括未生效的质押额) */
+  flexibleBalance: string;
+  /** 定期质押额 */
+  fixedBalance: string;
+  /** KYC 1AC */
+  kycBalance: string;
+}
+
 export interface QueryGetDelegationResponse {
   delegation: Delegation | undefined;
 }
@@ -1142,6 +1155,190 @@ export const QueryGetDelegationRequest = {
   },
 };
 
+const baseQueryGetDelegationAmountRequest: object = { addr: "" };
+
+export const QueryGetDelegationAmountRequest = {
+  encode(
+    message: QueryGetDelegationAmountRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.addr !== "") {
+      writer.uint32(10).string(message.addr);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetDelegationAmountRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetDelegationAmountRequest,
+    } as QueryGetDelegationAmountRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.addr = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetDelegationAmountRequest {
+    const message = {
+      ...baseQueryGetDelegationAmountRequest,
+    } as QueryGetDelegationAmountRequest;
+    if (object.addr !== undefined && object.addr !== null) {
+      message.addr = String(object.addr);
+    } else {
+      message.addr = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetDelegationAmountRequest): unknown {
+    const obj: any = {};
+    message.addr !== undefined && (obj.addr = message.addr);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetDelegationAmountRequest>
+  ): QueryGetDelegationAmountRequest {
+    const message = {
+      ...baseQueryGetDelegationAmountRequest,
+    } as QueryGetDelegationAmountRequest;
+    if (object.addr !== undefined && object.addr !== null) {
+      message.addr = object.addr;
+    } else {
+      message.addr = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetDelegationAmountResponse: object = {
+  flexibleBalance: "",
+  fixedBalance: "",
+  kycBalance: "",
+};
+
+export const QueryGetDelegationAmountResponse = {
+  encode(
+    message: QueryGetDelegationAmountResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.flexibleBalance !== "") {
+      writer.uint32(10).string(message.flexibleBalance);
+    }
+    if (message.fixedBalance !== "") {
+      writer.uint32(18).string(message.fixedBalance);
+    }
+    if (message.kycBalance !== "") {
+      writer.uint32(26).string(message.kycBalance);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetDelegationAmountResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetDelegationAmountResponse,
+    } as QueryGetDelegationAmountResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.flexibleBalance = reader.string();
+          break;
+        case 2:
+          message.fixedBalance = reader.string();
+          break;
+        case 3:
+          message.kycBalance = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetDelegationAmountResponse {
+    const message = {
+      ...baseQueryGetDelegationAmountResponse,
+    } as QueryGetDelegationAmountResponse;
+    if (
+      object.flexibleBalance !== undefined &&
+      object.flexibleBalance !== null
+    ) {
+      message.flexibleBalance = String(object.flexibleBalance);
+    } else {
+      message.flexibleBalance = "";
+    }
+    if (object.fixedBalance !== undefined && object.fixedBalance !== null) {
+      message.fixedBalance = String(object.fixedBalance);
+    } else {
+      message.fixedBalance = "";
+    }
+    if (object.kycBalance !== undefined && object.kycBalance !== null) {
+      message.kycBalance = String(object.kycBalance);
+    } else {
+      message.kycBalance = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetDelegationAmountResponse): unknown {
+    const obj: any = {};
+    message.flexibleBalance !== undefined &&
+      (obj.flexibleBalance = message.flexibleBalance);
+    message.fixedBalance !== undefined &&
+      (obj.fixedBalance = message.fixedBalance);
+    message.kycBalance !== undefined && (obj.kycBalance = message.kycBalance);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetDelegationAmountResponse>
+  ): QueryGetDelegationAmountResponse {
+    const message = {
+      ...baseQueryGetDelegationAmountResponse,
+    } as QueryGetDelegationAmountResponse;
+    if (
+      object.flexibleBalance !== undefined &&
+      object.flexibleBalance !== null
+    ) {
+      message.flexibleBalance = object.flexibleBalance;
+    } else {
+      message.flexibleBalance = "";
+    }
+    if (object.fixedBalance !== undefined && object.fixedBalance !== null) {
+      message.fixedBalance = object.fixedBalance;
+    } else {
+      message.fixedBalance = "";
+    }
+    if (object.kycBalance !== undefined && object.kycBalance !== null) {
+      message.kycBalance = object.kycBalance;
+    } else {
+      message.kycBalance = "";
+    }
+    return message;
+  },
+};
+
 const baseQueryGetDelegationResponse: object = {};
 
 export const QueryGetDelegationResponse = {
@@ -1782,6 +1979,10 @@ export interface Query {
   Delegation(
     request: QueryGetDelegationRequest
   ): Promise<QueryGetDelegationResponse>;
+  /** Queries a Delegation all amount by index. */
+  DelegationAmount(
+    request: QueryGetDelegationAmountRequest
+  ): Promise<QueryGetDelegationAmountResponse>;
   /** Queries a list of Delegation items. */
   DelegationAll(
     request: QueryAllDelegationRequest
@@ -1876,6 +2077,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryGetDelegationResponse.decode(new Reader(data))
+    );
+  }
+
+  DelegationAmount(
+    request: QueryGetDelegationAmountRequest
+  ): Promise<QueryGetDelegationAmountResponse> {
+    const data = QueryGetDelegationAmountRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "srspoa.srstaking.Query",
+      "DelegationAmount",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetDelegationAmountResponse.decode(new Reader(data))
     );
   }
 

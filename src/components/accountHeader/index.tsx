@@ -47,7 +47,7 @@ export default function AccountHeader({ title, showBack }: any) {
           </Box>
           <Box className={styles.addr}>
             {cutText(account.address)}
-            <CopyIcon cursor="pointer" mt="-2px" ml="10px" boxSize="12px" onClick={onCopyAddr} />
+            <CopyIcon cursor="pointer" mt="-2px" ml="8px" boxSize="12px" onClick={onCopyAddr} />
           </Box>
         </Box>
       </Flex>

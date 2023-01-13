@@ -30,6 +30,9 @@ export interface SrvaultFixedDeposit {
 
   /** @format int64 */
   start_height?: string;
+
+  /** @format int64 */
+  end_height?: string;
   period?: SrvaultFixedDepositPeriod;
 }
 
@@ -40,6 +43,12 @@ export enum SrvaultFixedDepositPeriod {
   PERIOD12MONTHS = "PERIOD_12_MONTHS",
   PERIOD24MONTHS = "PERIOD_24_MONTHS",
   PERIOD48MONTHS = "PERIOD_48_MONTHS",
+}
+
+export enum SrvaultFixedDepositQueryType {
+  QUERY_ALL = "QUERY_ALL",
+  QUERY_NOT_EXPIRED = "QUERY_NOT_EXPIRED",
+  QUERY_EXPIRED = "QUERY_EXPIRED",
 }
 
 export enum SrvaultKYCROLE {
@@ -54,7 +63,6 @@ export interface SrvaultKyc {
   /** @format int64 */
   LastClearHeight?: string;
   role?: SrvaultKYCROLE;
-  AgAmount?: string;
   minStaking?: string;
   maxStaking?: string;
 }
@@ -143,6 +151,21 @@ export interface SrvaultQueryAllRegionVaultResponse {
 }
 
 export interface SrvaultQueryFixedDepositByAcctResponse {
+  FixedDeposit?: SrvaultFixedDeposit[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface SrvaultQueryFixedDepositByRegionResponse {
   FixedDeposit?: SrvaultFixedDeposit[];
 
   /**
@@ -520,11 +543,39 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       "pagination.offset"?: string;
       "pagination.limit"?: string;
       "pagination.count_total"?: boolean;
+      query_type?: "QUERY_ALL" | "QUERY_NOT_EXPIRED" | "QUERY_EXPIRED";
     },
     params: RequestParams = {},
   ) =>
     this.request<SrvaultQueryFixedDepositByAcctResponse, RpcStatus>({
       path: `/srs-poa/srvault/fixed_deposit_by_acct/${account}`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryFixedDepositByRegion
+   * @summary Queries a list of FixedDepositByRegion items.
+   * @request GET:/srs-poa/srvault/fixed_deposit_by_region/{regionid}
+   */
+  queryFixedDepositByRegion = (
+    regionid: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      query_type?: "QUERY_ALL" | "QUERY_NOT_EXPIRED" | "QUERY_EXPIRED";
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<SrvaultQueryFixedDepositByRegionResponse, RpcStatus>({
+      path: `/srs-poa/srvault/fixed_deposit_by_region/${regionid}`,
       method: "GET",
       query: query,
       format: "json",

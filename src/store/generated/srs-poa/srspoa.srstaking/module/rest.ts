@@ -133,36 +133,6 @@ export interface RpcStatus {
   details?: ProtobufAny[];
 }
 
-export interface SrspoasrstakingValidator {
-  /** operator_address defines the address of the validator's operator; bech encoded in JSON. */
-  operator_address?: string;
-
-  /** consensus_pubkey is the consensus public key of the validator, as a Protobuf Any. */
-  consensus_pubkey?: string;
-
-  /** description defines the description terms for the validator. */
-  description?: SrstakingDescription;
-
-  /** status is the validator status (bonded/unbonding/unbonded). */
-  status?: SrstakingValidatorStatus;
-
-  /** tokens define the delegated tokens (incl. self-delegation). */
-  tokens?: string;
-
-  /** delegator_shares defines total shares issued to a validator's delegators. */
-  delegator_shares?: string;
-  RegionID?: string;
-
-  /**
-   * unbonding_time defines, if unbonding, the min time for the validator to complete unbonding.
-   * @format date-time
-   */
-  unbonding_time?: string;
-
-  /** commission defines the commission parameters. */
-  commission?: SrstakingCommission;
-}
-
 export enum SrstakingApplyAction {
   APPLY_ACTION_CREATE_REGION = "APPLY_ACTION_CREATE_REGION",
   APPLY_ACTION_DELETE_REGION = "APPLY_ACTION_DELETE_REGION",
@@ -199,38 +169,8 @@ export interface SrstakingApplyPeriod {
   ignoreNotify?: SrstakingNotify[];
 }
 
-/**
- * Commission defines commission parameters for a given validator.
- */
-export interface SrstakingCommission {
-  /** commission_rates defines the initial commission rates to be used for creating a validator. */
-  commission_rates?: SrstakingCommissionRates;
-
-  /**
-   * update_time is the last time the commission rate was changed.
-   * @format date-time
-   */
-  update_time?: string;
-}
-
-/**
-* CommissionRates defines the initial commission rates to be used for creating
-a validator.
-*/
-export interface SrstakingCommissionRates {
-  /** rate is the commission rate charged to delegators, as a fraction. */
-  rate?: string;
-
-  /** max_rate defines the maximum commission rate which validator can ever charge, as a fraction. */
-  max_rate?: string;
-
-  /** max_change_rate defines the maximum daily increase of the validator commission, as a fraction. */
-  max_change_rate?: string;
-}
-
 export interface SrstakingDelegation {
   delegatorAddress?: string;
-  validator_address?: string;
   belongRegion?: string;
   bondAmount?: string;
   commissionPowerAmount?: string;
@@ -238,7 +178,6 @@ export interface SrstakingDelegation {
   changeBondAmount?: string;
   bondDenom?: string;
   commissionPowerDenom?: string;
-  shares?: string;
 
   /** ValidatorStatus is the status of a validator. */
   status?: SrstakingDelegationStatus;
@@ -388,7 +327,7 @@ export interface SrstakingQueryAllRegionResponse {
 }
 
 export interface SrstakingQueryAllValidatorResponse {
-  validator?: SrspoasrstakingValidator[];
+  validator?: SrstakingValidator[];
 
   /**
    * PageResponse is to be embedded in gRPC response messages where the
@@ -400,6 +339,12 @@ export interface SrstakingQueryAllValidatorResponse {
    *  }
    */
   pagination?: V1Beta1PageResponse;
+}
+
+export interface SrstakingQueryGetDelegationAmountResponse {
+  flexibleBalance?: string;
+  fixedBalance?: string;
+  kycBalance?: string;
 }
 
 export interface SrstakingQueryGetDelegationResponse {
@@ -419,7 +364,7 @@ export interface SrstakingQueryGetRegionResponse {
 }
 
 export interface SrstakingQueryGetValidatorResponse {
-  validator?: SrspoasrstakingValidator;
+  validator?: SrstakingValidator;
 }
 
 export interface SrstakingQueryKycBonusResponse {
@@ -488,6 +433,21 @@ export interface SrstakingRegionCommission {
 export interface SrstakingRegionDelegators {
   regionId?: string;
   delegators?: string[];
+}
+
+export interface SrstakingValidator {
+  /** operator_address defines the address of the validator's operator; bech encoded in JSON. */
+  operator_address?: string;
+
+  /** consensus_pubkey is the consensus public key of the validator, as a Protobuf Any. */
+  consensus_pubkey?: string;
+
+  /** description defines the description terms for the validator. */
+  description?: SrstakingDescription;
+
+  /** status is the validator status (bonded/unbonding/unbonded). */
+  status?: SrstakingValidatorStatus;
+  RegionID?: string;
 }
 
 /**
@@ -810,6 +770,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryDelegation = (index: string, params: RequestParams = {}) =>
     this.request<SrstakingQueryGetDelegationResponse, RpcStatus>({
       path: `/srs-poa/srstaking/delegation/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDelegationAmount
+   * @summary Queries a Delegation all amount by index.
+   * @request GET:/srs-poa/srstaking/delegationAmount/{addr}
+   */
+  queryDelegationAmount = (addr: string, params: RequestParams = {}) =>
+    this.request<SrstakingQueryGetDelegationAmountResponse, RpcStatus>({
+      path: `/srs-poa/srstaking/delegationAmount/${addr}`,
       method: "GET",
       format: "json",
       ...params,

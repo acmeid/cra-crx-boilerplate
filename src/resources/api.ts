@@ -37,7 +37,7 @@ export const getRegionVaultById = (regionId: any): Promise<any> => {
 }
 
 export const getBalanceByAddr = (address: any): Promise<any> => {
-  return ajax.get(`/cosmos/bank/v1beta1/balances/${address}`)
+  return ajax.get(`/srs-poa/bank/balances/${address}`)
 }
 
 export const getAccountByAddr = (address: any): Promise<any> => {

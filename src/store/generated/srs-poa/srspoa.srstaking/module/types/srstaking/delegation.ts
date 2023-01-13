@@ -56,7 +56,6 @@ export function delegationStatusToJSON(object: DelegationStatus): string {
 
 export interface Delegation {
   delegatorAddress: string;
-  validator_address: string;
   belongRegion: string;
   bondAmount: string;
   commissionPowerAmount: string;
@@ -64,13 +63,11 @@ export interface Delegation {
   changeBondAmount: string;
   bondDenom: string;
   commissionPowerDenom: string;
-  shares: string;
   status: DelegationStatus;
 }
 
 const baseDelegation: object = {
   delegatorAddress: "",
-  validator_address: "",
   belongRegion: "",
   bondAmount: "",
   commissionPowerAmount: "",
@@ -78,7 +75,6 @@ const baseDelegation: object = {
   changeBondAmount: "",
   bondDenom: "",
   commissionPowerDenom: "",
-  shares: "",
   status: 0,
 };
 
@@ -87,35 +83,29 @@ export const Delegation = {
     if (message.delegatorAddress !== "") {
       writer.uint32(10).string(message.delegatorAddress);
     }
-    if (message.validator_address !== "") {
-      writer.uint32(18).string(message.validator_address);
-    }
     if (message.belongRegion !== "") {
-      writer.uint32(26).string(message.belongRegion);
+      writer.uint32(18).string(message.belongRegion);
     }
     if (message.bondAmount !== "") {
-      writer.uint32(34).string(message.bondAmount);
+      writer.uint32(26).string(message.bondAmount);
     }
     if (message.commissionPowerAmount !== "") {
-      writer.uint32(42).string(message.commissionPowerAmount);
+      writer.uint32(34).string(message.commissionPowerAmount);
     }
     if (message.commissionPowerRate !== "") {
-      writer.uint32(50).string(message.commissionPowerRate);
+      writer.uint32(42).string(message.commissionPowerRate);
     }
     if (message.changeBondAmount !== "") {
-      writer.uint32(58).string(message.changeBondAmount);
+      writer.uint32(50).string(message.changeBondAmount);
     }
     if (message.bondDenom !== "") {
-      writer.uint32(66).string(message.bondDenom);
+      writer.uint32(58).string(message.bondDenom);
     }
     if (message.commissionPowerDenom !== "") {
-      writer.uint32(74).string(message.commissionPowerDenom);
-    }
-    if (message.shares !== "") {
-      writer.uint32(82).string(message.shares);
+      writer.uint32(66).string(message.commissionPowerDenom);
     }
     if (message.status !== 0) {
-      writer.uint32(88).int32(message.status);
+      writer.uint32(72).int32(message.status);
     }
     return writer;
   },
@@ -131,33 +121,27 @@ export const Delegation = {
           message.delegatorAddress = reader.string();
           break;
         case 2:
-          message.validator_address = reader.string();
-          break;
-        case 3:
           message.belongRegion = reader.string();
           break;
-        case 4:
+        case 3:
           message.bondAmount = reader.string();
           break;
-        case 5:
+        case 4:
           message.commissionPowerAmount = reader.string();
           break;
-        case 6:
+        case 5:
           message.commissionPowerRate = reader.string();
           break;
-        case 7:
+        case 6:
           message.changeBondAmount = reader.string();
           break;
-        case 8:
+        case 7:
           message.bondDenom = reader.string();
           break;
-        case 9:
+        case 8:
           message.commissionPowerDenom = reader.string();
           break;
-        case 10:
-          message.shares = reader.string();
-          break;
-        case 11:
+        case 9:
           message.status = reader.int32() as any;
           break;
         default:
@@ -177,14 +161,6 @@ export const Delegation = {
       message.delegatorAddress = String(object.delegatorAddress);
     } else {
       message.delegatorAddress = "";
-    }
-    if (
-      object.validator_address !== undefined &&
-      object.validator_address !== null
-    ) {
-      message.validator_address = String(object.validator_address);
-    } else {
-      message.validator_address = "";
     }
     if (object.belongRegion !== undefined && object.belongRegion !== null) {
       message.belongRegion = String(object.belongRegion);
@@ -233,11 +209,6 @@ export const Delegation = {
     } else {
       message.commissionPowerDenom = "";
     }
-    if (object.shares !== undefined && object.shares !== null) {
-      message.shares = String(object.shares);
-    } else {
-      message.shares = "";
-    }
     if (object.status !== undefined && object.status !== null) {
       message.status = delegationStatusFromJSON(object.status);
     } else {
@@ -250,8 +221,6 @@ export const Delegation = {
     const obj: any = {};
     message.delegatorAddress !== undefined &&
       (obj.delegatorAddress = message.delegatorAddress);
-    message.validator_address !== undefined &&
-      (obj.validator_address = message.validator_address);
     message.belongRegion !== undefined &&
       (obj.belongRegion = message.belongRegion);
     message.bondAmount !== undefined && (obj.bondAmount = message.bondAmount);
@@ -264,7 +233,6 @@ export const Delegation = {
     message.bondDenom !== undefined && (obj.bondDenom = message.bondDenom);
     message.commissionPowerDenom !== undefined &&
       (obj.commissionPowerDenom = message.commissionPowerDenom);
-    message.shares !== undefined && (obj.shares = message.shares);
     message.status !== undefined &&
       (obj.status = delegationStatusToJSON(message.status));
     return obj;
@@ -279,14 +247,6 @@ export const Delegation = {
       message.delegatorAddress = object.delegatorAddress;
     } else {
       message.delegatorAddress = "";
-    }
-    if (
-      object.validator_address !== undefined &&
-      object.validator_address !== null
-    ) {
-      message.validator_address = object.validator_address;
-    } else {
-      message.validator_address = "";
     }
     if (object.belongRegion !== undefined && object.belongRegion !== null) {
       message.belongRegion = object.belongRegion;
@@ -334,11 +294,6 @@ export const Delegation = {
       message.commissionPowerDenom = object.commissionPowerDenom;
     } else {
       message.commissionPowerDenom = "";
-    }
-    if (object.shares !== undefined && object.shares !== null) {
-      message.shares = object.shares;
-    } else {
-      message.shares = "";
     }
     if (object.status !== undefined && object.status !== null) {
       message.status = object.status;

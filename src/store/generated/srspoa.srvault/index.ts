@@ -49,6 +49,8 @@ const getDefaultState = () => {
 				Kyc: {},
 				KycAll: {},
 				KycByRegion: {},
+				FixedDepositByAcct: {},
+				FixedDepositByRegion: {},
 				
 				_Structure: {
 						Bonus: getStructure(Bonus.fromPartial({})),
@@ -134,6 +136,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.KycByRegion[JSON.stringify(params)] ?? {}
+		},
+				getFixedDepositByAcct: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.FixedDepositByAcct[JSON.stringify(params)] ?? {}
+		},
+				getFixedDepositByRegion: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.FixedDepositByRegion[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -361,29 +375,68 @@ export default {
 		},
 		
 		
-		async sendMsgSetRegionFeeRate({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		
+		 		
+		
+		
+		async QueryFixedDepositByAcct({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
 			try {
-				const client=await initClient(rootGetters)
-				const result = await client.SrspoaSrvault.tx.sendMsgSetRegionFeeRate({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetRegionFeeRate:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgSetRegionFeeRate:Send Could not broadcast Tx: '+ e.message)
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.SrspoaSrvault.query.queryFixedDepositByAcct( key.account, query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.SrspoaSrvault.query.queryFixedDepositByAcct( key.account, {...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
 				}
+				commit('QUERY', { query: 'FixedDepositByAcct', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryFixedDepositByAcct', payload: { options: { all }, params: {...key},query }})
+				return getters['getFixedDepositByAcct']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryFixedDepositByAcct API Node Unavailable. Could not perform query: ' + e.message)
+				
 			}
 		},
-		async sendMsgDoFixedWithdraw({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryFixedDepositByRegion({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.SrspoaSrvault.query.queryFixedDepositByRegion( key.regionid, query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.SrspoaSrvault.query.queryFixedDepositByRegion( key.regionid, {...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'FixedDepositByRegion', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryFixedDepositByRegion', payload: { options: { all }, params: {...key},query }})
+				return getters['getFixedDepositByRegion']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryFixedDepositByRegion API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		async sendMsgNewKyc({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.SrspoaSrvault.tx.sendMsgDoFixedWithdraw({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.SrspoaSrvault.tx.sendMsgNewKyc({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDoFixedWithdraw:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgNewKyc:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgDoFixedWithdraw:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgNewKyc:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -400,32 +453,6 @@ export default {
 				}
 			}
 		},
-		async sendMsgSetKycMaxStaking({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.SrspoaSrvault.tx.sendMsgSetKycMaxStaking({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetKycMaxStaking:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgSetKycMaxStaking:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgNewKyc({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.SrspoaSrvault.tx.sendMsgNewKyc({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgNewKyc:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgNewKyc:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgSetFixedDepositInterestRate({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -439,16 +466,29 @@ export default {
 				}
 			}
 		},
-		async sendMsgAgToAc({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgDoFixedWithdraw({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.SrspoaSrvault.tx.sendMsgAgToAc({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.SrspoaSrvault.tx.sendMsgDoFixedWithdraw({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgAgToAc:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDoFixedWithdraw:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgAgToAc:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgDoFixedWithdraw:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgSetRegionFeeRate({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.SrspoaSrvault.tx.sendMsgSetRegionFeeRate({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSetRegionFeeRate:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgSetRegionFeeRate:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -465,30 +505,43 @@ export default {
 				}
 			}
 		},
-		
-		async MsgSetRegionFeeRate({ rootGetters }, { value }) {
+		async sendMsgSetKycMaxStaking({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
-				const client=initClient(rootGetters)
-				const msg = await client.SrspoaSrvault.tx.msgSetRegionFeeRate({value})
-				return msg
+				const client=await initClient(rootGetters)
+				const result = await client.SrspoaSrvault.tx.sendMsgSetKycMaxStaking({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetRegionFeeRate:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgSetRegionFeeRate:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgSetKycMaxStaking:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgSetKycMaxStaking:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
-		async MsgDoFixedWithdraw({ rootGetters }, { value }) {
+		async sendMsgAgToAc({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.SrspoaSrvault.tx.sendMsgAgToAc({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgAgToAc:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgAgToAc:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		
+		async MsgNewKyc({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.SrspoaSrvault.tx.msgDoFixedWithdraw({value})
+				const msg = await client.SrspoaSrvault.tx.msgNewKyc({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDoFixedWithdraw:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgNewKyc:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgDoFixedWithdraw:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgNewKyc:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -505,32 +558,6 @@ export default {
 				}
 			}
 		},
-		async MsgSetKycMaxStaking({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.SrspoaSrvault.tx.msgSetKycMaxStaking({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgSetKycMaxStaking:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgSetKycMaxStaking:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgNewKyc({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.SrspoaSrvault.tx.msgNewKyc({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgNewKyc:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgNewKyc:Create Could not create message: ' + e.message)
-				}
-			}
-		},
 		async MsgSetFixedDepositInterestRate({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -544,16 +571,29 @@ export default {
 				}
 			}
 		},
-		async MsgAgToAc({ rootGetters }, { value }) {
+		async MsgDoFixedWithdraw({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.SrspoaSrvault.tx.msgAgToAc({value})
+				const msg = await client.SrspoaSrvault.tx.msgDoFixedWithdraw({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgAgToAc:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDoFixedWithdraw:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgAgToAc:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgDoFixedWithdraw:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgSetRegionFeeRate({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.SrspoaSrvault.tx.msgSetRegionFeeRate({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSetRegionFeeRate:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgSetRegionFeeRate:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -567,6 +607,32 @@ export default {
 					throw new Error('TxClient:MsgRemoveKyc:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgRemoveKyc:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgSetKycMaxStaking({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.SrspoaSrvault.tx.msgSetKycMaxStaking({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgSetKycMaxStaking:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgSetKycMaxStaking:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgAgToAc({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.SrspoaSrvault.tx.msgAgToAc({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgAgToAc:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgAgToAc:Create Could not create message: ' + e.message)
 				}
 			}
 		},

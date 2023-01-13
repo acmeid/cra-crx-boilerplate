@@ -22,6 +22,7 @@ import { storage } from '@/resources/account'
 import Header from '@/components/header'
 import Step from '@/components/setp'
 import { openTab } from '@/utils/tools'
+import { qs } from 'url-parse'
 
 type IFormInput = {
   password: string
@@ -43,6 +44,9 @@ export default function Welcome({ style }: any) {
     formState: { errors, touchedFields },
   } = useForm<IFormInput>()
   const navigate = useNavigate()
+  const { search } = useLocation()
+  const searchs = qs.parse(search)
+
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     if (!checked) {
       toast({
@@ -59,7 +63,11 @@ export default function Welcome({ style }: any) {
     storage.set({ pw: data.password })
     storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
 
-    navigate({ pathname: '/create3' })
+    if (searchs.type === 'import') {
+      navigate({ pathname: '/importAccount' })
+    } else {
+      navigate({ pathname: '/create3' })
+    }
   }
 
   const rule = {

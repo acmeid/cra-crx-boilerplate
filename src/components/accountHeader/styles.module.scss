@@ -28,7 +28,7 @@
 }
 .addr {
   margin-left: 12px;
-  width: 136px;
+  width: 140px;
   height: 28px;
   line-height: 28px;
   background: var(--chakra-colors-blackAlpha-100);
@@ -38,6 +38,7 @@
   margin-top: 8px;
   font-size: 14px;
   user-select: none;
+  white-space: nowrap;
 }
 
 .edit {

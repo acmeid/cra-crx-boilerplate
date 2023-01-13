@@ -10,13 +10,11 @@ import { Region } from "./module/types/srstaking/region"
 import { RegionDelegators } from "./module/types/srstaking/region"
 import { RegionsDelegators } from "./module/types/srstaking/region"
 import { RegionCommission } from "./module/types/srstaking/region_commission"
-import { CommissionRates } from "./module/types/srstaking/validator"
-import { Commission } from "./module/types/srstaking/validator"
 import { Validator } from "./module/types/srstaking/validator"
 import { Description } from "./module/types/srstaking/validator"
 
 
-export { Delegation, google.protobuf.MessageOptions, Notify, Notifies, ApplyPeriod, Params, Region, RegionDelegators, RegionsDelegators, RegionCommission, CommissionRates, Commission, Validator, Description };
+export { Delegation, google.protobuf.MessageOptions, Notify, Notifies, ApplyPeriod, Params, Region, RegionDelegators, RegionsDelegators, RegionCommission, Validator, Description };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -61,6 +59,7 @@ const getDefaultState = () => {
 				Validator: {},
 				ValidatorAll: {},
 				Delegation: {},
+				DelegationAmount: {},
 				DelegationAll: {},
 				NotifyApply: {},
 				KycBonus: {},
@@ -76,8 +75,6 @@ const getDefaultState = () => {
 						RegionDelegators: getStructure(RegionDelegators.fromPartial({})),
 						RegionsDelegators: getStructure(RegionsDelegators.fromPartial({})),
 						RegionCommission: getStructure(RegionCommission.fromPartial({})),
-						CommissionRates: getStructure(CommissionRates.fromPartial({})),
-						Commission: getStructure(Commission.fromPartial({})),
 						Validator: getStructure(Validator.fromPartial({})),
 						Description: getStructure(Description.fromPartial({})),
 						
@@ -149,6 +146,12 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Delegation[JSON.stringify(params)] ?? {}
+		},
+				getDelegationAmount: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.DelegationAmount[JSON.stringify(params)] ?? {}
 		},
 				getDelegationAll: (state) => (params = { params: {}}) => {
 					if (!(<any> params).query) {
@@ -369,6 +372,28 @@ export default {
 		 		
 		
 		
+		async QueryDelegationAmount({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryDelegationAmount( key.addr)).data
+				
+					
+				commit('QUERY', { query: 'DelegationAmount', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryDelegationAmount', payload: { options: { all }, params: {...key},query }})
+				return getters['getDelegationAmount']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryDelegationAmount API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
 		async QueryDelegationAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
 			try {
 				const key = params ?? {};
@@ -434,21 +459,6 @@ export default {
 		},
 		
 		
-		async sendMsgDelegate({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDelegate(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDelegate:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgDelegate:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgWithdraw({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -464,48 +474,78 @@ export default {
 				}
 			}
 		},
-		async sendMsgExitDelegate({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgDeleteRegion({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgExitDelegate(value)
+				const msg = await txClient.msgDeleteRegion(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgExitDelegate:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDeleteRegion:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgExitDelegate:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgDeleteRegion:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
-		async sendMsgUndelegate({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateDelegate({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgUndelegate(value)
+				const msg = await txClient.msgCreateDelegate(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUndelegate:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateDelegate:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgUndelegate:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateDelegate:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
-		async sendMsgCreateRegion({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgDelegate({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateRegion(value)
+				const msg = await txClient.msgDelegate(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateRegion:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDelegate:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateRegion:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgDelegate:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgUpdateValidator({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgUpdateValidator(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateValidator:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUpdateValidator:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCreateValidator({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateValidator(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateValidator:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateValidator:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -539,48 +579,33 @@ export default {
 				}
 			}
 		},
-		async sendMsgCreateValidator({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgUndelegate({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateValidator(value)
+				const msg = await txClient.msgUndelegate(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateValidator:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUndelegate:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateValidator:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgUndelegate:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
-		async sendMsgUpdateValidator({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateRegion({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgUpdateValidator(value)
+				const msg = await txClient.msgCreateRegion(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateValidator:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateRegion:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgUpdateValidator:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgCreateDelegate({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateDelegate(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateDelegate:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreateDelegate:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateRegion:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -599,35 +624,22 @@ export default {
 				}
 			}
 		},
-		async sendMsgDeleteRegion({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgExitDelegate({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDeleteRegion(value)
+				const msg = await txClient.msgExitDelegate(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteRegion:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgExitDelegate:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgDeleteRegion:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgExitDelegate:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgDelegate({ rootGetters }, { value }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDelegate(value)
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDelegate:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgDelegate:Create Could not create message: ' + e.message)
-				}
-			}
-		},
 		async MsgWithdraw({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -641,42 +653,68 @@ export default {
 				}
 			}
 		},
-		async MsgExitDelegate({ rootGetters }, { value }) {
+		async MsgDeleteRegion({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgExitDelegate(value)
+				const msg = await txClient.msgDeleteRegion(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgExitDelegate:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDeleteRegion:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgExitDelegate:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgDeleteRegion:Create Could not create message: ' + e.message)
 				}
 			}
 		},
-		async MsgUndelegate({ rootGetters }, { value }) {
+		async MsgCreateDelegate({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgUndelegate(value)
+				const msg = await txClient.msgCreateDelegate(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUndelegate:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateDelegate:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgUndelegate:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateDelegate:Create Could not create message: ' + e.message)
 				}
 			}
 		},
-		async MsgCreateRegion({ rootGetters }, { value }) {
+		async MsgDelegate({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateRegion(value)
+				const msg = await txClient.msgDelegate(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateRegion:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDelegate:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateRegion:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgDelegate:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgUpdateValidator({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgUpdateValidator(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateValidator:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateValidator:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreateValidator({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateValidator(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateValidator:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateValidator:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -706,42 +744,29 @@ export default {
 				}
 			}
 		},
-		async MsgCreateValidator({ rootGetters }, { value }) {
+		async MsgUndelegate({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateValidator(value)
+				const msg = await txClient.msgUndelegate(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateValidator:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUndelegate:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateValidator:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgUndelegate:Create Could not create message: ' + e.message)
 				}
 			}
 		},
-		async MsgUpdateValidator({ rootGetters }, { value }) {
+		async MsgCreateRegion({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgUpdateValidator(value)
+				const msg = await txClient.msgCreateRegion(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateValidator:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateRegion:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgUpdateValidator:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgCreateDelegate({ rootGetters }, { value }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateDelegate(value)
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateDelegate:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCreateDelegate:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateRegion:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -758,16 +783,16 @@ export default {
 				}
 			}
 		},
-		async MsgDeleteRegion({ rootGetters }, { value }) {
+		async MsgExitDelegate({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDeleteRegion(value)
+				const msg = await txClient.msgExitDelegate(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteRegion:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgExitDelegate:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgDeleteRegion:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgExitDelegate:Create Could not create message: ' + e.message)
 				}
 			}
 		},

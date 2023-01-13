@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { Timestamp } from "../google/protobuf/timestamp";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "srspoa.srstaking";
@@ -46,27 +45,6 @@ export function validatorStatusToJSON(object: ValidatorStatus): string {
   }
 }
 
-/**
- * CommissionRates defines the initial commission rates to be used for creating
- * a validator.
- */
-export interface CommissionRates {
-  /** rate is the commission rate charged to delegators, as a fraction. */
-  rate: string;
-  /** max_rate defines the maximum commission rate which validator can ever charge, as a fraction. */
-  max_rate: string;
-  /** max_change_rate defines the maximum daily increase of the validator commission, as a fraction. */
-  max_change_rate: string;
-}
-
-/** Commission defines commission parameters for a given validator. */
-export interface Commission {
-  /** commission_rates defines the initial commission rates to be used for creating a validator. */
-  commission_rates: CommissionRates | undefined;
-  /** update_time is the last time the commission rate was changed. */
-  update_time: Date | undefined;
-}
-
 export interface Validator {
   /** operator_address defines the address of the validator's operator; bech encoded in JSON. */
   operator_address: string;
@@ -76,15 +54,7 @@ export interface Validator {
   description: Description | undefined;
   /** status is the validator status (bonded/unbonding/unbonded). */
   status: ValidatorStatus;
-  /** tokens define the delegated tokens (incl. self-delegation). */
-  tokens: string;
-  /** delegator_shares defines total shares issued to a validator's delegators. */
-  delegator_shares: string;
   RegionID: string;
-  /** unbonding_time defines, if unbonding, the min time for the validator to complete unbonding. */
-  unbonding_time: Date | undefined;
-  /** commission defines the commission parameters. */
-  commission: Commission | undefined;
 }
 
 /** Description defines a validator description. */
@@ -101,212 +71,10 @@ export interface Description {
   details: string;
 }
 
-const baseCommissionRates: object = {
-  rate: "",
-  max_rate: "",
-  max_change_rate: "",
-};
-
-export const CommissionRates = {
-  encode(message: CommissionRates, writer: Writer = Writer.create()): Writer {
-    if (message.rate !== "") {
-      writer.uint32(10).string(message.rate);
-    }
-    if (message.max_rate !== "") {
-      writer.uint32(18).string(message.max_rate);
-    }
-    if (message.max_change_rate !== "") {
-      writer.uint32(26).string(message.max_change_rate);
-    }
-    return writer;
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): CommissionRates {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseCommissionRates } as CommissionRates;
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.rate = reader.string();
-          break;
-        case 2:
-          message.max_rate = reader.string();
-          break;
-        case 3:
-          message.max_change_rate = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CommissionRates {
-    const message = { ...baseCommissionRates } as CommissionRates;
-    if (object.rate !== undefined && object.rate !== null) {
-      message.rate = String(object.rate);
-    } else {
-      message.rate = "";
-    }
-    if (object.max_rate !== undefined && object.max_rate !== null) {
-      message.max_rate = String(object.max_rate);
-    } else {
-      message.max_rate = "";
-    }
-    if (
-      object.max_change_rate !== undefined &&
-      object.max_change_rate !== null
-    ) {
-      message.max_change_rate = String(object.max_change_rate);
-    } else {
-      message.max_change_rate = "";
-    }
-    return message;
-  },
-
-  toJSON(message: CommissionRates): unknown {
-    const obj: any = {};
-    message.rate !== undefined && (obj.rate = message.rate);
-    message.max_rate !== undefined && (obj.max_rate = message.max_rate);
-    message.max_change_rate !== undefined &&
-      (obj.max_change_rate = message.max_change_rate);
-    return obj;
-  },
-
-  fromPartial(object: DeepPartial<CommissionRates>): CommissionRates {
-    const message = { ...baseCommissionRates } as CommissionRates;
-    if (object.rate !== undefined && object.rate !== null) {
-      message.rate = object.rate;
-    } else {
-      message.rate = "";
-    }
-    if (object.max_rate !== undefined && object.max_rate !== null) {
-      message.max_rate = object.max_rate;
-    } else {
-      message.max_rate = "";
-    }
-    if (
-      object.max_change_rate !== undefined &&
-      object.max_change_rate !== null
-    ) {
-      message.max_change_rate = object.max_change_rate;
-    } else {
-      message.max_change_rate = "";
-    }
-    return message;
-  },
-};
-
-const baseCommission: object = {};
-
-export const Commission = {
-  encode(message: Commission, writer: Writer = Writer.create()): Writer {
-    if (message.commission_rates !== undefined) {
-      CommissionRates.encode(
-        message.commission_rates,
-        writer.uint32(10).fork()
-      ).ldelim();
-    }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(
-        toTimestamp(message.update_time),
-        writer.uint32(18).fork()
-      ).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): Commission {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseCommission } as Commission;
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.commission_rates = CommissionRates.decode(
-            reader,
-            reader.uint32()
-          );
-          break;
-        case 2:
-          message.update_time = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32())
-          );
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Commission {
-    const message = { ...baseCommission } as Commission;
-    if (
-      object.commission_rates !== undefined &&
-      object.commission_rates !== null
-    ) {
-      message.commission_rates = CommissionRates.fromJSON(
-        object.commission_rates
-      );
-    } else {
-      message.commission_rates = undefined;
-    }
-    if (object.update_time !== undefined && object.update_time !== null) {
-      message.update_time = fromJsonTimestamp(object.update_time);
-    } else {
-      message.update_time = undefined;
-    }
-    return message;
-  },
-
-  toJSON(message: Commission): unknown {
-    const obj: any = {};
-    message.commission_rates !== undefined &&
-      (obj.commission_rates = message.commission_rates
-        ? CommissionRates.toJSON(message.commission_rates)
-        : undefined);
-    message.update_time !== undefined &&
-      (obj.update_time =
-        message.update_time !== undefined
-          ? message.update_time.toISOString()
-          : null);
-    return obj;
-  },
-
-  fromPartial(object: DeepPartial<Commission>): Commission {
-    const message = { ...baseCommission } as Commission;
-    if (
-      object.commission_rates !== undefined &&
-      object.commission_rates !== null
-    ) {
-      message.commission_rates = CommissionRates.fromPartial(
-        object.commission_rates
-      );
-    } else {
-      message.commission_rates = undefined;
-    }
-    if (object.update_time !== undefined && object.update_time !== null) {
-      message.update_time = object.update_time;
-    } else {
-      message.update_time = undefined;
-    }
-    return message;
-  },
-};
-
 const baseValidator: object = {
   operator_address: "",
   consensus_pubkey: "",
   status: 0,
-  tokens: "",
-  delegator_shares: "",
   RegionID: "",
 };
 
@@ -327,23 +95,8 @@ export const Validator = {
     if (message.status !== 0) {
       writer.uint32(32).int32(message.status);
     }
-    if (message.tokens !== "") {
-      writer.uint32(42).string(message.tokens);
-    }
-    if (message.delegator_shares !== "") {
-      writer.uint32(50).string(message.delegator_shares);
-    }
     if (message.RegionID !== "") {
-      writer.uint32(58).string(message.RegionID);
-    }
-    if (message.unbonding_time !== undefined) {
-      Timestamp.encode(
-        toTimestamp(message.unbonding_time),
-        writer.uint32(66).fork()
-      ).ldelim();
-    }
-    if (message.commission !== undefined) {
-      Commission.encode(message.commission, writer.uint32(74).fork()).ldelim();
+      writer.uint32(42).string(message.RegionID);
     }
     return writer;
   },
@@ -368,21 +121,7 @@ export const Validator = {
           message.status = reader.int32() as any;
           break;
         case 5:
-          message.tokens = reader.string();
-          break;
-        case 6:
-          message.delegator_shares = reader.string();
-          break;
-        case 7:
           message.RegionID = reader.string();
-          break;
-        case 8:
-          message.unbonding_time = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32())
-          );
-          break;
-        case 9:
-          message.commission = Commission.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -420,33 +159,10 @@ export const Validator = {
     } else {
       message.status = 0;
     }
-    if (object.tokens !== undefined && object.tokens !== null) {
-      message.tokens = String(object.tokens);
-    } else {
-      message.tokens = "";
-    }
-    if (
-      object.delegator_shares !== undefined &&
-      object.delegator_shares !== null
-    ) {
-      message.delegator_shares = String(object.delegator_shares);
-    } else {
-      message.delegator_shares = "";
-    }
     if (object.RegionID !== undefined && object.RegionID !== null) {
       message.RegionID = String(object.RegionID);
     } else {
       message.RegionID = "";
-    }
-    if (object.unbonding_time !== undefined && object.unbonding_time !== null) {
-      message.unbonding_time = fromJsonTimestamp(object.unbonding_time);
-    } else {
-      message.unbonding_time = undefined;
-    }
-    if (object.commission !== undefined && object.commission !== null) {
-      message.commission = Commission.fromJSON(object.commission);
-    } else {
-      message.commission = undefined;
     }
     return message;
   },
@@ -463,19 +179,7 @@ export const Validator = {
         : undefined);
     message.status !== undefined &&
       (obj.status = validatorStatusToJSON(message.status));
-    message.tokens !== undefined && (obj.tokens = message.tokens);
-    message.delegator_shares !== undefined &&
-      (obj.delegator_shares = message.delegator_shares);
     message.RegionID !== undefined && (obj.RegionID = message.RegionID);
-    message.unbonding_time !== undefined &&
-      (obj.unbonding_time =
-        message.unbonding_time !== undefined
-          ? message.unbonding_time.toISOString()
-          : null);
-    message.commission !== undefined &&
-      (obj.commission = message.commission
-        ? Commission.toJSON(message.commission)
-        : undefined);
     return obj;
   },
 
@@ -507,33 +211,10 @@ export const Validator = {
     } else {
       message.status = 0;
     }
-    if (object.tokens !== undefined && object.tokens !== null) {
-      message.tokens = object.tokens;
-    } else {
-      message.tokens = "";
-    }
-    if (
-      object.delegator_shares !== undefined &&
-      object.delegator_shares !== null
-    ) {
-      message.delegator_shares = object.delegator_shares;
-    } else {
-      message.delegator_shares = "";
-    }
     if (object.RegionID !== undefined && object.RegionID !== null) {
       message.RegionID = object.RegionID;
     } else {
       message.RegionID = "";
-    }
-    if (object.unbonding_time !== undefined && object.unbonding_time !== null) {
-      message.unbonding_time = object.unbonding_time;
-    } else {
-      message.unbonding_time = undefined;
-    }
-    if (object.commission !== undefined && object.commission !== null) {
-      message.commission = Commission.fromPartial(object.commission);
-    } else {
-      message.commission = undefined;
     }
     return message;
   },
@@ -685,25 +366,3 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
-
-function toTimestamp(date: Date): Timestamp {
-  const seconds = date.getTime() / 1_000;
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
-}
-
-function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
-    return o;
-  } else if (typeof o === "string") {
-    return new Date(o);
-  } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
-  }
-}

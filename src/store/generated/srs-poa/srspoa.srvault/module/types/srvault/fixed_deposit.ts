@@ -62,6 +62,48 @@ export function fixedDepositPeriodToJSON(object: FixedDepositPeriod): string {
   }
 }
 
+export enum FixedDepositQueryType {
+  QUERY_ALL = 0,
+  QUERY_NOT_EXPIRED = 1,
+  QUERY_EXPIRED = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function fixedDepositQueryTypeFromJSON(
+  object: any
+): FixedDepositQueryType {
+  switch (object) {
+    case 0:
+    case "QUERY_ALL":
+      return FixedDepositQueryType.QUERY_ALL;
+    case 1:
+    case "QUERY_NOT_EXPIRED":
+      return FixedDepositQueryType.QUERY_NOT_EXPIRED;
+    case 2:
+    case "QUERY_EXPIRED":
+      return FixedDepositQueryType.QUERY_EXPIRED;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return FixedDepositQueryType.UNRECOGNIZED;
+  }
+}
+
+export function fixedDepositQueryTypeToJSON(
+  object: FixedDepositQueryType
+): string {
+  switch (object) {
+    case FixedDepositQueryType.QUERY_ALL:
+      return "QUERY_ALL";
+    case FixedDepositQueryType.QUERY_NOT_EXPIRED:
+      return "QUERY_NOT_EXPIRED";
+    case FixedDepositQueryType.QUERY_EXPIRED:
+      return "QUERY_EXPIRED";
+    default:
+      return "UNKNOWN";
+  }
+}
+
 export interface FixedDeposit {
   id: number;
   account: string;
@@ -69,6 +111,7 @@ export interface FixedDeposit {
   amount: string;
   interest: string;
   start_height: number;
+  end_height: number;
   period: FixedDepositPeriod;
 }
 
@@ -79,6 +122,7 @@ const baseFixedDeposit: object = {
   amount: "",
   interest: "",
   start_height: 0,
+  end_height: 0,
   period: 0,
 };
 
@@ -102,8 +146,11 @@ export const FixedDeposit = {
     if (message.start_height !== 0) {
       writer.uint32(48).int64(message.start_height);
     }
+    if (message.end_height !== 0) {
+      writer.uint32(56).int64(message.end_height);
+    }
     if (message.period !== 0) {
-      writer.uint32(56).int32(message.period);
+      writer.uint32(64).int32(message.period);
     }
     return writer;
   },
@@ -134,6 +181,9 @@ export const FixedDeposit = {
           message.start_height = longToNumber(reader.int64() as Long);
           break;
         case 7:
+          message.end_height = longToNumber(reader.int64() as Long);
+          break;
+        case 8:
           message.period = reader.int32() as any;
           break;
         default:
@@ -176,6 +226,11 @@ export const FixedDeposit = {
     } else {
       message.start_height = 0;
     }
+    if (object.end_height !== undefined && object.end_height !== null) {
+      message.end_height = Number(object.end_height);
+    } else {
+      message.end_height = 0;
+    }
     if (object.period !== undefined && object.period !== null) {
       message.period = fixedDepositPeriodFromJSON(object.period);
     } else {
@@ -193,6 +248,7 @@ export const FixedDeposit = {
     message.interest !== undefined && (obj.interest = message.interest);
     message.start_height !== undefined &&
       (obj.start_height = message.start_height);
+    message.end_height !== undefined && (obj.end_height = message.end_height);
     message.period !== undefined &&
       (obj.period = fixedDepositPeriodToJSON(message.period));
     return obj;
@@ -229,6 +285,11 @@ export const FixedDeposit = {
       message.start_height = object.start_height;
     } else {
       message.start_height = 0;
+    }
+    if (object.end_height !== undefined && object.end_height !== null) {
+      message.end_height = object.end_height;
+    } else {
+      message.end_height = 0;
     }
     if (object.period !== undefined && object.period !== null) {
       message.period = object.period;
