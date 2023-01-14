@@ -1,7 +1,6 @@
 /* eslint-disable */
-// @ts-nocheck
 import { Reader, util, configure, Writer } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
 import { Description } from "../srstaking/validator";
 import { Coin } from "../cosmos/base/v1beta1/coin";
 
@@ -1798,9 +1797,6 @@ export const MsgCreateDelegate = {
     if (message.belongRegion !== "") {
       writer.uint32(26).string(message.belongRegion);
     }
-    // if (message['region-id'] !== "") {
-    //   writer.uint32(26).string(message.belongRegion);
-    // }
     if (message.amount !== undefined) {
       Coin.encode(message.amount, writer.uint32(34).fork()).ldelim();
     }
@@ -1893,11 +1889,6 @@ export const MsgCreateDelegate = {
       message.belongRegion = object.belongRegion;
     } else {
       message.belongRegion = "";
-    }
-    if (object['region-id'] !== undefined && object['region-id'] !== null) {
-      message['region-id'] = object['region-id'];
-    } else {
-      message['region-id'] = "";
     }
     if (object.amount !== undefined && object.amount !== null) {
       message.amount = Coin.fromPartial(object.amount);

@@ -1,5 +1,4 @@
 /* eslint-disable */
-// @ts-nocheck
 import {
   FixedDepositPeriod,
   fixedDepositPeriodFromJSON,
@@ -7,7 +6,7 @@ import {
 } from "../srvault/fixed_deposit";
 import { KYC_ROLE, kYC_ROLEFromJSON, kYC_ROLEToJSON } from "../srvault/kyc";
 import { Reader, util, configure, Writer } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
 
 export const protobufPackage = "srspoa.srvault";
 

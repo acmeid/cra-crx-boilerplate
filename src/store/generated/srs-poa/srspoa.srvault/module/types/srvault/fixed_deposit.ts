@@ -1,7 +1,5 @@
 /* eslint-disable */
-// @ts-nocheck
-// import * as Long from "long";
-import Long from "long"
+import Long from "long";
 import { util, configure, Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "srspoa.srvault";

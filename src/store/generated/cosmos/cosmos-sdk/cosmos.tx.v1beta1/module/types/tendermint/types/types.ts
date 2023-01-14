@@ -173,7 +173,7 @@ export interface Vote {
   signature: Uint8Array;
 }
 
-/** Commit contains the srsevidence that a block was committed by a set of validators. */
+/** Commit contains the evidence that a block was committed by a set of validators. */
 export interface Commit {
   height: number;
   round: number;
