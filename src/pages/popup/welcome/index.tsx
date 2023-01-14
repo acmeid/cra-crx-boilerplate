@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Flex, Button, Image, effect } from '@chakra-ui/react'
 import styles from './styles.module.scss'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { getAccount, storage } from '@/resources/account'
+import { qs } from 'url-parse'
 
 export default function Welcome({ style }: any) {
   const navigate = useNavigate()
   const [show, setShow] = useState(false)
+  const { search } = useLocation()
+  const searchs = qs.parse(search)
   storage.get(['currentAccount'], (res) => console.log('currentAccount:', res))
 
+  console.log('search::::', search)
   // const timer = 20000
   const timer = 30 * 60 * 1000
   if (chrome?.runtime) {
@@ -18,13 +22,13 @@ export default function Welcome({ style }: any) {
     getAccount().then((res: any) => {
       // console.log('Account:', res)
 
-      storage.get(['closeTime', 'autoLockTime'], ({ closeTime, autoLockTime }) => {
+      storage.get(['closeTime', 'autoLockTime', 'isLock'], ({ closeTime, autoLockTime, isLock }) => {
         // console.log('closeTime:::', closeTime)
         const now = new Date().getTime()
         // console.log('now - closeTime:::', now - closeTime)
         if (!res?.address) {
           setShow(true)
-        } else if (now - closeTime > autoLockTime * 60 * 1000) {
+        } else if (now - closeTime >= autoLockTime * 60 * 1000 || isLock) {
           navigate({ pathname: '/unlock' }, { replace: true })
         } else {
           navigate({ pathname: '/main/home' }, { replace: true })
@@ -45,7 +49,7 @@ export default function Welcome({ style }: any) {
         <Box fontSize="13px" ml="18px" mr="18px">
           The most reliable way to engage on SRS. Buy, store, and offer tokens & NFTs.
         </Box>
-        <Link to={{ pathname: '/create1', search: `?type=create` }}>
+        <Link to={{ pathname: '/create1', search: `?type=create&isOpen=${searchs.isOpen}` }}>
           <Button colorScheme="green" w="100%" h="49px" mt="150px" fontWeight="500">
             Create New Wallet
           </Button>
@@ -56,7 +60,7 @@ export default function Welcome({ style }: any) {
           cursor="pointer"
           mt="14px"
           fontSize="16px"
-          onClick={() => navigate({ pathname: '/create1', search: `?type=import` })}
+          onClick={() => navigate({ pathname: '/create1', search: `?type=import&isOpen=${searchs.isOpen}` })}
         >
           Import Wallet
         </Box>

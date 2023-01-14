@@ -60,7 +60,7 @@ export default function Activity({ style, setTab }: any) {
             ...v,
             _time: dayjs(v.timestamp).format('h:mm A'),
             _type,
-            _isForm: _type === 'Send' && res.address === v.value.from_address,
+            _isForm: _type === 'Send' && res.address === v.value.to_address,
             _gas: v.fee.amount.find((v2: any) => v2.denom === 'src').amount,
           }
         })

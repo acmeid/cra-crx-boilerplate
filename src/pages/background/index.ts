@@ -1,4 +1,4 @@
-import { createSend, getAccount, storage } from '@/resources/account'
+import { createSend, getAccount, storage, connect } from '@/resources/account'
 import {
   msgCreateDelegate,
   msgExitDelegate,
@@ -10,6 +10,7 @@ import {
   msgSend,
   msgWithdraw,
 } from '@/resources'
+
 // // import { SRS } from '@/utils/cosmos'
 // import { openTab } from '@/utils/tools'
 
@@ -57,40 +58,57 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
   console.log('background.js收到信息', request)
   if (request.value === 'requestConnect') {
     const { connectList } = await storage.get(['connectList'])
+    const account = await getAccount()
 
-    console.log('connectList::::', connectList)
-    const targetOrigin = (connectList || []).find((item: any) => item.origin === request.origin)
-    console.log('targetOrigin:::::::', targetOrigin)
-    if (targetOrigin && targetOrigin.status === 'connected') {
-      const tab: any = await getCurrentTab()
-      const account: any = await getAccount()
-      console.log('tab::', tab)
-      // const { requestTab } = await storage.get(['requestTab'])
-      chrome.tabs.sendMessage(
-        tab.id,
-        {
-          from: 'popup',
-          value: 'requestConnectConfirm',
-          account: account,
-        },
-        async (result) => {
-          if (!chrome.runtime.lastError) {
-            // message processing code goes here
-            console.log('result:::::', result)
-          } else {
-            console.log('result:::::', result)
-            // error handling code goes here
-          }
-        }
-      )
-      sendResponse({ msg: '已授权' })
-      return true
+    if (!account?.address) {
+      chrome.windows.create({ url: `${chrome.runtime.getURL('popup.html')}#/welcome?isOpen=1`, type: 'popup', width: 391, height: 639 })
+      sendResponse({ msg: '打开创建窗口' })
+      return
     }
 
-    await storage.set({ currentConnectOrigin: request.origin })
+    const { closeTime, autoLockTime, isLock } = await storage.get(['closeTime', 'autoLockTime', 'isLock'])
+    console.log('isLock:::::', isLock)
+    const now = new Date().getTime()
+    if (now - closeTime > autoLockTime * 60 * 1000 || isLock) {
+      // navigate({ pathname: '/unlock' }, { replace: true })
+      chrome.windows.create({ url: `${chrome.runtime.getURL('popup.html')}#/unlock?isOpen=1`, type: 'popup', width: 391, height: 639 })
+      sendResponse({ msg: '打开解锁窗口' })
+      return
+    }
 
-    // chrome.runtime.getURL('popup.html/#/welcome')
-    chrome.windows.create({ url: `${chrome.runtime.getURL('popup.html')}#/authorize`, type: 'popup', width: 375, height: 639 })
+    connect()
+    // console.log('connectList::::', connectList)
+    // const targetOrigin = (connectList || []).find((item: any) => item.origin === request.origin)
+    // console.log('targetOrigin:::::::', targetOrigin)
+    // if (targetOrigin && targetOrigin.status === 'connected') {
+    //   const tab: any = await getCurrentTab()
+    //   const account: any = await getAccount()
+    //   console.log('tab::', tab)
+    //   // const { requestTab } = await storage.get(['requestTab'])
+    //   chrome.tabs.sendMessage(
+    //     tab.id,
+    //     {
+    //       from: 'popup',
+    //       value: 'requestConnectConfirm',
+    //       account: account,
+    //     },
+    //     async (result) => {
+    //       if (!chrome.runtime.lastError) {
+    //         // message processing code goes here
+    //         console.log('result:::::', result)
+    //       } else {
+    //         console.log('result:::::', result)
+    //         // error handling code goes here
+    //       }
+    //     }
+    //   )
+    //   sendResponse({ msg: '已授权' })
+    //   return true
+    // }
+
+    // await storage.set({ currentConnectOrigin: request.origin })
+
+    // chrome.windows.create({ url: `${chrome.runtime.getURL('popup.html')}#/authorize`, type: 'popup', width: 375, height: 639 })
     sendResponse({ msg: '成功打开窗口' })
     return true
   }

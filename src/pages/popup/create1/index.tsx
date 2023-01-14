@@ -64,9 +64,9 @@ export default function Welcome({ style }: any) {
     storage.get(['pw'], (res) => console.log('chrome.storage.local.get:', res))
 
     if (searchs.type === 'import') {
-      navigate({ pathname: '/importAccount' })
+      navigate({ pathname: '/importAccount', search: search })
     } else {
-      navigate({ pathname: '/create3' })
+      navigate({ pathname: '/create3', search: search })
     }
   }
 

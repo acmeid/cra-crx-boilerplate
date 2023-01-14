@@ -21,9 +21,10 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 
 import { SRS } from '../../../utils/cosmos'
-import { addAccount, getAccount, getAccountList } from '@/resources/account'
+import { addAccount, connect, getAccount, getAccountList } from '@/resources/account'
 import Header from '@/components/header'
 import Step from '@/components/setp'
+import { qs } from 'url-parse'
 
 export default function Create3({ style, setTab }: any) {
   const [mnemonic, setMnemonic] = useState<any[]>(new Array(24).fill('Wallet'))
@@ -34,6 +35,8 @@ export default function Create3({ style, setTab }: any) {
   const [step, setStep] = useState<number>(2)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
+  const { search } = useLocation()
+  const searchs = qs.parse(search)
 
   // const onToggle = () => {
   //   console.log('onToggle')
@@ -78,7 +81,11 @@ export default function Create3({ style, setTab }: any) {
 
     try {
       await addAccount({ mnemonic: _mnemonic })
-      navigate({ pathname: '/main/home' })
+      if (searchs.isOpen === '1') {
+        connect()
+      } else {
+        navigate({ pathname: '/main/home' })
+      }
     } catch (error) {
       console.error('add error', error)
     }

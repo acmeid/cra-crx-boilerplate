@@ -22,8 +22,34 @@ export default function Welcome({ style, setTab }: any) {
     })
   }, [])
 
-  const onCancel = () => {
-    window.close()
+  const onCancel = async () => {
+    const tabs: any[] = await chrome.tabs.query({ active: true })
+    console.log('tabs::', tabs)
+    tabs.forEach((tab: any) => {
+      chrome.tabs.sendMessage(
+        tab.id,
+        {
+          from: 'popup',
+          value: 'requestConnectCancel',
+          // account: account,
+        },
+        async (result) => {
+          if (!chrome.runtime.lastError) {
+            // message processing code goes here
+            console.log('result:::::', result)
+          } else {
+            console.log('result:::::', result)
+            // error handling code goes here
+          }
+
+          console.log('onCancel 取消授权')
+
+          setTimeout(() => {
+            window.close()
+          }, 300)
+        }
+      )
+    })
   }
   const onConfirm = async () => {
     // const tab: any = await getCurrentTab()
@@ -78,7 +104,7 @@ export default function Welcome({ style, setTab }: any) {
 
           setTimeout(() => {
             window.close()
-          }, 500)
+          }, 300)
         }
       )
     })

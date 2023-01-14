@@ -15,7 +15,7 @@ export default function MsgSend(props: any) {
       </div>
       <div className={styles.line}>
         <div className={styles.key}>Amount</div>
-        <div className={styles.val}>{props.message?.amount}</div>
+        <div className={styles.val}>{typeof props.message?.amount === 'string' ? props.message?.amount : props.message?.amount?.amount}</div>
       </div>
     </>
   )

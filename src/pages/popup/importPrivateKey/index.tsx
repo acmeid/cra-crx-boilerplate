@@ -3,14 +3,17 @@ import { Box, Flex, Button, Image, InputGroup, InputRightElement, Input, useToas
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon, ChevronRightIcon, EditIcon } from '@chakra-ui/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
+import { qs } from 'url-parse'
 
-import { addAccount } from '@/resources/account'
+import { addAccount, connect } from '@/resources/account'
 
 export default function Welcome({ style, setTab }: any) {
   const toast = useToast()
   const navigate = useNavigate()
   const [privKey, setPrivKey] = useState<string>('')
   const [show1, setShow1] = useState(false)
+  const { search } = useLocation()
+  const searchs = qs.parse(search)
 
   useEffect(() => {}, [])
 
@@ -28,7 +31,12 @@ export default function Welcome({ style, setTab }: any) {
           duration: 5000,
           isClosable: true,
         })
-        navigate({ pathname: '/main/home' })
+
+        if (searchs.isOpen === '1') {
+          connect()
+        } else {
+          navigate({ pathname: '/main/home' })
+        }
       })
       .catch((error) => {
         toast({

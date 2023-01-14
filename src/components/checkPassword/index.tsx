@@ -108,9 +108,10 @@ export default function CheckPassword({ next }: any) {
       <Modal onClose={onClose} size={'xs'} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader pl="15px">Are you sure you want to reset the password?</ModalHeader>
+          <ModalHeader pr="30px">Are you sure you want to reset the password?</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            {/* <Box fontSize="20px">Are you sure you want to reset the password?</Box> */}
             <Box mb="20px">
               PLEASE NOTE: You will not be able to recover your wallet account unless you have stored the private key or mnemonic associated with your
               wallet address.

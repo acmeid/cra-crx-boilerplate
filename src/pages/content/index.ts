@@ -75,6 +75,17 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     )
 
     return sendResponse({ msg: '收到确认授权' })
+  } else if (request.from === 'popup' && request.value === 'requestConnectCancel') {
+    window.postMessage(
+      {
+        value: request.value,
+        form: 'content',
+        // account: request.account,
+      },
+      window.location.origin
+    )
+
+    return sendResponse({ msg: '收到取消授权' })
   }
 })
 
@@ -83,6 +94,24 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   console.log('监听取消授权消息')
   if (request.from === 'popup' && request.value === 'requestConnectCancel') {
     console.log('content.js收到popup.js取消的信息')
+
+    window.postMessage(
+      {
+        value: request.value,
+        form: 'content',
+      },
+      window.location.origin
+    )
+
+    return sendResponse()
+  }
+})
+
+// 监听断开消息
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+  console.log('监听断开消息')
+  if (request.from === 'popup' && request.value === 'disconnect') {
+    console.log('content.js收到popup.js断开的信息')
 
     window.postMessage(
       {
@@ -126,7 +155,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
       window.location.origin
     )
 
-    return sendResponse({ msg: '收到确认授权' })
+    return sendResponse({ msg: '收到确认断开' })
   }
 })
 

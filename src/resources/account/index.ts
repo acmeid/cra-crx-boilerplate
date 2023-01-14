@@ -411,3 +411,106 @@ export const createSend = async ({ toAddress, amount, memo, gas }: params) => {
   console.log('createSend::', res2)
   return res2
 }
+
+// 连接
+export const connect = async () => {
+  const account: any = await getAccount()
+  const tabs: any[] = await chrome.tabs.query({ active: true })
+  console.log('tabs::', tabs)
+  tabs.forEach((tab: any) => {
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        from: 'popup',
+        value: 'requestConnectConfirm',
+        account: account,
+      },
+      async (result) => {
+        if (!chrome.runtime.lastError) {
+          // message processing code goes here
+          console.log('result:::::', result)
+        } else {
+          console.log('result:::::', result)
+          // error handling code goes here
+        }
+
+        console.log('onConfirm 确认授权')
+
+        let { connectList } = await storage.get(['connectList'])
+        connectList = connectList || []
+
+        // console.log('onConfirm 确认授权22222222')
+        let current = connectList.find((item: any) => {
+          // console.log('item.origin::', item.origin)
+          return item.origin && item.origin === origin
+        })
+
+        if (!current) {
+          current = { status: 'connected', origin: origin }
+          // console.log('current::::::::', current)
+          connectList.push(current)
+        } else {
+          current.status = 'connected'
+        }
+
+        await storage.set({ connectList: connectList })
+        await storage.get(['connectList']).then(({ connectList }) => {
+          console.log('onConfirm connectList:::', connectList)
+        })
+
+        setTimeout(() => {
+          window.close()
+        }, 300)
+      }
+    )
+  })
+}
+// 断开连接
+export const disconnect = async () => {
+  const account: any = await getAccount()
+  const tabs: any[] = await chrome.tabs.query({ active: true })
+  console.log('tabs::', tabs)
+  tabs.forEach((tab: any) => {
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        from: 'popup',
+        value: 'disconnect',
+        account: account,
+      },
+      async (result) => {
+        if (!chrome.runtime.lastError) {
+          // message processing code goes here
+          console.log('result:::::', result)
+        } else {
+          console.log('result:::::', result)
+          // error handling code goes here
+        }
+
+        console.log('onConfirm 确认授权')
+
+        let { connectList } = await storage.get(['connectList'])
+        connectList = connectList || []
+
+        // console.log('onConfirm 确认授权22222222')
+        let current = connectList.find((item: any) => {
+          // console.log('item.origin::', item.origin)
+          return item.origin && item.origin === origin
+        })
+
+        if (!current) {
+          current = { status: 'off', origin: origin }
+          // console.log('current::::::::', current)
+          connectList.push(current)
+        } else {
+          current.status = 'off'
+        }
+
+        await storage.set({ connectList: connectList })
+        await storage.get(['connectList']).then(({ connectList }) => {
+          console.log('onConfirm connectList:::', connectList)
+        })
+      }
+    )
+  })
+}

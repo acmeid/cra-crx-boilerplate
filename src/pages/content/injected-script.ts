@@ -27,6 +27,16 @@ const securityDomain = ['http://192.168.0.206', 'http://localhost:3001', 'http:/
 //   )
 // }
 
+// window.addEventListener(
+//   'message',
+//   async (event: MessageEvent) => {
+//     if (securityDomain.includes(event.origin) && event.data.form === 'content' && event.data.value === 'disconnect') {
+//       console.log('inejectedScript收到断开的信息')
+//     }
+//   },
+//   false
+// )
+
 console.log('chrome:::', chrome.runtime)
 
 function init() {

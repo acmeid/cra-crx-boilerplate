@@ -18,9 +18,10 @@ import {
   ModalFooter,
 } from '@chakra-ui/react'
 import styles from './styles.module.scss'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { getAccount, resetAccount, storage } from '@/resources/account'
+import { getAccount, resetAccount, storage, connect } from '@/resources/account'
+import { qs } from 'url-parse'
 
 export default function Welcome({ style }: any) {
   const navigate = useNavigate()
@@ -28,6 +29,8 @@ export default function Welcome({ style }: any) {
   const [pw, setPw] = useState('')
   const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { search } = useLocation()
+  const searchs = qs.parse(search)
 
   const check = async () => {
     const data: any = await storage.get(['pw'])
@@ -36,6 +39,14 @@ export default function Welcome({ style }: any) {
     // console.log('pw::::', pw)
 
     if (data.pw === pw) {
+      storage.set({ isLock: false })
+      const account: any = await getAccount()
+
+      if (searchs.isOpen === '1') {
+        connect()
+        return
+      }
+
       navigate('/main/home')
     } else {
       toast({

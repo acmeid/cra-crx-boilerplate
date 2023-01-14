@@ -109,31 +109,7 @@ export default function ChangePassword({ style }: any) {
               rules={oldPwRule}
               render={({ field }) => {
                 setPassword(field.value)
-                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" />
-              }}
-            />
-
-            <InputRightElement h="49px">
-              <ViewIcon cursor="pointer" color="blackAlpha.600" style={{ display: show2 ? '' : 'none' }} onClick={() => setShow2(!show2)}></ViewIcon>
-              <ViewOffIcon
-                cursor="pointer"
-                color="blackAlpha.400"
-                style={{ display: !show1 ? '' : 'none' }}
-                onClick={() => setShow2(!show2)}
-              ></ViewOffIcon>
-            </InputRightElement>
-          </InputGroup>
-          {errors.cpassword?.type === 'required' && <ErrorMessage>Password is required</ErrorMessage>}
-          {errors.cpassword?.type === 'validate' && <ErrorMessage>The current password is incorrect</ErrorMessage>}
-
-          <InputGroup mt="22px">
-            <Controller
-              name="password"
-              control={control}
-              rules={{ required: true, minLength: 6 }}
-              render={({ field }) => {
-                setPassword(field.value)
-                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="New Password" />
+                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Current Password" />
               }}
             />
 
@@ -147,6 +123,30 @@ export default function ChangePassword({ style }: any) {
               ></ViewOffIcon>
             </InputRightElement>
           </InputGroup>
+          {errors.cpassword?.type === 'required' && <ErrorMessage>Password is required</ErrorMessage>}
+          {errors.cpassword?.type === 'validate' && <ErrorMessage>The current password is incorrect</ErrorMessage>}
+
+          <InputGroup mt="22px">
+            <Controller
+              name="password"
+              control={control}
+              rules={{ required: true, minLength: 6 }}
+              render={({ field }) => {
+                setPassword(field.value)
+                return <Input {...field} h="49px" type={show2 ? 'text' : 'password'} placeholder="New Password" />
+              }}
+            />
+
+            <InputRightElement h="49px">
+              <ViewIcon cursor="pointer" color="blackAlpha.600" style={{ display: show2 ? '' : 'none' }} onClick={() => setShow2(!show2)}></ViewIcon>
+              <ViewOffIcon
+                cursor="pointer"
+                color="blackAlpha.400"
+                style={{ display: !show2 ? '' : 'none' }}
+                onClick={() => setShow2(!show2)}
+              ></ViewOffIcon>
+            </InputRightElement>
+          </InputGroup>
           {errors.password?.type === 'required' && <ErrorMessage>Password is required</ErrorMessage>}
           {errors.password?.type === 'minLength' && <ErrorMessage>Please enter at least 6 digits</ErrorMessage>}
         </Box>
@@ -156,7 +156,7 @@ export default function ChangePassword({ style }: any) {
               name="password2"
               control={control}
               rules={rule}
-              render={({ field }) => <Input {...field} type="password" h="49px" placeholder="Confirm Password" />}
+              render={({ field }) => <Input {...field} type="password" h="49px" placeholder="Confirm New Password" />}
             />
           </InputGroup>
           {errors.password2?.type === 'validate' && <ErrorMessage>Password should match</ErrorMessage>}

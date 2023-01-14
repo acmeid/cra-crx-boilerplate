@@ -11,7 +11,7 @@ export default function MsgSend(props: any) {
       </div>
       <div className={styles.line}>
         <div className={styles.key}>Delegator Address</div>
-        <div className={styles.val}>{props.message?.delegatorAddress}</div>
+        <div className={styles.val}>{props.message?.delegatorAddress || props.message?.creator}</div>
       </div>
     </>
   )

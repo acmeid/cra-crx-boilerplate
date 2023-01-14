@@ -6,15 +6,28 @@ import styles from './styles.module.scss'
 
 import { getAccountList, switchAccount } from '@/resources/account'
 import { cutText } from '@/utils/tools'
+import { qs } from 'url-parse'
 
 export default function Account({ style }: any) {
   const navigate = useNavigate()
   const [list, setList] = useState<any[]>([])
+  const { search } = useLocation()
+  const searchs = qs.parse(search)
 
   useEffect(() => {
-    getAccountList().then((list) => {
-      console.log('list::::', list)
-      setList(list)
+    getAccountList().then((res) => {
+      console.log('res::::', res)
+      setList(res)
+
+      // 如果是删除了账户，跳转过来，这里默认选择第一个账户
+      if (searchs.replace) {
+        switchAccount(res[0]).then(() => {
+          getAccountList().then((res2) => {
+            console.log('res2::::', res2)
+            setList(res2)
+          })
+        })
+      }
     })
   }, [])
 
@@ -27,14 +40,16 @@ export default function Account({ style }: any) {
   return (
     <Box className={styles.container} style={style}>
       <Box className={styles.tit}>
-        <ChevronLeftIcon
-          cursor="pointer"
-          boxSize="26px"
-          mt="-2px"
-          onClick={() => {
-            navigate(-1)
-          }}
-        ></ChevronLeftIcon>
+        {!searchs.replace && (
+          <ChevronLeftIcon
+            cursor="pointer"
+            boxSize="26px"
+            mt="-2px"
+            onClick={() => {
+              navigate(-1)
+            }}
+          ></ChevronLeftIcon>
+        )}
         Accounts
       </Box>
 

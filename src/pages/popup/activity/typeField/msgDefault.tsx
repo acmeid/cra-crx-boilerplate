@@ -21,7 +21,12 @@ export default function MsgDefault({ data }: any) {
       <Box flexGrow="1">
         <Flex justifyContent="space-between">
           <Box className={styles.type}>{data._type}</Box>
-          <Box className={styles.amount}>- {data._gas} SRC</Box>
+          <Box className={styles.amount}>
+            {data.value?.amount?.amount || data.value?.amount?.[0]?.amount || data.value?.amount
+              ? data.value?.amount?.amount || data.value?.amount?.[0]?.amount || data.value?.amount || 0 + ' SRC'
+              : ''}
+          </Box>
+          {/* <Box className={styles.amount}>{data.value?.amount?.amount || data.value?.amount?.[0]?.amount || data.value?.amount || 0} SRC</Box> */}
         </Flex>
         <Flex justifyContent="space-between" mt="4px">
           <Box className={styles.form}>{/* From <span className={styles.highlight}>0x22ec40b3...720fd</span> */}</Box>

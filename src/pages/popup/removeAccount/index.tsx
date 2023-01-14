@@ -7,7 +7,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 import CheckPassword from '@/components/checkPassword'
-import { getAccount, removeAccount, storage } from '@/resources/account'
+import { disconnect, getAccount, removeAccount, storage } from '@/resources/account'
 import { cutText } from '@/utils/tools'
 
 type IFormInput = {
@@ -33,10 +33,11 @@ export default function ChangeName({ style }: any) {
 
   const remove = async () => {
     const accountList = await removeAccount()
+    disconnect()
     if (accountList?.length) {
-      navigate('/account', { replace: true })
+      navigate({ pathname: '/account', search: '?replace=1' }, { replace: true })
     } else {
-      navigate('/welcome', { replace: true })
+      navigate({ pathname: '/welcome' }, { replace: true })
     }
   }
 

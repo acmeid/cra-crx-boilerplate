@@ -3,9 +3,12 @@ import { Box, Flex, Button, Image } from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon, ChevronRightIcon, EditIcon } from '@chakra-ui/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
+import { qs } from 'url-parse'
 
 export default function ImportAccount({ style, setTab }: any) {
   const navigate = useNavigate()
+  const { search } = useLocation()
+  const searchs = qs.parse(search)
 
   useEffect(() => {}, [])
 
@@ -34,13 +37,13 @@ export default function ImportAccount({ style, setTab }: any) {
             <ChevronRightIcon boxSize="18px" color="blackAlpha.500"></ChevronRightIcon>
           </Box>
         </Flex> */}
-        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/importPrivateKey' })}>
+        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/importPrivateKey', search: search })}>
           <Box flexGrow="1">Import private key</Box>
           <Box>
             <ChevronRightIcon boxSize="18px" color="blackAlpha.500"></ChevronRightIcon>
           </Box>
         </Flex>
-        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/ImportMnemonic' })}>
+        <Flex className={styles.listItem} onClick={() => navigate({ pathname: '/ImportMnemonic', search: search })}>
           <Box flexGrow="1">Import mnemonic</Box>
           <Box>
             <ChevronRightIcon boxSize="18px" color="blackAlpha.500"></ChevronRightIcon>
