@@ -23,13 +23,15 @@ export default function MsgCustom({ data }: any) {
       <Box flexGrow="1">
         <Flex justifyContent="space-between">
           <Box className={styles.type}>{data._type}</Box>
+          <Box className={styles.time}>{data._time}</Box>
+        </Flex>
+        <Flex justifyContent="space-between" mt="4px">
           {addList.includes(data._type) ? (
             <Box className={styles.amountFrom}>+ {data.value?.amount?.amount || data.value?.amount?.[0]?.amount || data.value?.amount || 0} SRC</Box>
           ) : (
             <Box className={styles.amountTo}>- {data.value?.amount?.amount || data.value?.amount?.[0]?.amount || data.value?.amount || 0} SRC</Box>
           )}
-        </Flex>
-        <Flex justifyContent="space-between" mt="4px">
+
           {addList.includes(data._type) ? (
             <Box className={styles.form}>
               {data?.value?.delegatorAddress && 'From'} <span className={styles.highlight}>{cutText(data?.value?.delegatorAddress, 10, 6)}</span>
@@ -39,8 +41,6 @@ export default function MsgCustom({ data }: any) {
               {data?.value?.delegatorAddress && 'To'} <span className={styles.highlight}>{cutText(data?.value?.delegatorAddress, 10, 6)}</span>
             </Box>
           )}
-
-          <Box className={styles.time}>{data._time}</Box>
         </Flex>
       </Box>
     </Flex>
