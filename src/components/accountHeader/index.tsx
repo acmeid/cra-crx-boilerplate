@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { ChevronLeftIcon, CopyIcon, EditIcon } from '@chakra-ui/icons'
 import { getAccount } from '@/resources/account'
 import { cutText, copyText } from '@/utils/tools'
+import { getKyc } from '@/resources/api'
 
 // type cprops = any
 
@@ -17,6 +18,12 @@ export default function AccountHeader({ title, showBack }: any) {
     getAccount().then((res) => {
       setAccount(res)
     })
+
+    // getKyc(data.address).then((res) => {
+    //   if (res?.value?.kyc) {
+
+    //   }
+    // })
   }, [])
 
   const onCopyAddr = (e: any) => {

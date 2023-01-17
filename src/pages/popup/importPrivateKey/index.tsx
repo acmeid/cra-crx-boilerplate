@@ -9,6 +9,7 @@ import { addAccount, connect } from '@/resources/account'
 
 export default function Welcome({ style, setTab }: any) {
   const toast = useToast()
+  const toastIdRef: any = React.useRef()
   const navigate = useNavigate()
   const [privKey, setPrivKey] = useState<string>('')
   const [show1, setShow1] = useState(false)
@@ -24,11 +25,14 @@ export default function Welcome({ style, setTab }: any) {
     }
     addAccount({ priv: _priv })
       .then(() => {
-        toast({
+        if (toastIdRef.current) {
+          toast.close(toastIdRef.current)
+        }
+        toastIdRef.current = toast({
           title: 'Import succeeded',
           position: 'top',
           status: 'success',
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         })
 
@@ -39,12 +43,15 @@ export default function Welcome({ style, setTab }: any) {
         }
       })
       .catch((error) => {
-        toast({
+        if (toastIdRef.current) {
+          toast.close(toastIdRef.current)
+        }
+        toastIdRef.current = toast({
           title: 'Import failed',
           description: error?.msg || 'The private key is incorrect',
           position: 'top',
           status: 'error',
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         })
       })
@@ -68,7 +75,12 @@ export default function Welcome({ style, setTab }: any) {
       <Box mt="45px">Access an existing wallet with your private key.</Box>
       <Box mt="11px">
         <InputGroup>
-          <Input h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter private key here" onChange={(e) => setPrivKey(e.target.value)} />
+          <Input
+            h="49px"
+            type={show1 ? 'text' : 'password'}
+            placeholder="Enter private key here"
+            onChange={(e) => setPrivKey(e.target.value.trim())}
+          />
           <InputRightElement h="49px">
             <ViewIcon cursor="pointer" color="blackAlpha.600" style={{ display: show1 ? '' : 'none' }} onClick={() => setShow1(!show1)}></ViewIcon>
             <ViewOffIcon

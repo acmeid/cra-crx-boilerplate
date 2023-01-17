@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { txClient } from '@/store/generated/cosmos/cosmos-sdk/cosmos.bank.v1beta1/module'
+import { txClient } from '@/store/generated/srs-poa/srspoa.bank/module'
 import { DirectSecp256k1HdWallet, DirectSecp256k1Wallet, Registry } from '@cosmjs/proto-signing'
 import { getAccount } from '../account'
 import { prefix, addr, denom } from '@/resources/constants'
@@ -19,40 +19,44 @@ const getWallet = async () => {
 
 // 发送普通交易
 export const msgSend = async ({ amount, toAddress, feeAmount, gas, memo }?: any) => {
-  const wallet = await getWallet()
+  try {
+    const wallet = await getWallet()
 
-  console.log('wallet:::::', wallet)
-  const [account] = await wallet.getAccounts()
-  console.log('wallet.getAccounts::', account)
+    console.log('wallet:::::', wallet)
+    const [account] = await wallet.getAccounts()
+    console.log('wallet.getAccounts::', account)
 
-  const client = await txClient(wallet, { addr })
-  console.log('client:::', client)
+    const client = await txClient(wallet, { addr })
+    console.log('client:::', client)
 
-  const value = {
-    from_address: account.address,
-    to_address: toAddress,
-    amount: [
-      {
-        denom,
-        amount: String(amount),
-      },
-    ],
+    const value = {
+      from_address: account.address,
+      to_address: toAddress,
+      amount: [
+        {
+          denom,
+          amount: String(amount),
+        },
+      ],
+    }
+
+    const msg = await client.msgSend(value)
+    console.log('msg:::', msg)
+
+    const fee = {
+      amount: [
+        {
+          denom,
+          amount: String(feeAmount),
+        },
+      ],
+      gas: String(gas),
+    }
+    console.log('fee:::', fee)
+    const result = await client.signAndBroadcast([msg], { fee, memo })
+    console.log('result:::::::', result)
+    return result
+  } catch (error) {
+    return Promise.reject(error)
   }
-
-  const msg = await client.msgSend(value)
-  console.log('msg:::', msg)
-
-  const fee = {
-    amount: [
-      {
-        denom,
-        amount: String(feeAmount),
-      },
-    ],
-    gas: String(gas),
-  }
-  console.log('fee:::', fee)
-  const result = await client.signAndBroadcast([msg], { fee, memo })
-  console.log('result:::::::', result)
-  return result
 }

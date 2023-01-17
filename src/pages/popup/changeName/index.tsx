@@ -61,7 +61,7 @@ export default function ChangeName({ style }: any) {
         h="49px"
         mt="10px"
         value={walletName}
-        onChange={(e) => setWalletName(e.target.value)}
+        onChange={(e) => setWalletName(e.target.value.trim())}
       ></Input>
 
       <Flex position="absolute" bottom="18px" left="18px" right="18px" justifyContent="space-around">

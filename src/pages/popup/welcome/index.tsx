@@ -25,10 +25,15 @@ export default function Welcome({ style }: any) {
       storage.get(['closeTime', 'autoLockTime', 'isLock'], ({ closeTime, autoLockTime, isLock }) => {
         // console.log('closeTime:::', closeTime)
         const now = new Date().getTime()
+
+        if (!autoLockTime) {
+          autoLockTime = autoLockTime || 15
+          storage.set({ autoLockTime: autoLockTime })
+        }
         // console.log('now - closeTime:::', now - closeTime)
         if (!res?.address) {
           setShow(true)
-        } else if (now - closeTime >= autoLockTime * 60 * 1000 || isLock) {
+        } else if (isLock || (isLock !== false && now - closeTime >= autoLockTime * 60 * 1000)) {
           navigate({ pathname: '/unlock' }, { replace: true })
         } else {
           navigate({ pathname: '/main/home' }, { replace: true })

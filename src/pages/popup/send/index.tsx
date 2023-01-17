@@ -1,5 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Flex, Button, Input, useToast, Drawer, DrawerOverlay, DrawerContent, DrawerBody, useDisclosure } from '@chakra-ui/react'
+import {
+  Text,
+  Box,
+  Flex,
+  Button,
+  Input,
+  useToast,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerBody,
+  useDisclosure,
+  InputGroup,
+  InputRightElement,
+} from '@chakra-ui/react'
 import { ChevronLeftIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { debounce, round } from 'lodash-es'
 import styles from './styles.module.scss'
@@ -8,9 +22,12 @@ import { useNavigate, useLocation } from 'react-router-dom'
 // import ErrorMessage from '@/components/errorMessage'
 import Header from '@/components/header'
 // import { createSend, storage } from '@/resources/account'
-import { cutText } from '@/utils/tools'
+import { cutText, getFee, getMaximum } from '@/utils/tools'
 import { msgSend } from '@/resources/bank'
 import { baseFee, amountThreshold, rate, gas, minFee } from '@/resources/constants'
+import { qs } from 'url-parse'
+import { getBalanceByAddr } from '@/resources/api'
+import { getAccount } from '@/resources/account'
 
 // type IFormInput = {
 //   password: string
@@ -22,16 +39,18 @@ export default function Send({ style }: any) {
   const [toAddress, setToAddress] = useState<string>('')
   const [amount, setAmount] = useState<any>('')
   const [fee, setFee] = useState<any>()
+  const [account, setAccount] = useState<any>({})
+  const [data, setData] = useState<any>({
+    ac: 0,
+    ag: 0,
+    showAc: '0',
+    showAg: '0',
+  })
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const [sendLoading, setSendLoading] = useState<boolean>(false)
-  // const gas_limit = 200000
-  // const gas_price = 500
-  // const baseFee = gas_limit * gas_price
-
-  // const changeAmount = debounce((e) => {
-  //   setAmount(e.target.value)
-  // }, 200)
+  const { search } = useLocation()
+  const searchs = qs.parse(search)
 
   const next = () => {
     let msg = ''
@@ -61,38 +80,89 @@ export default function Send({ style }: any) {
 
   const send = async () => {
     setSendLoading(true)
-    const res: any = await msgSend({ amount, toAddress, feeAmount: fee, gas, memo: '' })
-    console.log('send res::', res)
-    if (res?.code === 0) {
-      toast({
-        title: 'Transaction success',
-        // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
-        position: 'top',
-        status: 'success',
-        duration: 4000,
-        isClosable: true,
-      })
-    } else {
+    let res
+    try {
+      res = await msgSend({ amount, toAddress, feeAmount: fee, gas, memo: '' })
+
+      console.log('send res::', res)
+      if (res?.code === 0) {
+        getData(account)
+        toast({
+          title: 'Transaction success',
+          // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
+          position: 'top',
+          status: 'success',
+          duration: 4000,
+          isClosable: true,
+        })
+      } else {
+        toast({
+          title: 'Transaction failed',
+          // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
+          position: 'top',
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        })
+      }
+      setSendLoading(false)
+      close()
+    } catch (error) {
+      setSendLoading(false)
       toast({
         title: 'Transaction failed',
-        // description: 'Amount transferred: 1, gas consumed:0.000334 SRC',
         position: 'top',
         status: 'error',
         duration: 4000,
         isClosable: true,
       })
     }
-    setSendLoading(false)
-    close()
+  }
+
+  const getData = async (data?: any) => {
+    console.log('account:::::', account)
+    const res = await getBalanceByAddr(data.address)
+    let ac = 0
+    let ag = 0
+    res?.balances?.forEach((item: any) => {
+      if (item.denom === 'src') {
+        ac = Number(item.amount)
+      }
+      if (item.denom === 'srg') {
+        ag = Number(item.amount)
+      }
+    })
+
+    console.log('res:::::', res)
+    console.log('ac:::::', ac)
+    setData((val: any) => {
+      return {
+        ...val,
+        ac,
+        ag,
+        showAc: Number(ac).toLocaleString('en-US'),
+        showAg: Number(ag).toLocaleString('en-US'),
+      }
+    })
   }
 
   useEffect(() => {
     setFee(() => {
-      if (Number.isNaN(Number(amount))) return
-      const amountFee = round(amount * rate, 6)
-      return amount ? baseFee + (amountFee > minFee ? amountFee : minFee) : 0
+      // if (Number.isNaN(Number(amount))) return
+      // const amountFee = round(amount * rate, 6)
+      // return amount ? baseFee + (amountFee > minFee ? amountFee : minFee) : 0
+
+      return getFee(amount)
     })
   }, [amount])
+
+  useEffect(() => {
+    getAccount().then(async (res) => {
+      setAccount(res)
+      console.log('data2222222222:::::', res)
+      getData(res)
+    })
+  }, [])
 
   const close = () => {
     setAmount('')
@@ -103,7 +173,13 @@ export default function Send({ style }: any) {
   return (
     <Box className={styles.container} style={style}>
       <Header showBack></Header>
-      <Box fontSize="16px" fontWeight="600" mt="4px">
+      <Box>
+        <Text fontSize="16px" fontWeight="600">
+          Available
+        </Text>
+        <Text fontSize="16px">{data.showAc} SRC</Text>
+      </Box>
+      <Box fontSize="16px" fontWeight="600" mt="14px">
         Add an address and amount
       </Box>
       <Flex className={styles.info}>
@@ -113,7 +189,7 @@ export default function Send({ style }: any) {
         <Box flexGrow="1">
           <Box fontSize="16px" fontWeight="600" wordBreak="break-all">
             {/* 0x22ec40b30x22ec40b30x22ec40b3 b340b30 */}
-            <Input className={styles.inp} value={toAddress} onChange={(e: any) => setToAddress(e.target.value)}></Input>
+            <Input className={styles.inp} value={toAddress} onChange={(e: any) => setToAddress(e.target.value.trim())}></Input>
           </Box>
           <Box fontSize="12px" color="#08CE9E" mt="6px">
             Account not found, will be created
@@ -122,14 +198,29 @@ export default function Send({ style }: any) {
       </Flex>
 
       <Flex className={styles.am} alignItems="center" mt="18px">
-        <Input className={styles.inp} value={amount} onChange={(e) => setAmount(e.target.value)}></Input>
+        <InputGroup w="262px">
+          <Input className={styles.inp} value={amount} onChange={(e) => setAmount(e.target.value.trim())}></Input>
+          <InputRightElement pr="28px">
+            <Button
+              h="33px"
+              mt="16px"
+              size="lg"
+              minW="50px"
+              colorScheme="gray"
+              fontWeight="normal"
+              onClick={() => setAmount(getMaximum(Number(searchs.ac)))}
+            >
+              Max
+            </Button>
+          </InputRightElement>
+        </InputGroup>
         <Box className={styles.tex}>SRC</Box>
       </Flex>
       <Box color="#B1B6BB" mt="13px">
         fees: {fee} SRC
       </Box>
 
-      <Flex mt="210px" justifyContent="space-around">
+      <Flex mt="180px" justifyContent="space-around">
         <Button size="lg" variant="outline" minW="154px" h="46px" onClick={() => navigate(-1)}>
           cancel
         </Button>

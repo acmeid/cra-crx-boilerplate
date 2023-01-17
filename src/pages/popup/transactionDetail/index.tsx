@@ -25,7 +25,7 @@ export default function TransactionDetail({ style }: any) {
     setData({
       ...res2.data,
       _type: dealType(res2.data.messages[0]?.['@type']),
-      _status: res2.data.success ? 'success' : 'fail',
+      _status: res2.data.success ? 'Success' : 'Fail',
       _date: dayjs(res2.timestamp).format('MMM D, YYYY, h:mm A'),
       _gas: res2.data.fee.amount.find((v2: any) => v2.denom === 'src').amount,
     })
@@ -50,7 +50,7 @@ export default function TransactionDetail({ style }: any) {
         <Flex className={styles.listItem}>
           <Box flexGrow="1">Height</Box>
           <Box>
-            <span className={styles.highlight}>12519939</span>
+            <span className={styles.highlight}>{data.height}</span>
           </Box>
         </Flex>
         <Flex className={styles.listItem}>

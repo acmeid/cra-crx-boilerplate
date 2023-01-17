@@ -19,7 +19,7 @@ import { ChevronLeftIcon, ViewIcon, ViewOffIcon, WarningIcon } from '@chakra-ui/
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './styles.module.scss'
 import AccountHeader from '@/components/accountHeader'
-import { getAccount } from '@/resources/account'
+import { getAccount, storage } from '@/resources/account'
 import { delegationAmount, delegationByAddress, getAccountByAddr, getBalanceByAddr, getKyc, getRegionVaultById } from '@/resources/api'
 import { debounce, round } from 'lodash-es'
 import { openTab } from '@/utils/tools'
@@ -30,6 +30,8 @@ export default function Home({ style, setTab }: any) {
   const [data, setData] = useState<any>({
     ac: 0,
     ag: 0,
+    showAc: '0',
+    showAg: '0',
     totalFixed: 0,
     showTotalFixed: '0',
     flexibleBalance: 0,
@@ -173,7 +175,7 @@ export default function Home({ style, setTab }: any) {
       <AccountHeader title="Home"></AccountHeader>
 
       <Box fontSize="18px" mt="18px">
-        Total Balance: <span style={{ fontSize: '22px' }}>{data.total} </span>
+        Total Balance: <span style={{ fontSize: '20px' }}>{data.total} </span>
         <span className={styles.highlight}>SRC</span>
       </Box>
 
@@ -219,7 +221,12 @@ export default function Home({ style, setTab }: any) {
           <Button variant="outline" minW="158px" h="45px" onClick={() => showQrCode()}>
             Deposit
           </Button>
-          <Button variant="outline" minW="158px" h="45px" onClick={() => navigate('/send')}>
+          <Button
+            variant="outline"
+            minW="158px"
+            h="45px"
+            onClick={() => navigate({ pathname: '/send', search: `?ac=${data.ac}&showAc=${data.showAc}` })}
+          >
             Send
           </Button>
         </Flex>

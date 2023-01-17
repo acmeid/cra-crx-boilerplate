@@ -1,5 +1,6 @@
 import { Base64 } from 'js-base64'
 import { debounce, round } from 'lodash-es'
+import { baseFee, amountThreshold, gas, rate, minFee } from '../resources/constants'
 
 // 复制文本
 export const copyText = (value: any, callback: () => void): void => {
@@ -165,6 +166,34 @@ export const sliceArray = (array: any[], size: number) => {
     result.push(array.slice(start, end))
   }
   return result
+}
+
+// 普通交易，根据可用金额，计算最大可交易额
+export const getMaximum = (maxAmount: number) => {
+  console.log('maxAmount::::', maxAmount)
+  if (maxAmount > amountThreshold) {
+    const val = (maxAmount - baseFee) / (1 + rate)
+    return val > 0 ? parseInt(`${val}`) : 0
+  } else {
+    const val = maxAmount - minFee
+    return val > 0 ? parseInt(`${maxAmount - minFee}`) : 0
+  }
+}
+
+// 其他交易，根据可用金额，计算最大可交易额
+export const getMaximumOther = (maxAmount: number) => {
+  const max = maxAmount - baseFee
+  return max > 0 ? max : 0
+}
+
+// 计算交易费
+export const getFee = (amount: number) => {
+  if (!amount || Number.isNaN(Number(amount))) return 0
+
+  let fees = Number(Math.ceil(amount * rate))
+  fees = fees > minFee ? fees : minFee
+
+  return baseFee + fees
 }
 
 export const openTab = (tab: any) => {

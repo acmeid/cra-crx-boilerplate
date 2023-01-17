@@ -31,6 +31,10 @@ export default function AutoLock({ style }: any) {
     getAccount().then((res) => {
       setWalletName(res.accountName)
     })
+    storage.get(['autoLockTime'], ({ autoLockTime }) => {
+      console.log('autoLockTime:', autoLockTime)
+      setMinute(autoLockTime)
+    })
   }, [])
 
   const onSubmit = () => {
@@ -73,7 +77,7 @@ export default function AutoLock({ style }: any) {
 
       <InputGroup size="lg" mt="20px">
         {/* <InputLeftAddon children="https://" /> */}
-        <Input placeholder="" onChange={(e) => setMinute(e.target.value)} />
+        <Input placeholder="" value={minute} onChange={(e) => setMinute(e.target.value.trim())} />
         <InputRightAddon bg="blackAlpha.100">minutes</InputRightAddon>
       </InputGroup>
 

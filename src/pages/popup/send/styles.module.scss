@@ -13,17 +13,18 @@
 
 .am {
   .inp {
-    width: 228px;
-    height: 60px;
+    // width: 2px;
+    width: 100%;
+    height: 54px;
     border-radius: 8px;
-    background-color: var(--chakra-colors-blackAlpha-100);
-    font-size: 24px;
+    // background-color: var(--chakra-colors-blackAlpha-100);
+    font-size: 22px;
   }
   .tex {
-    font-size: 32px;
+    font-size: 30px;
     font-weight: bold;
     color: #444651;
-    text-align: center;
+    text-align: right;
     flex-grow: 1;
   }
 }

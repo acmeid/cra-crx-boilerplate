@@ -40,6 +40,8 @@ export default function Welcome({ style }: any) {
 
     if (data.pw === pw) {
       storage.set({ isLock: false })
+      storage.set({ closeTime: 0 })
+
       const account: any = await getAccount()
 
       if (searchs.isOpen === '1') {
@@ -61,7 +63,11 @@ export default function Welcome({ style }: any) {
 
   const handleReset = () => {
     resetAccount().then(() => {
-      navigate('/welcome')
+      if (searchs.isOpen) {
+        navigate('/welcome?isOpen=1')
+      } else {
+        navigate('/welcome')
+      }
     })
   }
 
@@ -84,7 +90,7 @@ export default function Welcome({ style }: any) {
         </Box>
       </Flex>
       <InputGroup mt="5px">
-        <Input h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" onChange={(e) => setPw(e.target.value)} />
+        <Input h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" onChange={(e) => setPw(e.target.value.trim())} />
 
         <InputRightElement h="49px">
           <ViewIcon cursor="pointer" color="blackAlpha.600" style={{ display: show1 ? '' : 'none' }} onClick={() => setShow1(!show1)}></ViewIcon>

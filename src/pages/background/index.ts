@@ -77,6 +77,9 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
     }
 
     connect()
+    sendResponse({ msg: '成功授权' })
+    return true
+
     // console.log('connectList::::', connectList)
     // const targetOrigin = (connectList || []).find((item: any) => item.origin === request.origin)
     // console.log('targetOrigin:::::::', targetOrigin)
@@ -109,8 +112,6 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
     // await storage.set({ currentConnectOrigin: request.origin })
 
     // chrome.windows.create({ url: `${chrome.runtime.getURL('popup.html')}#/authorize`, type: 'popup', width: 375, height: 639 })
-    sendResponse({ msg: '成功打开窗口' })
-    return true
   }
 })
 
@@ -175,6 +176,9 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
 // 其他交易
 chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
   console.log('background 收到其他交易请求')
+
+  // TODO: 判断是否锁定
+
   const tab: any = await getCurrentTab()
   if (request.value === 'sendTx') {
     let send: Promise<any> = Promise.resolve('缺少msgType')
