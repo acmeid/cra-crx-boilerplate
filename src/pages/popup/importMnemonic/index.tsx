@@ -67,7 +67,7 @@ export default function Welcome({ style, setTab }: any) {
             return (
               <div key={index}>
                 <span>{index + 1}</span>
-                <input type="text" onChange={(e) => checkMn(index, e.target.value.trim())} />
+                <input type="text" onChange={(e) => checkMn(index, e.target.value.trim())} autoComplete="off" />
               </div>
             )
           })}

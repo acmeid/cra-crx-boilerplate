@@ -189,7 +189,7 @@ export default function Send({ style }: any) {
         <Box flexGrow="1">
           <Box fontSize="16px" fontWeight="600" wordBreak="break-all">
             {/* 0x22ec40b30x22ec40b30x22ec40b3 b340b30 */}
-            <Input className={styles.inp} value={toAddress} onChange={(e: any) => setToAddress(e.target.value.trim())}></Input>
+            <Input className={styles.inp} value={toAddress} onChange={(e: any) => setToAddress(e.target.value.trim())} autoComplete="off"></Input>
           </Box>
           <Box fontSize="12px" color="#08CE9E" mt="6px">
             Account not found, will be created
@@ -199,7 +199,7 @@ export default function Send({ style }: any) {
 
       <Flex className={styles.am} alignItems="center" mt="18px">
         <InputGroup w="262px">
-          <Input className={styles.inp} value={amount} onChange={(e) => setAmount(e.target.value.trim())}></Input>
+          <Input className={styles.inp} value={amount} onChange={(e) => setAmount(e.target.value.trim())} autoComplete="off"></Input>
           <InputRightElement pr="28px">
             <Button
               h="33px"

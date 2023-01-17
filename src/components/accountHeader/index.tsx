@@ -1,4 +1,4 @@
-import { Box, Image, Flex, useToast } from '@chakra-ui/react'
+import { Box, Image, Flex, useToast, Tag } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -12,18 +12,19 @@ import { getKyc } from '@/resources/api'
 export default function AccountHeader({ title, showBack }: any) {
   const navigate = useNavigate()
   const [account, setAccount] = useState<any>({})
+  const [isKyc, setIsKyc] = useState<any>(false)
   const toast = useToast()
 
   useEffect(() => {
     getAccount().then((res) => {
       setAccount(res)
+
+      getKyc(res.address).then((res) => {
+        if (res?.kyc) {
+          setIsKyc(true)
+        }
+      })
     })
-
-    // getKyc(data.address).then((res) => {
-    //   if (res?.value?.kyc) {
-
-    //   }
-    // })
   }, [])
 
   const onCopyAddr = (e: any) => {
@@ -50,7 +51,13 @@ export default function AccountHeader({ title, showBack }: any) {
         </Box>
         <Box flexGrow="1">
           <Box className={styles.id}>
-            {account.accountName} <EditIcon className={styles.edit} onClick={() => navigate('/changeName')} />
+            {account.accountName}{' '}
+            {isKyc && (
+              <Tag colorScheme="green" verticalAlign="middle" borderRadius="full" mb="1px" size="sm" className={styles.tagKyc}>
+                kyc
+              </Tag>
+            )}{' '}
+            <EditIcon className={styles.edit} onClick={() => navigate('/changeName')} />
           </Box>
           <Box className={styles.addr}>
             {cutText(account.address)}

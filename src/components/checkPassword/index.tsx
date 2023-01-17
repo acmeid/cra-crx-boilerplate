@@ -74,7 +74,14 @@ export default function CheckPassword({ next }: any) {
       </Flex>
       <Box mt="10px">
         <InputGroup>
-          <Input size="lg" h="49px" type={show1 ? 'text' : 'password'} placeholder="Password" onChange={(e) => setPw(e.target.value.trim())}></Input>
+          <Input
+            size="lg"
+            h="49px"
+            type={show1 ? 'text' : 'password'}
+            placeholder="Password"
+            onChange={(e) => setPw(e.target.value.trim())}
+            autoComplete="off"
+          ></Input>
           <InputRightElement h="49px">
             <ViewIcon
               boxSize="16px"

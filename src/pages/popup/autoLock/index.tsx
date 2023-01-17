@@ -77,7 +77,7 @@ export default function AutoLock({ style }: any) {
 
       <InputGroup size="lg" mt="20px">
         {/* <InputLeftAddon children="https://" /> */}
-        <Input placeholder="" value={minute} onChange={(e) => setMinute(e.target.value.trim())} />
+        <Input placeholder="" value={minute} onChange={(e) => setMinute(e.target.value.trim())} autoComplete="off" />
         <InputRightAddon bg="blackAlpha.100">minutes</InputRightAddon>
       </InputGroup>
 

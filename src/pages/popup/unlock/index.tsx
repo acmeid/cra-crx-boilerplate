@@ -90,7 +90,13 @@ export default function Welcome({ style }: any) {
         </Box>
       </Flex>
       <InputGroup mt="5px">
-        <Input h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" onChange={(e) => setPw(e.target.value.trim())} />
+        <Input
+          h="49px"
+          type={show1 ? 'text' : 'password'}
+          placeholder="Enter Password"
+          onChange={(e) => setPw(e.target.value.trim())}
+          autoComplete="off"
+        />
 
         <InputRightElement h="49px">
           <ViewIcon cursor="pointer" color="blackAlpha.600" style={{ display: show1 ? '' : 'none' }} onClick={() => setShow1(!show1)}></ViewIcon>

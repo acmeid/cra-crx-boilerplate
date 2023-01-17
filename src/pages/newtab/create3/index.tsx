@@ -41,7 +41,7 @@ export default function Welcome({ style, setTab }: any) {
             return (
               <div key={index}>
                 <span>{index + 1}</span>
-                <input type="text" />
+                <input type="text" autoComplete="off" />
               </div>
             )
           })}

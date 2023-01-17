@@ -44,7 +44,7 @@ export default function Welcome({ style }: any) {
       </Box>
       <Box mt="22px">
         <InputGroup>
-          <Input h="49px" type={show1 ? 'text' : 'password'} placeholder="Confirm Password"></Input>
+          <Input h="49px" type={show1 ? 'text' : 'password'} placeholder="Confirm Password" autoComplete="off"></Input>
           <InputRightElement>
             {/* <ViewIcon cursor="pointer" color="blackAlpha.600" style={{ display: show2 ? '' : 'none' }} onClick={() => setShow2(!show2)}></ViewIcon> */}
             {/* <ViewOffIcon

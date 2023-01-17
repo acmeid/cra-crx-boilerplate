@@ -99,7 +99,7 @@ export default function Welcome({ style }: any) {
               rules={{ required: true, minLength: 6 }}
               render={({ field }) => {
                 setPassword(field.value)
-                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" />
+                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Enter Password" autoComplete="off" />
               }}
             />
 
@@ -122,7 +122,7 @@ export default function Welcome({ style }: any) {
               name="password2"
               control={control}
               rules={rule}
-              render={({ field }) => <Input {...field} type="password" h="49px" placeholder="Confirm Password" />}
+              render={({ field }) => <Input {...field} type="password" h="49px" placeholder="Confirm Password" autoComplete="off" />}
             />
           </InputGroup>
           {errors.password2?.type === 'validate' && <ErrorMessage>Password should match</ErrorMessage>}

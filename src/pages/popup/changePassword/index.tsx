@@ -109,7 +109,7 @@ export default function ChangePassword({ style }: any) {
               rules={oldPwRule}
               render={({ field }) => {
                 setPassword(field.value)
-                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Current Password" />
+                return <Input {...field} h="49px" type={show1 ? 'text' : 'password'} placeholder="Current Password" autoComplete="off" />
               }}
             />
 
@@ -133,7 +133,7 @@ export default function ChangePassword({ style }: any) {
               rules={{ required: true, minLength: 6 }}
               render={({ field }) => {
                 setPassword(field.value)
-                return <Input {...field} h="49px" type={show2 ? 'text' : 'password'} placeholder="New Password" />
+                return <Input {...field} h="49px" type={show2 ? 'text' : 'password'} placeholder="New Password" autoComplete="off" />
               }}
             />
 
@@ -156,7 +156,7 @@ export default function ChangePassword({ style }: any) {
               name="password2"
               control={control}
               rules={rule}
-              render={({ field }) => <Input {...field} type="password" h="49px" placeholder="Confirm New Password" />}
+              render={({ field }) => <Input {...field} type="password" h="49px" placeholder="Confirm New Password" autoComplete="off" />}
             />
           </InputGroup>
           {errors.password2?.type === 'validate' && <ErrorMessage>Password should match</ErrorMessage>}
